@@ -1,0 +1,16 @@
+services:
+  app:
+    container_name: soat-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: soat-backend:latest
+    ports:
+      - "8081:8080"
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail --silent http://localhost:8080/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
