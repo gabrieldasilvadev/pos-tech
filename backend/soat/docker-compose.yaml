@@ -1,16 +1,39 @@
 services:
-  app:
+  soat-api:
     container_name: soat-backend
     build:
       context: .
       dockerfile: Dockerfile
     image: soat:latest
+    environment:
+      DB_URL: jdbc:postgresql://soat-postgres:5432/soat
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+    depends_on:
+      - soat-postgres
+    networks:
+      - soat-network
     ports:
       - "8081:8080"
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "curl --fail --silent http://localhost:8080/actuator/health || exit 1"]
+      test: ["CMD-SHELL", "curl --fail --silent http://localhost:8080/api/health || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 3
       start_period: 15s
+  soat-postgres:
+    image: postgres:17
+    container_name: soat-postgres
+    environment:
+      - POSTGRES_DB=soat
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+    ports:
+      - "5432:5432"
+    networks:
+      - soat-network
+
+networks:
+  soat-network:
+    driver: bridge
