@@ -1,5 +1,5 @@
 services:
-  soat-api:
+  soat-backend:
     container_name: soat-backend
     build:
       context: .

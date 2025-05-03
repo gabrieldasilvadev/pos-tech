@@ -1,4 +1,4 @@
-package br.com.postech.soat.adapters.in;
+package br.com.postech.soat.core.adapters.in;
 
 import org.springframework.boot.actuate.health.CompositeHealth;
 import org.springframework.boot.actuate.health.HealthEndpoint;
