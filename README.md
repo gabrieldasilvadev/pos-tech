@@ -28,13 +28,11 @@ sdk install java 21-zulu
 java --version
 ```
 
-##### Crie um arquivo `.env` a partir do arquivo de exemplo em `pos-tech/backend/soat/contrib/env.example`
+##### Para iniciar o app execute:
 
 ```sh
-cp pos-tech/backend/soat/contrib/env.example pos-tech/backend/soat/.env
+mvn spring-boot:run
 ```
-
-Feito isso, altere as envs conforme o seu ambiente.
 
 ##### Executar os testes unitários
 
@@ -61,7 +59,7 @@ http://localhost:8080/api/health
 ```sh
 export DB_URL=jdbc:postgresql://soat-postgres:5432/soat
 export DB_USER=<DB_USER>
-export DB_PASS=<DB_PASS>
+export DB_PASSWORD=<DB_PASSWORD>
 ```
 
 ##### Executar o docker-compose
