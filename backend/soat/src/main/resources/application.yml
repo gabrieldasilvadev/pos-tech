@@ -10,7 +10,7 @@ spring:
     password: ${DB_PASSWORD:123456}
     driver-class-name: org.postgresql.Driver
   jpa:
-    show-sql: ${DB_USER:true}
+    show-sql: ${DB_SHOW_SQL:true}
     properties:
       hibernate:
         format_sql: true
