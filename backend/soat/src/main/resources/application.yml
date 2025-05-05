@@ -1,3 +1,6 @@
+server:
+  servlet:
+    context-path: /api
 spring:
   application:
     name: soat
@@ -16,8 +19,8 @@ spring:
         format_sql: true
 springdoc:
   swagger-ui:
-    path: /api/docs
-'#management':
+    path: /docs
+management:
   endpoints:
     web:
-      base-path: /api/
+      base-path: /
