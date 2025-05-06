@@ -12,22 +12,26 @@ import org.joda.time.Instant;
 @Table(name = "event_store")
 public class EventEntity {
   @Id
+  @Column(name = "id", nullable = false)
   private UUID eventId;
 
-  @Column(nullable = false)
+  @Column(name = "aggregate_id", nullable = false)
   private String aggregateId;
 
-  @Column(nullable = false)
+  @Column(name = "event_type", nullable = false)
   private String eventType;
 
-  @Column(columnDefinition = "TEXT", nullable = false)
+  @Column(name = "payload", columnDefinition = "TEXT", nullable = false)
   private String payload;
 
-  @Column(nullable = false)
+  @Column(name = "occurred_on", nullable = false)
   private Instant occurredOn;
 
   @Column(name = "version", nullable = false)
   private int version;
+
+  @Column(name = "metadata", columnDefinition = "JSONB")
+  private String metadata;
 
   protected EventEntity() {
   }
