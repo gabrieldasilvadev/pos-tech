@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 @SuppressWarnings("rawtypes")
 @Repository
-public class JpaEventStore implements EventStore {
+public class EventStoreJpa implements EventStore {
 
   @PersistenceContext
   private EntityManager em;
