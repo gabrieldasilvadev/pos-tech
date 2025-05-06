@@ -17,8 +17,8 @@ CREATE TABLE transaction (
     order_id UUID NOT NULL REFERENCES "order"(id) ON DELETE CASCADE,
     qr_code TEXT NOT NULL,
     value NUMERIC(10, 2) NOT NULL CHECK (value > 0),
-    status transaction_status NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
-    processed_at TIMESTAMP WITH TIME ZONE,
-    updated_at TIMESTAMP WITH TIME ZONE
+    status transaction_status NOT NULL DEFAULT 'PENDING',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    processed_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ
 );

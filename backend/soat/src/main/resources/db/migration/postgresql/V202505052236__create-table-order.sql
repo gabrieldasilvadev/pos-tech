@@ -5,7 +5,8 @@ CREATE TABLE "order" (
     total_price NUMERIC(10, 2) NOT NULL CHECK (total_price > 0),
     discount NUMERIC(10, 2) DEFAULT 0 CHECK (discount >= 0),
     observation VARCHAR(255),
-    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ
 ) PARTITION BY RANGE (created_at);
 
 -- create order_item table
@@ -18,5 +19,6 @@ CREATE TABLE order_item (
     unit_price NUMERIC(10, 2) NOT NULL CHECK (unit_price > 0),
     discount NUMERIC(10, 2) DEFAULT 0 CHECK (discount >= 0),
     observation VARCHAR(255),
-    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ
 );
