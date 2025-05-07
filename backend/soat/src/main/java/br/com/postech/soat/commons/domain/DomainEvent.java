@@ -1,8 +1,8 @@
 package br.com.postech.soat.commons.domain;
 
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
-import org.joda.time.Instant;
 
 public abstract class DomainEvent {
   private final UUID eventId;
