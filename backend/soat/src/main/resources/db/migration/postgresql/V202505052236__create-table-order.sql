@@ -11,7 +11,7 @@ CREATE TABLE "order" (
 
 -- create order_item table
 CREATE TABLE order_item (
-    id UUID PRIMARY KEY DEFAULT en_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     order_id UUID NOT NULL REFERENCES "order"(id) ON DELETE CASCADE,
     product_id UUID NOT NULL REFERENCES product(id),
     product_name VARCHAR(255) NOT NULL,  -- Denormalized for historical accuracy
