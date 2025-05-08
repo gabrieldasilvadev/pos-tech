@@ -7,7 +7,7 @@ CREATE TABLE "order" (
     observation VARCHAR(255),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ
-) PARTITION BY RANGE (created_at);
+);
 
 -- create order_item table
 CREATE TABLE order_item (
