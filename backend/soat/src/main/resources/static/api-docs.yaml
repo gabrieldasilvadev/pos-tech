@@ -324,7 +324,7 @@ components:
   schemas:
     Customer:
       type: object
-      title: Client
+      title: Customer
       description: Modelo de cliente no banco de dados
       properties:
         id:
