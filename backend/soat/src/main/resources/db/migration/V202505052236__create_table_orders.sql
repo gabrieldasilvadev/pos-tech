@@ -1,23 +1,23 @@
 -- create order table
-CREATE TABLE "order" (
+CREATE TABLE orders (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    customer_id UUID NOT NULL REFERENCES customer(id),
-    total_price NUMERIC(10, 2) NOT NULL CHECK (total_price > 0),
-    discount NUMERIC(10, 2) DEFAULT 0 CHECK (discount >= 0),
+    customer_id UUID NOT NULL,
+    total_price NUMERIC(18, 4) NOT NULL CHECK (total_price > 0),
+    discount_amount NUMERIC(18, 4) DEFAULT 0 CHECK (discount_amount >= 0),
     observation VARCHAR(255),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ
 );
 
 -- create order_item table
-CREATE TABLE order_item (
+CREATE TABLE order_items (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    order_id UUID NOT NULL REFERENCES "order"(id) ON DELETE CASCADE,
-    product_id UUID NOT NULL REFERENCES product(id),
+    order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,  -- foreign key constraint won't interfere on microservices
+    product_id UUID NOT NULL,
     product_name VARCHAR(255) NOT NULL,  -- Denormalized for historical accuracy
     product_quantity INTEGER NOT NULL CHECK (product_quantity > 0),
-    unit_price NUMERIC(10, 2) NOT NULL CHECK (unit_price > 0),
-    discount NUMERIC(10, 2) DEFAULT 0 CHECK (discount >= 0),
+    unit_price NUMERIC(18, 4) NOT NULL CHECK (unit_price > 0),
+    discount_amount NUMERIC(18, 4) DEFAULT 0 CHECK (discount_amount >= 0),
     observation VARCHAR(255),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ
