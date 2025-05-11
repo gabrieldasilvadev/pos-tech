@@ -36,10 +36,21 @@ public class Product {
         this.category = category;
     }
 
+    public Product(
+        UUID id,
+        String sku,
+        String name,
+        BigDecimal price,
+        String description,
+        String image,
+        Category category
+    ) {
+        this(id, sku, true, name, price, description, image, category);
+    }
+
     public UUID getId() {
         return id;
     }
-
     public void setId(UUID id) {
         this.id = id;
     }
@@ -47,7 +58,6 @@ public class Product {
     public String getSku() {
         return sku;
     }
-
     public void setSku(String sku) {
         this.sku = sku;
     }
@@ -55,7 +65,6 @@ public class Product {
     public Boolean getActive() {
         return active;
     }
-
     public void setActive(Boolean active) {
         this.active = active;
     }
@@ -63,7 +72,6 @@ public class Product {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -71,7 +79,6 @@ public class Product {
     public BigDecimal getPrice() {
         return price;
     }
-
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
@@ -79,7 +86,6 @@ public class Product {
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
@@ -87,7 +93,6 @@ public class Product {
     public String getImage() {
         return image;
     }
-
     public void setImage(String image) {
         this.image = image;
     }
@@ -95,7 +100,6 @@ public class Product {
     public Category getCategory() {
         return category;
     }
-
     public void setCategory(Category category) {
         this.category = category;
     }

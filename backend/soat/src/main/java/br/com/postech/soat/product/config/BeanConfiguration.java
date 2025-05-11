@@ -1,8 +1,8 @@
 package br.com.postech.soat.product.config;
 
-import br.com.postech.soat.product.core.ports.in.CreateProductUseCase;
-import br.com.postech.soat.product.core.ports.out.ProductRepository;
-import br.com.postech.soat.product.core.usecase.CreateProductUseCaseImpl;
+import br.com.postech.soat.product.core.ports.in.IProductUseCase;
+import br.com.postech.soat.product.core.ports.out.IProductRepository;
+import br.com.postech.soat.product.core.usecase.ProductUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class BeanConfiguration {
 
     @Bean
-    public CreateProductUseCase createProductUseCase (ProductRepository repository) {
-        return new CreateProductUseCaseImpl(repository);
+    public IProductUseCase createProductUseCase (IProductRepository repository) {
+        return new ProductUseCase(repository);
     }
 }
