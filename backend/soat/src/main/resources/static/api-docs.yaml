@@ -1,0 +1,379 @@
+openapi: 3.0.3
+info:
+  version: '1.0'
+  title: PosTech - SOAT
+  description: API para gerenciamento de clientes e pedidos no contexto da disciplina de Soluções de Arquitetura de Software.
+  contact:
+    email: hahmann96@gmail.com
+    name: Philipp Hahmann
+    url: 'https://github.com/philipphahmann'
+  license:
+    url: 'https://opensource.org/licenses/MIT'
+    name: MIT License
+servers:
+  - url: 'http://localhost:8080'
+    description: Localhost
+paths:
+  /customers:
+    get:
+      tags:
+        - Customer
+      summary: Buscar clientes (todos ou por CPF)
+      description: Busca todos os clientes cadastrados ou realiza filtro por CPF
+      operationId: getClients
+      parameters:
+        - $ref: '#/components/parameters/CpfParam'
+      responses:
+        '200':
+          description: Cliente(s) encontrado(s)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+              examples:
+                ExemploClientePorCPF:
+                  value:
+                    - id: 01fc4570-8b23-11ed-a1eb-0242ac120002
+                      cpf: '12345678900'
+                      name: Maria Oliveira
+                      email: maria@example.com
+                ExemploListaClientes:
+                  value:
+                    - id: 01fc4570-8b23-11ed-a1eb-0242ac120002
+                      cpf: '12345678900'
+                      name: Maria Oliveira
+                      email: maria@example.com
+                    - id: 01fc4570-8b23-11ed-a1eb-0242ac120003
+                      cpf: '12345678901'
+                      name: Joe Doe
+                      email: joe@doe.com
+        '204':
+          description: Nenhum cliente retornado
+        '400':
+          description: Requisição inválida. Verique os dados enviados.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Erro interno no servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      servers:
+        - url: 'http://localhost:8080'
+          description: Localhost
+    post:
+      tags:
+        - Customer
+      summary: Criar cliente
+      description: Cria um cliente
+      operationId: postClients
+      requestBody:
+        $ref: '#/components/requestBodies/ClientRequest'
+      responses:
+        '201':
+          description: Cliente cadastrado com sucesso
+        '400':
+          description: Requisição inválida. Verifique os dados enviados.
+        '409':
+          description: Duplicidade
+        '500':
+          description: Erro interno no servidor
+      servers:
+        - url: 'http://localhost:8080'
+          description: Localhost
+  /products:
+    get:
+      tags:
+        - Product
+      summary: 'Buscar produtos (todos, por ID ou por categoria)'
+      description: Retorna todos os produtos cadastrados ou realiza filtros por ID ou categoria
+      operationId: getProduct
+      parameters:
+        - $ref: '#/components/parameters/ProductIdParam'
+        - $ref: '#/components/parameters/CategoryParam'
+      responses:
+        '200':
+          description: OK
+        '204':
+          description: Nenhum produto encontrado
+        '400':
+          description: Requisição inválida
+        '500':
+          description: Erro interno ao buscar produtos
+      servers:
+        - url: 'http://localhost:8080'
+          description: Localhost
+    post:
+      tags:
+        - Product
+      summary: Criar produto
+      description: 'Cria um novo produto no catálogo, exigindo dados como nome, SKU, preço e categoria.'
+      operationId: post-Produto
+      requestBody:
+        $ref: '#/components/requestBodies/ProductCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  message:
+                    type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+      servers:
+        - url: 'http://localhost:8080'
+          description: Localhost
+    put:
+      tags:
+        - Product
+      summary: Atualizar produto
+      description: Atualiza um produto existente com base no identificador e nos novos dados enviados.
+      operationId: put-Produto
+      requestBody:
+        $ref: '#/components/requestBodies/ProductUpdateRequest'
+      responses:
+        '200':
+          description: Produto atualizado com sucesso.
+        '400':
+          description: Dados inválidos. Verifique os campos obrigatórios e o formato enviado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Recurso não encontrado. Verifique o identificador ou o endpoint.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Erro interno no servidor. Tente novamente mais tarde ou contate o suporte.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      servers:
+        - url: 'http://localhost:8080'
+          description: Localhost
+  '/products/{productId}':
+    delete:
+      tags:
+        - Product
+      summary: Inativar produto
+      operationId: delete-products-productId
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      servers:
+        - url: 'http://localhost:8080'
+          description: Localhost
+  /orders:
+    get:
+      tags:
+        - Order
+      summary: Buscar pedido
+      operationId: get-orders
+      responses:
+        '200':
+          description: Lista de pedidos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+      servers:
+        - url: 'http://localhost:8080'
+          description: Localhost
+    post:
+      tags:
+        - Order
+      summary: Criar pedido
+      operationId: post-orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Pedido criado com sucesso
+      servers:
+        - url: 'http://localhost:8080'
+          description: Localhost
+tags:
+  - name: Customer
+    description: Operações relacionadas a clientes
+  - name: Product
+    description: Operações relacionadas a produtos
+  - name: Order
+    description: Operações relacionadas aos pedidos
+components:
+  parameters:
+    CpfParam:
+      name: cpf
+      in: query
+      description: CPF do cliente no formato apenas números
+      schema:
+        type: string
+        pattern: '^\d{11}$'
+    CategoryParam:
+      name: category
+      in: query
+      description: Enum da categoria
+      required: false
+      schema:
+        type: string
+    ProductIdParam:
+      name: ProductIdParam
+      in: query
+      description: Id do produto
+      required: false
+      schema:
+        type: string
+  requestBodies:
+    ClientRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              cpf:
+                type: string
+                minLength: 11
+                maxLength: 11
+                example: '12345678901'
+              name:
+                type: string
+              email:
+                type: string
+                format: email
+            required:
+              - cpf
+              - name
+              - email
+    ProductCreateRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              sku:
+                type: string
+              name:
+                type: string
+              price:
+                type: number
+              description:
+                type: string
+              image:
+                type: string
+              category:
+                $ref: '#/components/schemas/Category'
+            required:
+              - sku
+              - name
+              - price
+              - description
+              - image
+              - category
+    ProductUpdateRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              price:
+                type: number
+              description:
+                type: string
+              image:
+                type: string
+              category:
+                $ref: '#/components/schemas/Category'
+  schemas:
+    Customer:
+      type: object
+      title: Client
+      description: Modelo de cliente no banco de dados
+      properties:
+        id:
+          type: string
+          format: uuid
+        cpf:
+          type: string
+          pattern: '^\d{11}$'
+          minLength: 11
+          maxLength: 11
+          example: '12345678901'
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+      required:
+        - id
+        - cpf
+        - name
+        - email
+      example:
+        id: 123e4567-e89b-12d3-a456-426614174000
+        cpf: '12345678901'
+        name: John Doe
+        email: john@doe.com
+    ErrorResponse:
+      type: object
+      title: ErrorResponse
+      description: Response de erro
+      properties:
+        status:
+          type: integer
+        message:
+          type: string
+        error:
+          type: array
+          items:
+            type: string
+      example:
+        status: 400
+        message: Requisição inválida
+        error:
+          - Campo obrigatório 'email' não informado
+    Category:
+      type: string
+      enum:
+        - SNACK
+        - DRINK
+        - DESSERT
+        - SIDE_DISH
+      title: Category
