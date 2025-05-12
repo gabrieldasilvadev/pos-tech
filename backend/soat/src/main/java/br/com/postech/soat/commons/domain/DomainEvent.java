@@ -1,16 +1,17 @@
 package br.com.postech.soat.commons.domain;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
-public abstract class DomainEvent {
+public abstract class DomainEvent implements Serializable {
   private final UUID eventId;
-  private final String aggregateId;
+  private final Identifier<?> aggregateId;
   private final Instant occurredOn;
   private final int version;
 
-  protected DomainEvent(UUID eventId, String aggregateId) {
+  protected DomainEvent(UUID eventId, Identifier<?> aggregateId) {
     this.eventId = eventId;
     this.aggregateId = Objects.requireNonNull(aggregateId);
     this.occurredOn = Instant.now();
@@ -21,7 +22,7 @@ public abstract class DomainEvent {
     return eventId;
   }
 
-  public String getAggregateId() {
+  public Identifier<?> getAggregateId() {
     return aggregateId;
   }
 

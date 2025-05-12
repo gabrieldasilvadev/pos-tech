@@ -15,8 +15,8 @@ public class EventEntity {
   @Column(name = "id", nullable = false)
   private UUID eventId;
 
-  @Column(name = "aggregate_id", nullable = false)
-  private String aggregateId;
+  @Column(name = "aggregate_id", nullable = false, columnDefinition = "UUID")
+  private UUID aggregateId;
 
   @Column(name = "event_type", nullable = false)
   private String eventType;
@@ -38,7 +38,7 @@ public class EventEntity {
 
   public EventEntity(DomainEvent event) {
     this.eventId = event.getEventId();
-    this.aggregateId = event.getAggregateId();
+    this.aggregateId = event.getAggregateId().getId();
     this.eventType = event.getEventType();
     this.payload = event.toPayload();
     this.occurredOn = event.getOccurredOn();
@@ -49,7 +49,7 @@ public class EventEntity {
     return eventId;
   }
 
-  public String getAggregateId() {
+  public UUID getAggregateId() {
     return aggregateId;
   }
 
