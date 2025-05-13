@@ -7,8 +7,8 @@ services:
     image: soat:latest
     environment:
       DB_URL: jdbc:postgresql://soat-postgres:5432/soat
-      DB_USER: ${DB_USER:-postgres}
-      DB_PASSWORD: ${DB_PASSWORD:-123456}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
     depends_on:
       - soat-postgres
     networks:
