@@ -26,7 +26,6 @@ import java.util.UUID;
 public class ProductEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @Column(nullable = false)
@@ -50,7 +49,4 @@ public class ProductEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Category category;
-
-    @Version
-    private Long version;
 }
