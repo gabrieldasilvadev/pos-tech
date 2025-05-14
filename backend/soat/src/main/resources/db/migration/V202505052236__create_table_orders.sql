@@ -1,6 +1,6 @@
 -- create order table
 CREATE TABLE orders (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY,
     customer_id UUID NOT NULL,
     total_price NUMERIC(18, 4) NOT NULL CHECK (total_price > 0),
     discount_amount NUMERIC(18, 4) DEFAULT 0 CHECK (discount_amount >= 0),
@@ -11,8 +11,8 @@ CREATE TABLE orders (
 
 -- create order_item table
 CREATE TABLE order_items (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,  -- foreign key constraint won't interfere on microservices
+    id UUID PRIMARY KEY,
+    order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
     product_id UUID NOT NULL,
     product_name VARCHAR(255) NOT NULL,  -- Denormalized for historical accuracy
     product_quantity INTEGER NOT NULL CHECK (product_quantity > 0),

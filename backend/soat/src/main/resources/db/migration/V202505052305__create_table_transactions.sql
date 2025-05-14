@@ -12,7 +12,7 @@ CREATE TYPE transaction_status AS ENUM (
 
 -- create transaction table
 CREATE TABLE transactions (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY,
     method payment_method NOT NULL,
     order_id UUID NOT NULL,
     qr_code TEXT NOT NULL,
