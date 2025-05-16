@@ -1,6 +1,6 @@
 package br.com.postech.soat.commons.infrastructure.exception.handler;
 
-import br.com.postech.soat.commons.infrastructure.exception.DomainException;
+import br.com.postech.soat.commons.infrastructure.exception.BaseException;
 import br.com.postech.soat.commons.infrastructure.exception.NotFoundException;
 import br.com.postech.soat.openapi.model.ErrorResponse;
 import java.util.Collections;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class DomainExceptionHandler {
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException e) {
@@ -22,8 +22,8 @@ public class DomainExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
-    @ExceptionHandler(DomainException.class)
-    public ResponseEntity<ErrorResponse> handleDomainException(DomainException e) {
+    @ExceptionHandler(BaseException.class)
+    public ResponseEntity<ErrorResponse> handleDomainException(BaseException e) {
         ErrorResponse errorResponse = new ErrorResponse()
             .status(e.getStatus())
             .message("Requisição inválida")

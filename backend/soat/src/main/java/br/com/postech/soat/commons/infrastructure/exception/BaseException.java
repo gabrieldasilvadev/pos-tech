@@ -1,10 +1,10 @@
 package br.com.postech.soat.commons.infrastructure.exception;
 
-public abstract class DomainException extends RuntimeException {
+public abstract class BaseException extends RuntimeException {
 
     private int status = 400;
 
-    public DomainException(String message) {
+    public BaseException(String message) {
         super(message);
     }
 
