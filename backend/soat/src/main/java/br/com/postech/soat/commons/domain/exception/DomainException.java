@@ -1,4 +1,4 @@
-package br.com.postech.soat.commons.domain.exeption;
+package br.com.postech.soat.commons.domain.exception;
 
 public abstract class DomainException extends RuntimeException {
 

@@ -1,6 +1,6 @@
 package br.com.postech.soat.customer.core.domain.valueobject;
 
-import br.com.postech.soat.customer.core.domain.exeption.InvalidNameException;
+import br.com.postech.soat.customer.core.domain.exception.InvalidNameException;
 
 public record Name(String value) {
     public Name {

@@ -1,6 +1,6 @@
-package br.com.postech.soat.customer.adapters.out.persistente;
+package br.com.postech.soat.customer.adapters.out.persistence;
 
-import br.com.postech.soat.commons.domain.exeption.NotFoundException;
+import br.com.postech.soat.commons.domain.exception.NotFoundException;
 import br.com.postech.soat.customer.core.domain.model.Customer;
 import br.com.postech.soat.customer.core.domain.valueobject.CPF;
 import br.com.postech.soat.customer.core.ports.out.CustomerRepository;

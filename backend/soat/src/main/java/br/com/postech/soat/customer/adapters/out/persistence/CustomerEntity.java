@@ -1,4 +1,4 @@
-package br.com.postech.soat.customer.adapters.out.persistente;
+package br.com.postech.soat.customer.adapters.out.persistence;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

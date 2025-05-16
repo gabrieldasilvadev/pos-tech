@@ -1,5 +1,7 @@
-package br.com.postech.soat.commons.domain.exeption;
+package br.com.postech.soat.commons.domain.exception.handler;
 
+import br.com.postech.soat.commons.domain.exception.DomainException;
+import br.com.postech.soat.commons.domain.exception.NotFoundException;
 import br.com.postech.soat.openapi.model.ErrorResponse;
 import java.util.Collections;
 import org.springframework.http.HttpStatus;

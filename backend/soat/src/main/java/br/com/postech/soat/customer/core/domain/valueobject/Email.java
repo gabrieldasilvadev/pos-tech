@@ -1,6 +1,6 @@
 package br.com.postech.soat.customer.core.domain.valueobject;
 
-import br.com.postech.soat.customer.core.domain.exeption.InvalidEmailException;
+import br.com.postech.soat.customer.core.domain.exception.InvalidEmailException;
 import java.util.regex.Pattern;
 
 public record Email(String value) {

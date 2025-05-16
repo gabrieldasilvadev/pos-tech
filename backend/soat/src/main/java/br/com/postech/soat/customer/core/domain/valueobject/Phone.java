@@ -1,6 +1,6 @@
 package br.com.postech.soat.customer.core.domain.valueobject;
 
-import br.com.postech.soat.customer.core.domain.exeption.InvalidPhoneException;
+import br.com.postech.soat.customer.core.domain.exception.InvalidPhoneException;
 import java.util.regex.Pattern;
 
 public record Phone(String value) {

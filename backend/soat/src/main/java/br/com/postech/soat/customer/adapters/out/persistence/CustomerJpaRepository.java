@@ -1,10 +1,8 @@
-package br.com.postech.soat.customer.adapters.out.persistente;
+package br.com.postech.soat.customer.adapters.out.persistence;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository

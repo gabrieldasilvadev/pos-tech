@@ -1,6 +1,6 @@
 package br.com.postech.soat.customer.core.domain.valueobject;
 
-import br.com.postech.soat.customer.core.domain.exeption.InvalidCPFException;
+import br.com.postech.soat.customer.core.domain.exception.InvalidCPFException;
 import java.util.regex.Pattern;
 
 public record CPF(String value) {

@@ -1,6 +1,6 @@
 package br.com.postech.soat.customer.core.application;
 
-import br.com.postech.soat.customer.core.domain.exeption.CustomerAlreadyExistsException;
+import br.com.postech.soat.customer.core.domain.exception.CustomerAlreadyExistsException;
 import br.com.postech.soat.customer.core.domain.model.Customer;
 import br.com.postech.soat.customer.core.domain.valueobject.CPF;
 import br.com.postech.soat.customer.core.domain.valueobject.CustomerId;
