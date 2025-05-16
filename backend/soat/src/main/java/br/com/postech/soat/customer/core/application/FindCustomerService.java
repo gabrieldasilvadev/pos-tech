@@ -1,10 +1,9 @@
 package br.com.postech.soat.customer.core.application;
 
+import br.com.postech.soat.customer.core.domain.model.Customer;
 import br.com.postech.soat.customer.core.domain.valueobject.CPF;
 import br.com.postech.soat.customer.core.ports.in.FindCustomerUseCase;
 import br.com.postech.soat.customer.core.ports.out.CustomerRepository;
-import br.com.postech.soat.openapi.model.Customer;
-import java.util.List;
 
 public class FindCustomerService implements FindCustomerUseCase {
 
@@ -15,7 +14,7 @@ public class FindCustomerService implements FindCustomerUseCase {
     }
 
     @Override
-    public List<Customer> find(CPF cpf) {
-        return customerRepository.find(cpf);
+    public Customer findByCpf(CPF cpf) {
+        return customerRepository.findByCpf(cpf);
     }
 }

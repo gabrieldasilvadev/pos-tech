@@ -1,4 +1,6 @@
 openapi: 3.0.3
+x-stoplight:
+  id: ocgvai3peu18l
 info:
   version: '1.0'
   title: PosTech - SOAT
@@ -16,76 +18,49 @@ servers:
 paths:
   /customers:
     get:
-      tags:
-        - Customer
-      summary: Buscar clientes (todos ou por CPF)
-      description: Busca todos os clientes cadastrados ou realiza filtro por CPF
-      operationId: getClients
+      summary: Buscar cliente por CPF
+      description: Busca cliente por CPF
+      operationId: findCustomer
       parameters:
         - $ref: '#/components/parameters/CpfParam'
       responses:
         '200':
-          description: Cliente(s) encontrado(s)
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Customer'
-              examples:
-                ExemploClientePorCPF:
-                  value:
-                    - id: 01fc4570-8b23-11ed-a1eb-0242ac120002
-                      cpf: '12345678900'
-                      name: Maria Oliveira
-                      email: maria@example.com
-                ExemploListaClientes:
-                  value:
-                    - id: 01fc4570-8b23-11ed-a1eb-0242ac120002
-                      cpf: '12345678900'
-                      name: Maria Oliveira
-                      email: maria@example.com
-                    - id: 01fc4570-8b23-11ed-a1eb-0242ac120003
-                      cpf: '12345678901'
-                      name: Joe Doe
-                      email: joe@doe.com
-        '204':
-          description: Nenhum cliente retornado
+          $ref: '#/components/responses/CustomerResponse'
         '400':
-          description: Requisição inválida. Verique os dados enviados.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
         '500':
-          description: Erro interno no servidor
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/ErrorResponse'
       servers:
         - url: 'http://localhost:8080'
           description: Localhost
+      x-stoplight:
+        id: psy78iujnxyij
+      tags:
+        - Customer
     post:
       tags:
         - Customer
       summary: Criar cliente
       description: Cria um cliente
-      operationId: postClients
+      operationId: createCustomer
       requestBody:
-        $ref: '#/components/requestBodies/ClientRequest'
+        $ref: '#/components/requestBodies/CustomerRequest'
       responses:
         '201':
-          description: Cliente cadastrado com sucesso
+          $ref: '#/components/responses/CustomerResponse'
         '400':
-          description: Requisição inválida. Verifique os dados enviados.
+          $ref: '#/components/responses/ErrorResponse'
         '409':
-          description: Duplicidade
+          $ref: '#/components/responses/ErrorResponse'
         '500':
-          description: Erro interno no servidor
+          $ref: '#/components/responses/ErrorResponse'
       servers:
         - url: 'http://localhost:8080'
           description: Localhost
+      x-stoplight:
+        id: ffbuf882ozr9d
   /products:
     get:
       tags:
@@ -108,6 +83,8 @@ paths:
       servers:
         - url: 'http://localhost:8080'
           description: Localhost
+      x-stoplight:
+        id: jjfyovmrpr58z
     post:
       tags:
         - Product
@@ -139,6 +116,8 @@ paths:
       servers:
         - url: 'http://localhost:8080'
           description: Localhost
+      x-stoplight:
+        id: tw78fenqgrcpb
     put:
       tags:
         - Product
@@ -171,6 +150,8 @@ paths:
       servers:
         - url: 'http://localhost:8080'
           description: Localhost
+      x-stoplight:
+        id: ji4uzpxq02rwj
   '/products/{productId}':
     delete:
       tags:
@@ -195,6 +176,8 @@ paths:
       servers:
         - url: 'http://localhost:8080'
           description: Localhost
+      x-stoplight:
+        id: v15bjj4hw3qa4
   /orders:
     get:
       tags:
@@ -213,6 +196,8 @@ paths:
       servers:
         - url: 'http://localhost:8080'
           description: Localhost
+      x-stoplight:
+        id: s5ln7589z0tdp
     post:
       tags:
         - Order
@@ -229,6 +214,8 @@ paths:
       servers:
         - url: 'http://localhost:8080'
           description: Localhost
+      x-stoplight:
+        id: wlds5142eksro
 tags:
   - name: Customer
     description: Operações relacionadas a clientes
@@ -260,26 +247,42 @@ components:
       schema:
         type: string
   requestBodies:
-    ClientRequest:
+    CustomerRequest:
       content:
         application/json:
           schema:
             type: object
-            properties:
-              cpf:
-                type: string
-                minLength: 11
-                maxLength: 11
-                example: '12345678901'
-              name:
-                type: string
-              email:
-                type: string
-                format: email
             required:
               - cpf
               - name
               - email
+            properties:
+              cpf:
+                example: '53731833697'
+                type: string
+                minLength: 11
+                maxLength: 11
+                pattern: '^\d{11}$'
+              name:
+                type: string
+                example: João Cardoso
+                minLength: 3
+                maxLength: 255
+              email:
+                type: string
+                format: email
+                example: joao.cardoso@email.com
+                pattern: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+                maxLength: 255
+              phone:
+                type: string
+                x-stoplight:
+                  id: dgv8qzzhfpe6s
+                minLength: 10
+                maxLength: 111
+                pattern: '^(?:[1-9]{2})(?:[9]{1})?(?:[0-9]{8})$'
+                example: '1134567890'
+      description: ''
     ProductCreateRequest:
       content:
         application/json:
@@ -322,35 +325,6 @@ components:
               category:
                 $ref: '#/components/schemas/Category'
   schemas:
-    Customer:
-      type: object
-      title: Customer
-      description: Modelo de cliente no banco de dados
-      properties:
-        id:
-          type: string
-          format: uuid
-        cpf:
-          type: string
-          pattern: '^\d{11}$'
-          minLength: 11
-          maxLength: 11
-          example: '12345678901'
-        name:
-          type: string
-        email:
-          type: string
-          format: email
-      required:
-        - id
-        - cpf
-        - name
-        - email
-      example:
-        id: 123e4567-e89b-12d3-a456-426614174000
-        cpf: '12345678901'
-        name: John Doe
-        email: john@doe.com
     ErrorResponse:
       type: object
       title: ErrorResponse
@@ -369,6 +343,8 @@ components:
         message: Requisição inválida
         error:
           - Campo obrigatório 'email' não informado
+      x-stoplight:
+        id: chjz5hwn180qo
     Category:
       type: string
       enum:
@@ -377,3 +353,62 @@ components:
         - DESSERT
         - SIDE_DISH
       title: Category
+      x-stoplight:
+        id: k293svkgi1tmc
+  responses:
+    CustomerResponse:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+              email:
+                type: string
+              cpf:
+                type: string
+              phone:
+                type: string
+            x-examples:
+              Example 1:
+                id: 77a73531-d3ab-443e-b46a-6ff7ee5d5d29
+                name: Chaves
+                email: chaves@email.com
+                cpf: '33400276170'
+                phone: '11987654321'
+          examples:
+            Example 1:
+              value:
+                id: 77a73531-d3ab-443e-b46a-6ff7ee5d5d29
+                name: Chaves
+                email: chaves@email.com
+                cpf: '33400276170'
+                phone: ''
+    ErrorResponse:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+              message:
+                type: string
+              error:
+                type: array
+                items:
+                  type: string
+            x-examples:
+              Example 1:
+                status: 400
+                message: Error message
+                error:
+                  - error1
+                  - error2
+                  - error3
+          examples: {}
