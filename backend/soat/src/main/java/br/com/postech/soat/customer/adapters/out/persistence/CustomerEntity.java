@@ -14,7 +14,7 @@ public class CustomerEntity {
     @Id
     private UUID id;
 
-    @Column(unique = true, nullable = false, length = 11)
+    @Column(unique = true, nullable = false, length = 11, name = "document_identifier")
     private String cpf;
 
     @Column(nullable = false)
