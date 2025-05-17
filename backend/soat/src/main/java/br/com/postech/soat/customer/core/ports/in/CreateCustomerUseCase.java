@@ -1,11 +1,10 @@
 package br.com.postech.soat.customer.core.ports.in;
 
 import br.com.postech.soat.customer.core.domain.model.Customer;
-import br.com.postech.soat.customer.core.domain.valueobject.CPF;
-import br.com.postech.soat.customer.core.domain.valueobject.Email;
-import br.com.postech.soat.customer.core.domain.valueobject.Name;
-import br.com.postech.soat.customer.core.domain.valueobject.Phone;
 
 public interface CreateCustomerUseCase {
-    Customer create(CPF cpf, Name name, Email email, Phone phone);
+    Customer create(CreateCustomerCommand command);
+
+    record CreateCustomerCommand(String name, String email, String cpf, String phone) {
+    }
 }

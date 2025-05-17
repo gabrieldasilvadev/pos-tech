@@ -1,9 +1,10 @@
 package br.com.postech.soat.customer.core.application;
 
+import br.com.postech.soat.commons.infrastructure.exception.NotFoundException;
 import br.com.postech.soat.customer.core.domain.model.Customer;
-import br.com.postech.soat.customer.core.domain.valueobject.CPF;
 import br.com.postech.soat.customer.core.ports.in.FindCustomerUseCase;
 import br.com.postech.soat.customer.core.ports.out.CustomerRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 public class FindCustomerService implements FindCustomerUseCase {
 
@@ -13,8 +14,10 @@ public class FindCustomerService implements FindCustomerUseCase {
         this.customerRepository = customerRepository;
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public Customer findByCpf(CPF cpf) {
-        return customerRepository.findByCpf(cpf);
+    public Customer findByCpf(FindCustomerQuery query) {
+        return customerRepository.findByCpf(query.cpf())
+            .orElseThrow(() -> new NotFoundException("Cliente não encontrado para o CPF: " + query.cpf()));
     }
 }

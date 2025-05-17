@@ -14,7 +14,7 @@ public record Email(String value) {
 
     private void validate(String value) {
         if (value == null || !EMAIL_PATTERN.matcher(value).matches()) {
-            throw new InvalidEmailException("Formato de email inválido");
+            throw new InvalidEmailException("Email inválido: " + value);
         }
     }
 }

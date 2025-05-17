@@ -6,14 +6,24 @@ import java.util.regex.Pattern;
 public record CPF(String value) {
 
     private static final Pattern CPF_PATTERN = Pattern.compile("^\\d{11}$");
+    
+    public CPF(String value) {
+        String normalizedValue = normalize(value);
+        validate(normalizedValue);
+        this.value = normalizedValue;
+    }
 
-    public CPF {
-        validate(value);
+    private String normalize(String value) {
+        if (value == null) {
+            return null;
+        }
+
+        return value.replaceAll("[^0-9]", "");
     }
 
     private void validate(String value) {
         if (value == null || !CPF_PATTERN.matcher(value).matches()) {
-            throw new InvalidCPFException("CPF deve conter exatamente 11 dígitos numéricos");
+            throw new InvalidCPFException("CPF inválido: " + value);
         }
     }
 }

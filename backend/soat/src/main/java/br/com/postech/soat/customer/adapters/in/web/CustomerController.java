@@ -1,12 +1,10 @@
 package br.com.postech.soat.customer.adapters.in.web;
 
 import br.com.postech.soat.customer.core.domain.model.Customer;
-import br.com.postech.soat.customer.core.domain.valueobject.CPF;
-import br.com.postech.soat.customer.core.domain.valueobject.Email;
-import br.com.postech.soat.customer.core.domain.valueobject.Name;
-import br.com.postech.soat.customer.core.domain.valueobject.Phone;
 import br.com.postech.soat.customer.core.ports.in.CreateCustomerUseCase;
+import br.com.postech.soat.customer.core.ports.in.CreateCustomerUseCase.CreateCustomerCommand;
 import br.com.postech.soat.customer.core.ports.in.FindCustomerUseCase;
+import br.com.postech.soat.customer.core.ports.in.FindCustomerUseCase.FindCustomerQuery;
 import br.com.postech.soat.openapi.api.CustomerApi;
 import br.com.postech.soat.openapi.model.CreateCustomerRequest;
 import br.com.postech.soat.openapi.model.FindCustomer200Response;
@@ -19,10 +17,14 @@ public class CustomerController implements CustomerApi {
 
     private final FindCustomerUseCase findCustomerUseCase;
     private final CreateCustomerUseCase createCustomerUseCase;
+    private final CustomerWebMapper customerWebMapper;
 
-    public CustomerController(FindCustomerUseCase findCustomerUseCase, CreateCustomerUseCase createCustomerUseCase) {
+    public CustomerController(FindCustomerUseCase findCustomerUseCase,
+                              CreateCustomerUseCase createCustomerUseCase,
+                              CustomerWebMapper customerWebMapper) {
         this.findCustomerUseCase = findCustomerUseCase;
         this.createCustomerUseCase = createCustomerUseCase;
+        this.customerWebMapper = customerWebMapper;
     }
 
     @Override
@@ -31,30 +33,18 @@ public class CustomerController implements CustomerApi {
             return ResponseEntity.badRequest().build();
         }
 
-        CPF cpf = new CPF(createCustomerRequest.getCpf());
-        Name name = new Name(createCustomerRequest.getName());
-        Email email = new Email(createCustomerRequest.getEmail());
-        Phone phone = new Phone(createCustomerRequest.getPhone());
+        CreateCustomerCommand command = customerWebMapper.toCommand(createCustomerRequest);
 
-        var customer = createCustomerUseCase.create(cpf, name, email, phone);
+        var customer = createCustomerUseCase.create(command);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(toFindCustomer200Response(customer));
+            .body(customerWebMapper.toResponse(customer));
     }
 
     @Override
     public ResponseEntity<FindCustomer200Response> findCustomer(String cpf) {
-        Customer customer = findCustomerUseCase.findByCpf(new CPF(cpf));
-        return ResponseEntity.ok(toFindCustomer200Response(customer));
-    }
-
-    private FindCustomer200Response toFindCustomer200Response(Customer customer) {
-        FindCustomer200Response response = new FindCustomer200Response();
-        response.setId(customer.getId().toString());
-        response.setCpf(customer.getCpf());
-        response.setName(customer.getName());
-        response.setEmail(customer.getEmail());
-        response.setPhone(customer.getPhone());
-        return response;
+        FindCustomerQuery query = new FindCustomerQuery(cpf);
+        Customer customer = findCustomerUseCase.findByCpf(query);
+        return ResponseEntity.ok(customerWebMapper.toResponse(customer));
     }
 }

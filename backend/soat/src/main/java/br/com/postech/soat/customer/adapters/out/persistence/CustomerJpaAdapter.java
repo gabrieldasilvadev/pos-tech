@@ -1,57 +1,32 @@
 package br.com.postech.soat.customer.adapters.out.persistence;
 
-import br.com.postech.soat.commons.infrastructure.exception.NotFoundException;
 import br.com.postech.soat.customer.core.domain.model.Customer;
-import br.com.postech.soat.customer.core.domain.valueobject.CPF;
 import br.com.postech.soat.customer.core.ports.out.CustomerRepository;
+import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class CustomerJpaAdapter implements CustomerRepository {
 
     private final CustomerJpaRepository customerJpaRepository;
+    private final CustomerMapper customerMapper;
 
-    public CustomerJpaAdapter(CustomerJpaRepository customerJpaRepository) {
+    public CustomerJpaAdapter(CustomerJpaRepository customerJpaRepository,
+                              CustomerMapper customerMapper) {
         this.customerJpaRepository = customerJpaRepository;
+        this.customerMapper = customerMapper;
     }
 
     @Override
     public Customer save(Customer customer) {
-        CustomerEntity entity = toEntity(customer);
+        CustomerEntity entity = customerMapper.toEntity(customer);
         CustomerEntity savedEntity = customerJpaRepository.save(entity);
-        return toDomain(savedEntity);
+        return customerMapper.toModel(savedEntity);
     }
 
     @Override
-    public Customer findByCpf(CPF cpf) {
-        var customer = customerJpaRepository.findByCpf(cpf.value())
-            .orElseThrow(() -> new NotFoundException("Cliente não encontrado para o CPF: " + cpf.value()));
-
-        return toDomain(customer);
-    }
-
-    @Override
-    public boolean existsByCpf(CPF cpf) {
-        return customerJpaRepository.existsByCpf(cpf.value());
-    }
-
-    private CustomerEntity toEntity(Customer customer) {
-        CustomerEntity entity = new CustomerEntity();
-        entity.setId(customer.getId());
-        entity.setCpf(customer.getCpf());
-        entity.setName(customer.getName());
-        entity.setEmail(customer.getEmail());
-        entity.setPhone(customer.getPhone());
-        return entity;
-    }
-
-    private Customer toDomain(CustomerEntity entity) {
-        Customer customer = new Customer();
-        customer.setId(entity.getId());
-        customer.setCpf(entity.getCpf());
-        customer.setName(entity.getName());
-        customer.setEmail(entity.getEmail());
-        customer.setPhone(entity.getPhone());
-        return customer;
+    public Optional<Customer> findByCpf(String cpf) {
+        var customerEntityOptional = customerJpaRepository.findByCpf(cpf);
+        return customerEntityOptional.map(customerMapper::toModel);
     }
 }

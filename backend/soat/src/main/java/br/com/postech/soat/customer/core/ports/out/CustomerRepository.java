@@ -1,11 +1,10 @@
 package br.com.postech.soat.customer.core.ports.out;
 
 import br.com.postech.soat.customer.core.domain.model.Customer;
-import br.com.postech.soat.customer.core.domain.valueobject.CPF;
+import java.util.Optional;
 
 public interface CustomerRepository {
 
     Customer save(Customer customer);
-    Customer findByCpf(CPF cpf);
-    boolean existsByCpf(CPF cpf);
+    Optional<Customer> findByCpf(String cpf);
 }
