@@ -16,7 +16,15 @@ spring:
     show-sql: ${DB_SHOW_SQL:true}
     properties:
       hibernate:
+        ddl-auto: update
         format_sql: true
+        transaction:
+          coordinator_class: jdbc
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    placeholder-replacement: false
 springdoc:
   swagger-ui:
     path: /docs
