@@ -333,6 +333,11 @@ components:
                 maxItems: 100
                 items:
                   $ref: '#/components/schemas/OrderItem'
+              discounts:
+                type: array
+                readOnly: true
+                items:
+                  $ref: '#/components/schemas/UUID'
               notes:
                 type: array
                 items:
