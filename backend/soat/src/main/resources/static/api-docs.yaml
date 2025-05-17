@@ -347,6 +347,20 @@ components:
             required:
               - CustomerId
               - items
+          examples:
+            Example 1:
+              value:
+                CustomerId: 241fae7b-0210-4d29-a928-90653c9a9a89
+                items:
+                  - name: string
+                    quantity: 2
+                    price: '1946.32'
+                    category: SNACK
+                    discount: 12.5
+                discounts:
+                  - 241fae7b-0210-4d29-a928-90653c9a9a89
+                notes:
+                  - Remover a salada
   responses:
     OrderCreatedResponse:
       description: Example response
