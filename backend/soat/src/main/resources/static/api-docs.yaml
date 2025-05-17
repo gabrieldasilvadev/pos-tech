@@ -213,7 +213,6 @@ paths:
       servers:
         - url: 'http://localhost:8080'
           description: Localhost
-      description: 'Este endpoint retorna uma lista de pedidos cadastrados. Pode ser utilizado para fins administrativos, acompanhamento de operações ou exibição em dashboards. Cada item da lista representa um pedido completo, contendo os itens solicitados, dados do cliente associado e outras informações relevantes do pedido.'
     post:
       tags:
         - Order
@@ -223,11 +222,10 @@ paths:
         $ref: '#/components/requestBodies/CreateOrderRequest'
       responses:
         '201':
-          description: Pedido criado com sucesso
+          $ref: '#/components/responses/OrderCreatedResponse'
       servers:
         - url: 'http://localhost:8080'
           description: Localhost
-      description: 'Este endpoint permite a criação de um novo pedido. O cliente deve ser previamente cadastrado e identificado pelo seu UUID. O corpo da requisição deve conter a lista de itens do pedido, com informações como nome, quantidade, preço, categoria e desconto (se houver). É possível adicionar observações personalizadas ao pedido, como instruções específicas para a preparação.'
 tags:
   - name: Customer
     description: Operações relacionadas a clientes
@@ -344,6 +342,73 @@ components:
             required:
               - CustomerId
               - items
+  responses:
+    OrderCreatedResponse:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              OrderId:
+                $ref: '#/components/schemas/UUID'
+              items:
+                type: array
+                readOnly: true
+                items:
+                  $ref: '#/components/schemas/OrderItem'
+              discounts:
+                type: array
+                readOnly: true
+                items:
+                  type: object
+                  properties:
+                    discountId:
+                      $ref: '#/components/schemas/UUID'
+                    type:
+                      $ref: '#/components/schemas/DiscountType'
+                    value:
+                      anyOf:
+                        - $ref: '#/components/schemas/Money'
+                        - $ref: '#/components/schemas/Percentage'
+                    amount:
+                      $ref: '#/components/schemas/Money'
+                    reason:
+                      type: string
+                  required:
+                    - discountId
+                    - type
+              discountAmountTotal:
+                $ref: '#/components/schemas/Money'
+              subtotal:
+                $ref: '#/components/schemas/Money'
+              total:
+                $ref: '#/components/schemas/Money'
+            required:
+              - OrderId
+              - items
+              - discounts
+              - discountAmountTotal
+              - subtotal
+              - total
+          examples:
+            Example 1:
+              value:
+                OrderId: 241fae7b-0210-4d29-a928-90653c9a9a89
+                items:
+                  - name: string
+                    quantity: 2
+                    price: '1946.32'
+                    category: SNACK
+                    discount: 12.5
+                subtotal: '1946.32'
+                discountAmount: '1946.32'
+                discounts:
+                  - discountId: 241fae7b-0210-4d29-a928-90653c9a9a89
+                    type: PERCENTAGE
+                    value: '1946.32'
+                    amount: '1946.32'
+                total: '1946.32'
   schemas:
     Customer:
       type: object
@@ -455,3 +520,10 @@ components:
       maximum: 100
       readOnly: true
       example: 12.5
+    DiscountType:
+      type: string
+      enum:
+        - PERCENTAGE
+        - FIXED
+      title: DiscountType
+      readOnly: true
