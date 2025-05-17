@@ -1,6 +1,6 @@
 package br.com.postech.soat.customer.core.domain.valueobject;
 
-import br.com.postech.soat.customer.core.domain.exception.InvalidCPFException;
+import br.com.postech.soat.customer.core.domain.exception.InvalidCpfException;
 import java.util.regex.Pattern;
 
 public record CPF(String value) {
@@ -23,7 +23,7 @@ public record CPF(String value) {
 
     private void validate(String value) {
         if (value == null || !CPF_PATTERN.matcher(value).matches()) {
-            throw new InvalidCPFException("CPF inválido: " + value);
+            throw new InvalidCpfException("CPF inválido: " + value);
         }
     }
 }
