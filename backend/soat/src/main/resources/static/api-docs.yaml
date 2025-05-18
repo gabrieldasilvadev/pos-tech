@@ -1,6 +1,4 @@
 openapi: 3.0.3
-x-stoplight:
-  id: xxzpv5uwl9o9v
 info:
   version: '1.0'
   title: PosTech - SOAT
@@ -68,8 +66,6 @@ paths:
       servers:
         - url: 'http://localhost:8080'
           description: Localhost
-      x-stoplight:
-        id: ccjlr75qr13cq
     post:
       tags:
         - Customer
@@ -90,8 +86,6 @@ paths:
       servers:
         - url: 'http://localhost:8080'
           description: Localhost
-      x-stoplight:
-        id: p7id4z4j5ye8j
   /products:
     get:
       tags:
@@ -114,8 +108,6 @@ paths:
       servers:
         - url: 'http://localhost:8080'
           description: Localhost
-      x-stoplight:
-        id: 6xy270zvtp90v
     post:
       tags:
         - Product
@@ -147,8 +139,6 @@ paths:
       servers:
         - url: 'http://localhost:8080'
           description: Localhost
-      x-stoplight:
-        id: oqx8ph4u9d8yi
     put:
       tags:
         - Product
@@ -181,8 +171,6 @@ paths:
       servers:
         - url: 'http://localhost:8080'
           description: Localhost
-      x-stoplight:
-        id: apvbapxro0wtz
   '/products/{productId}':
     delete:
       tags:
@@ -207,8 +195,6 @@ paths:
       servers:
         - url: 'http://localhost:8080'
           description: Localhost
-      x-stoplight:
-        id: cody3klc1zb7p
   /orders:
     get:
       tags:
@@ -221,12 +207,15 @@ paths:
       servers:
         - url: 'http://localhost:8080'
           description: Localhost
-      x-stoplight:
-        id: htirceird8ayu
     post:
       tags:
         - Order
       summary: Criar pedido
+      description: |-
+        Endpoint responsável por registrar um novo pedido realizado no totem.
+        Recebe uma lista de itens escolhidos pelo cliente, aplica validações de disponibilidade, calcula o subtotal, aplica descontos válidos.
+        Retorna o resumo completo do pedido contendo os itens, valores parciais, descontos aplicados e o valor total a ser pago.
+        O pedido permanece em estado pendente de pagamento até a confirmação via meio de pagamento associado.
       operationId: post-orders
       requestBody:
         $ref: '#/components/requestBodies/CreateOrderRequest'
@@ -236,13 +225,6 @@ paths:
       servers:
         - url: 'http://localhost:8080'
           description: Localhost
-      x-stoplight:
-        id: xzapur9q63zqo
-      description: |-
-        Endpoint responsável por registrar um novo pedido realizado no totem.
-        Recebe uma lista de itens escolhidos pelo cliente, aplica validações de disponibilidade, calcula o subtotal, aplica descontos válidos.
-        Retorna o resumo completo do pedido contendo os itens, valores parciais, descontos aplicados e o valor total a ser pago.
-        O pedido permanece em estado pendente de pagamento até a confirmação via meio de pagamento associado.
 tags:
   - name: Customer
     description: Operações relacionadas a clientes
@@ -336,41 +318,34 @@ components:
               category:
                 $ref: '#/components/schemas/Category'
     CreateOrderRequest:
+      description: 'Requisição para criação de um novo pedido contendo cliente, lista de itens e observações opcionais.'
       content:
         application/json:
           schema:
             type: object
-            required:
-              - CustomerId
-              - items
             properties:
               CustomerId:
                 $ref: '#/components/schemas/UUID'
               items:
                 type: array
-                x-stoplight:
-                  id: iklu2djyzoe0j
                 minItems: 1
                 maxItems: 100
                 items:
                   $ref: '#/components/schemas/OrderItem'
               discounts:
                 type: array
-                x-stoplight:
-                  id: whbkbfnehhbh7
+                readOnly: true
                 items:
                   $ref: '#/components/schemas/UUID'
-                readOnly: true
               notes:
                 type: array
-                x-stoplight:
-                  id: syc04c2zn0hua
                 items:
-                  x-stoplight:
-                    id: 9lxcomfd87ypj
                   type: string
-                  example: Remover a salada
                   readOnly: true
+                  example: Remover a salada
+            required:
+              - CustomerId
+              - items
           examples:
             Example 1:
               value:
@@ -385,7 +360,78 @@ components:
                   - 241fae7b-0210-4d29-a928-90653c9a9a89
                 notes:
                   - Remover a salada
-      description: 'Requisição para criação de um novo pedido contendo cliente, lista de itens e observações opcionais.'
+  responses:
+    OrderCreatedResponse:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              OrderId:
+                $ref: '#/components/schemas/UUID'
+              items:
+                type: array
+                readOnly: true
+                items:
+                  $ref: '#/components/schemas/OrderItem'
+              discounts:
+                type: array
+                readOnly: true
+                items:
+                  type: object
+                  properties:
+                    discountId:
+                      $ref: '#/components/schemas/UUID'
+                    type:
+                      $ref: '#/components/schemas/DiscountType'
+                    value:
+                      anyOf:
+                        - $ref: '#/components/schemas/Money'
+                        - $ref: '#/components/schemas/Percentage'
+                    amount:
+                      $ref: '#/components/schemas/Money'
+                    reason:
+                      type: string
+                  required:
+                    - discountId
+                    - type
+              discountAmountTotal:
+                $ref: '#/components/schemas/Money'
+              subtotal:
+                $ref: '#/components/schemas/Money'
+              total:
+                $ref: '#/components/schemas/Money'
+              status:
+                $ref: '#/components/schemas/OrderStatus'
+            required:
+              - OrderId
+              - items
+              - discounts
+              - discountAmountTotal
+              - subtotal
+              - total
+              - status
+          examples:
+            Example 1:
+              value:
+                OrderId: 241fae7b-0210-4d29-a928-90653c9a9a89
+                items:
+                  - name: string
+                    quantity: 2
+                    price: '1946.32'
+                    category: SNACK
+                    discount: 12.5
+                discounts:
+                  - discountId: 241fae7b-0210-4d29-a928-90653c9a9a89
+                    type: PERCENTAGE
+                    value: '1946.32'
+                    amount: '1946.32'
+                    reason: string
+                discountAmountTotal: '1946.32'
+                subtotal: '1946.32'
+                total: '1946.32'
+                status: RECEIVED
   schemas:
     Customer:
       type: object
@@ -416,8 +462,6 @@ components:
         cpf: '12345678901'
         name: John Doe
         email: john@doe.com
-      x-stoplight:
-        id: 7zmeu59v72xzm
     ErrorResponse:
       type: object
       title: ErrorResponse
@@ -436,8 +480,6 @@ components:
         message: Requisição inválida
         error:
           - Campo obrigatório 'email' não informado
-      x-stoplight:
-        id: fl28edeczujwn
     Category:
       type: string
       enum:
@@ -447,28 +489,29 @@ components:
         - SIDE_DISH
       title: Category
       description: Categoria do produto dentro do pedido.
-      x-stoplight:
-        id: 2ak8h1mepj3oc
+    UUID:
+      type: string
+      title: UUID
+      description: Identificador único universal no formato UUID.
+      format: uuid
+      pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+      minLength: 36
+      maxLength: 36
+      example: 241fae7b-0210-4d29-a928-90653c9a9a89
     OrderItem:
-      title: OrderItem
-      x-stoplight:
-        id: u1kemoeyn6wo1
       type: object
+      title: OrderItem
       description: 'Item individual de um pedido, contendo informações do produto e quantidade solicitada.'
       properties:
         name:
           type: string
-          x-stoplight:
-            id: n1bit9j1z59cw
         quantity:
           type: integer
-          x-stoplight:
-            id: suq9qpzfyzmhf
-          example: 2
+          format: int32
           minimum: 1
           maximum: 100
-          format: int32
           readOnly: true
+          example: 2
         price:
           $ref: '#/components/schemas/Money'
         category:
@@ -480,56 +523,35 @@ components:
         - quantity
         - price
         - category
-    UUID:
-      title: UUID
-      x-stoplight:
-        id: xw2w2vxnuxc7b
-      type: string
-      format: uuid
-      minLength: 36
-      maxLength: 36
-      pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
-      example: 241fae7b-0210-4d29-a928-90653c9a9a89
-      description: Identificador único universal no formato UUID.
     Money:
-      title: Money
-      x-stoplight:
-        id: bnsq3cx9srure
-      example: '1946.32'
       type: string
+      title: Money
+      description: 'Valor monetário representado em formato brasileiro (R$), com suporte a casas decimais.'
       pattern: '(?:R\$\s?)?(?:\d{1,3}(?:\.\d{3})*|\d+)(?:,\d{2})?'
       minLength: 1
       maxLength: 1000000000000
       readOnly: true
-      description: 'Valor monetário representado em formato brasileiro (R$), com suporte a casas decimais.'
+      example: '1946.32'
     Discount:
       $ref: '#/components/schemas/Percentage'
-      description: 'Valor do desconto aplicado ao item, representado como valor monetário. Pode ser utilizado para promoções, cupons ou políticas comerciais. Caso não informado, assume-se que o item não possui desconto.'
-      x-stoplight:
-        id: 7pwor7z2bvg0o
     Percentage:
-      title: Percentage
-      x-stoplight:
-        id: 82j02v703ci7l
       type: number
+      title: Percentage
       description: 'Valor percentual entre 0 e 100, podendo conter casas decimais. Utilizado para representar taxas, descontos percentuais e proporções.'
       format: double
-      example: 12.5
       minimum: 0
       maximum: 100
       readOnly: true
+      example: 12.5
     DiscountType:
-      title: DiscountType
-      x-stoplight:
-        id: uja9zlpvfy1b7
+      type: string
       enum:
         - PERCENTAGE
         - FIXED
+      title: DiscountType
       readOnly: true
     OrderStatus:
-      title: OrderStatus
-      x-stoplight:
-        id: heaypai4fcsg8
+      type: string
       enum:
         - RECEIVED
         - AWAITING_PAYMENT
@@ -537,86 +559,5 @@ components:
         - IN_PREPARATION
         - DONE
         - DELIVERED
+      title: OrderStatus
       readOnly: true
-  responses:
-    OrderCreatedResponse:
-      description: Example response
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-              - OrderId
-              - items
-              - discounts
-              - discountAmountTotal
-              - subtotal
-              - total
-              - status
-            properties:
-              OrderId:
-                $ref: '#/components/schemas/UUID'
-              items:
-                type: array
-                x-stoplight:
-                  id: r462ax07rmgtr
-                items:
-                  $ref: '#/components/schemas/OrderItem'
-                readOnly: true
-              discounts:
-                type: array
-                x-stoplight:
-                  id: afvh9bb39lkvy
-                items:
-                  x-stoplight:
-                    id: 4a172qk753nn1
-                  type: object
-                  required:
-                    - discountId
-                    - type
-                  properties:
-                    discountId:
-                      $ref: '#/components/schemas/UUID'
-                    type:
-                      $ref: '#/components/schemas/DiscountType'
-                    value:
-                      x-stoplight:
-                        id: a7a2thbfdnjf3
-                      anyOf:
-                        - $ref: '#/components/schemas/Money'
-                        - $ref: '#/components/schemas/Percentage'
-                    amount:
-                      $ref: '#/components/schemas/Money'
-                    reason:
-                      type: string
-                      x-stoplight:
-                        id: cdyex9k4dxmio
-                readOnly: true
-              discountAmountTotal:
-                $ref: '#/components/schemas/Money'
-              subtotal:
-                $ref: '#/components/schemas/Money'
-              total:
-                $ref: '#/components/schemas/Money'
-              status:
-                $ref: '#/components/schemas/OrderStatus'
-          examples:
-            Example 1:
-              value:
-                OrderId: 241fae7b-0210-4d29-a928-90653c9a9a89
-                items:
-                  - name: string
-                    quantity: 2
-                    price: '1946.32'
-                    category: SNACK
-                    discount: 12.5
-                discounts:
-                  - discountId: 241fae7b-0210-4d29-a928-90653c9a9a89
-                    type: PERCENTAGE
-                    value: '1946.32'
-                    amount: '1946.32'
-                    reason: string
-                discountAmountTotal: '1946.32'
-                subtotal: '1946.32'
-                total: '1946.32'
-                status: RECEIVED
