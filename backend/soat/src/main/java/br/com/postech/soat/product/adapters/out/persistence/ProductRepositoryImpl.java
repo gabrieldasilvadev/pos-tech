@@ -5,7 +5,9 @@ import br.com.postech.soat.product.adapters.out.persistence.entities.mappers.Pro
 import br.com.postech.soat.product.adapters.out.persistence.entities.repositories.IProductJpaRepository;
 import br.com.postech.soat.product.core.domain.Product;
 import br.com.postech.soat.product.core.ports.out.IProductRepository;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -15,6 +17,11 @@ public class ProductRepositoryImpl implements IProductRepository {
 
     public ProductRepositoryImpl (IProductJpaRepository jpaRepository) {
         this.jpaRepository = jpaRepository;
+    }
+
+    @Override
+    public List<ProductEntity> findAll(Specification<ProductEntity> spec) {
+        return jpaRepository.findAll(spec);
     }
 
     @Override
