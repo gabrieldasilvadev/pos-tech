@@ -14,8 +14,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import java.math.BigDecimal;
 import java.util.UUID;
+
 
 @Getter
 @Setter
@@ -46,7 +49,9 @@ public class ProductEntity {
     @Column(nullable = false)
     private String image;
 
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false, columnDefinition = "product_category")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private Category category;
+
 }
