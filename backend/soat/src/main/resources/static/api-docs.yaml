@@ -196,17 +196,6 @@ paths:
         - url: 'http://localhost:8080'
           description: Localhost
   /orders:
-    get:
-      tags:
-        - Order
-      summary: Buscar pedido
-      operationId: get-orders
-      responses:
-        '200':
-          $ref: '#/components/responses/OrderCreatedResponse'
-      servers:
-        - url: 'http://localhost:8080'
-          description: Localhost
     post:
       tags:
         - Order
@@ -393,9 +382,6 @@ components:
                       $ref: '#/components/schemas/Money'
                     reason:
                       type: string
-                  required:
-                    - discountId
-                    - type
               discountAmountTotal:
                 $ref: '#/components/schemas/Money'
               subtotal:
@@ -407,7 +393,6 @@ components:
             required:
               - OrderId
               - items
-              - discounts
               - discountAmountTotal
               - subtotal
               - total
