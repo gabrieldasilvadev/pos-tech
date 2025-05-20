@@ -14,7 +14,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.type.SqlTypes;
 
 @Getter
 @Setter
@@ -29,8 +31,8 @@ public class OrderEntity {
     @Column(name = "customer_id", nullable = false)
     private UUID customerId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "status", columnDefinition = "order_status", nullable = false)
     private OrderStatus status;
 
     @Column(name = "total_price", nullable = false, precision = 18, scale = 4)
