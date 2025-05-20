@@ -22,12 +22,6 @@ public class Order extends AggregateRoot<OrderId> {
         super(orderId);
     }
 
-    public static Order receive(
-
-    ) {
-        return new Order(new OrderId(UUID.randomUUID()));
-    }
-
     public static Order receive(CustomerId customerId,
                                 List<OrderItem> orderItems,
                                 List<Discount> discounts,
@@ -60,7 +54,7 @@ public class Order extends AggregateRoot<OrderId> {
 
     public BigDecimal calculatePrice() {
         BigDecimal originalPrice = orderItems.stream()
-            .map(OrderItem::price)
+            .map(OrderItem::getPrice)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         this.originalPrice = originalPrice;

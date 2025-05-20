@@ -39,7 +39,7 @@ public class EventEntity {
 
   public EventEntity(DomainEvent event) {
     this.eventId = event.getEventId();
-    this.aggregateId = event.getAggregateId().getId();
+    this.aggregateId = event.getAggregateId().getValue();
     this.eventType = event.getEventType();
     this.payload = event.toPayload();
     this.occurredOn = event.getOccurredOn();

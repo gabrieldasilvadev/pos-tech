@@ -13,7 +13,7 @@ public abstract class Identifier {
     this.value = value;
   }
 
-  public UUID getId() {
+  public UUID getValue() {
     return value;
   }
 

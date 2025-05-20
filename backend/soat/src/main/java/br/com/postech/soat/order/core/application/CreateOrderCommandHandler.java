@@ -20,14 +20,19 @@ public class CreateOrderCommandHandler implements CommandHandler<CreateOrderComm
 
     @Override
     public Order handle(CreateOrderCommand command) {
-        final Order order = Order.receive(
-            command.customerId(),
-            command.orderItems(),
-            command.discounts(),
-            command.observations()
-        );
+        try {
+            final Order order = Order.receive(
+                command.customerId(),
+                command.orderItems(),
+                command.discounts(),
+                command.observations()
+            );
 
-        logger.info("Domain order created: {}", order);
-        return orderRepository.sendOrder(order);
+            logger.info("Domain order created: {}", order);
+            return orderRepository.sendOrder(order);
+        } catch (Exception e) {
+            logger.error("Error creating order: {}", e.getMessage(), e);
+            throw e;
+        }
     }
 }

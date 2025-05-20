@@ -13,7 +13,7 @@ import org.mapstruct.factory.Mappers;
 public interface OrderEntityMapper {
     OrderEntityMapper INSTANCE = Mappers.getMapper(OrderEntityMapper.class);
 
-    @Mapping(target = "id", source = "id.id")
+    @Mapping(target = "id", source = "id.value")
     @Mapping(target = "customerId", source = "customerId.value")
     @Mapping(target = "status", source = "status")
     @Mapping(target = "totalPrice", source = "totalPrice")

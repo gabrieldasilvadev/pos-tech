@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface OrderResponseMapper {
     OrderResponseMapper INSTANCE = Mappers.getMapper(OrderResponseMapper.class);
 
-    @Mapping(target = "orderId", source = "id.id")
+    @Mapping(target = "orderId", source = "id.value")
     @Mapping(target = "status", expression = "java(OrderStatusDto.fromValue(order.getStatus().name()))")
     @Mapping(target = "items", source = "orderItems")
     @Mapping(target = "discounts", source = "discounts")
@@ -21,11 +21,12 @@ public interface OrderResponseMapper {
     @Mapping(target = "total", expression = "java(order.getTotalPrice().toString())")
     PostOrders201ResponseDto toResponse(Order order);
 
+    @Mapping(target = "productId", source = "productId")
     @Mapping(target = "discount", source = "discount")
     @Mapping(target = "name", source = "name")
-    @Mapping(target = "category", expression = "java(CategoryDto.fromValue(orderItem.category()))")
+    @Mapping(target = "category", expression = "java(CategoryDto.fromValue(orderItem.getCategory()))")
     @Mapping(target = "quantity", source = "quantity")
-    @Mapping(target = "price", expression = "java(orderItem.price().toString())")
+    @Mapping(target = "price", expression = "java(orderItem.getPrice().toString())")
     OrderItemDto toOrderItemDto(OrderItem orderItem);
 
     default DiscountDto toDiscountDto(Discount discount) {
