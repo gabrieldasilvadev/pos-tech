@@ -3,8 +3,6 @@ package br.com.postech.soat.order.infrastructure.jpa.entity;
 import br.com.postech.soat.order.core.domain.model.OrderStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
