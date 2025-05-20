@@ -1,8 +1,8 @@
 package br.com.postech.soat.customer.core.application;
 
 import br.com.postech.soat.commons.infrastructure.exception.NotFoundException;
+import br.com.postech.soat.customer.core.application.dto.FindCustomerQuery;
 import br.com.postech.soat.customer.core.domain.model.Customer;
-import br.com.postech.soat.customer.core.ports.in.FindCustomerUseCase.FindCustomerQuery;
 import br.com.postech.soat.customer.core.ports.out.CustomerRepository;
 import java.util.Optional;
 import java.util.UUID;

@@ -18,10 +18,11 @@ public class CustomerJpaAdapter implements CustomerRepository {
     }
 
     @Override
-    public Customer save(Customer customer) {
+    public Customer save(final Customer customer) {
         CustomerEntity entity = customerMapper.toEntity(customer);
-        CustomerEntity savedEntity = customerJpaRepository.save(entity);
-        return customerMapper.toModel(savedEntity);
+        entity = customerJpaRepository.save(entity);
+
+        return customerMapper.toModel(entity);
     }
 
     @Override

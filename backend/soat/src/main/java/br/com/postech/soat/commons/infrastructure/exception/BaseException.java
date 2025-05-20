@@ -1,18 +1,14 @@
 package br.com.postech.soat.commons.infrastructure.exception;
 
-public abstract class BaseException extends RuntimeException {
+import lombok.Getter;
+import lombok.Setter;
 
-    private int status = 400;
+@Setter
+@Getter
+public abstract class BaseException extends RuntimeException {
 
     public BaseException(String message) {
         super(message);
     }
 
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public int getStatus() {
-        return status;
-    }
 }

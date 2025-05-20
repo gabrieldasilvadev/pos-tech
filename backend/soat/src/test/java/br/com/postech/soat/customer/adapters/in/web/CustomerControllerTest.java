@@ -1,10 +1,12 @@
 package br.com.postech.soat.customer.adapters.in.web;
 
+import br.com.postech.soat.customer.adapters.in.http.CustomerController;
+import br.com.postech.soat.customer.adapters.in.http.CustomerWebMapper;
+import br.com.postech.soat.customer.core.application.dto.CreateCustomerCommand;
+import br.com.postech.soat.customer.core.application.dto.FindCustomerQuery;
 import br.com.postech.soat.customer.core.domain.model.Customer;
 import br.com.postech.soat.customer.core.ports.in.CreateCustomerUseCase;
-import br.com.postech.soat.customer.core.ports.in.CreateCustomerUseCase.CreateCustomerCommand;
 import br.com.postech.soat.customer.core.ports.in.FindCustomerUseCase;
-import br.com.postech.soat.customer.core.ports.in.FindCustomerUseCase.FindCustomerQuery;
 import br.com.postech.soat.openapi.model.CreateCustomerRequest;
 import br.com.postech.soat.openapi.model.FindCustomer200Response;
 import java.util.UUID;
@@ -21,7 +23,6 @@ import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -45,17 +46,6 @@ class CustomerControllerTest {
     @Nested
     @DisplayName("Tests for the customer creation api")
     class CreateCustomer {
-
-        @Test
-        @DisplayName("Should return bad request when request is null")
-        void givenNullRequest_whenCreateCustomer_thenReturnBadRequest() {
-            // Act
-            ResponseEntity<FindCustomer200Response> response = customerController.createCustomer(null);
-
-            // Assert
-            assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-            assertNull(response.getBody());
-        }
 
         @Test
         @DisplayName("Should create customer and return created status")

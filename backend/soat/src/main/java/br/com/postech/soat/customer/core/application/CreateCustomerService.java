@@ -1,6 +1,7 @@
 package br.com.postech.soat.customer.core.application;
 
-import br.com.postech.soat.customer.core.domain.exception.CustomerAlreadyExistsException;
+import br.com.postech.soat.commons.infrastructure.exception.ResourceConflictException;
+import br.com.postech.soat.customer.core.application.dto.CreateCustomerCommand;
 import br.com.postech.soat.customer.core.domain.model.Customer;
 import br.com.postech.soat.customer.core.domain.valueobject.CPF;
 import br.com.postech.soat.customer.core.domain.valueobject.Email;
@@ -28,10 +29,10 @@ public class CreateCustomerService implements CreateCustomerUseCase {
 
         customerRepository.findByCpf(cpf.value())
             .ifPresent(c -> {
-                throw new CustomerAlreadyExistsException("Cliente com CPF " + cpf.value() + " já existe");
+                throw new ResourceConflictException("Cliente com CPF " + cpf.value() + " já existe");
             });
 
-        Customer customer = Customer.create(name, email, cpf, phone);
+        final Customer customer = Customer.create(name, email, cpf, phone);
         return customerRepository.save(customer);
     }
 }

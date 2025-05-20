@@ -2,6 +2,7 @@ package br.com.postech.soat.commons.infrastructure.exception.handler;
 
 import br.com.postech.soat.commons.infrastructure.exception.BaseException;
 import br.com.postech.soat.commons.infrastructure.exception.NotFoundException;
+import br.com.postech.soat.commons.infrastructure.exception.ResourceConflictException;
 import br.com.postech.soat.openapi.model.ErrorResponse;
 import java.util.Collections;
 import org.springframework.http.HttpStatus;
@@ -22,14 +23,24 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
+    @ExceptionHandler(ResourceConflictException.class)
+    public ResponseEntity<ErrorResponse> handleResourceConflictException(ResourceConflictException e) {
+        ErrorResponse errorResponse = new ErrorResponse()
+            .status(409)
+            .message("Conflito de recursos")
+            .error(Collections.singletonList(e.getMessage()));
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<ErrorResponse> handleDomainException(BaseException e) {
         ErrorResponse errorResponse = new ErrorResponse()
-            .status(e.getStatus())
+            .status(400)
             .message("Requisição inválida")
             .error(Collections.singletonList(e.getMessage()));
 
-        return ResponseEntity.status(HttpStatus.valueOf(e.getStatus())).body(errorResponse);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 }
 

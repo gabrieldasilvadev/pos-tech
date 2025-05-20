@@ -1,12 +1,12 @@
 package br.com.postech.soat.customer.core.application;
 
-import br.com.postech.soat.customer.core.domain.exception.CustomerAlreadyExistsException;
+import br.com.postech.soat.commons.infrastructure.exception.ResourceConflictException;
+import br.com.postech.soat.customer.core.application.dto.CreateCustomerCommand;
 import br.com.postech.soat.customer.core.domain.exception.InvalidCpfException;
 import br.com.postech.soat.customer.core.domain.exception.InvalidEmailException;
 import br.com.postech.soat.customer.core.domain.exception.InvalidNameException;
 import br.com.postech.soat.customer.core.domain.exception.InvalidPhoneException;
 import br.com.postech.soat.customer.core.domain.model.Customer;
-import br.com.postech.soat.customer.core.ports.in.CreateCustomerUseCase.CreateCustomerCommand;
 import br.com.postech.soat.customer.core.ports.out.CustomerRepository;
 import java.util.Optional;
 import java.util.UUID;
@@ -71,8 +71,8 @@ class CreateCustomerServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw CustomerAlreadyExistsException when CPF already exists")
-    void givenExistingCpf_whenCreate_thenThrowCustomerAlreadyExistsException() {
+    @DisplayName("Should throw ResourceConflictException when CPF already exists")
+    void givenExistingCpf_whenCreate_thenThrowResourceConflictException() {
         // Arrange
         CreateCustomerCommand command = new CreateCustomerCommand(
             "João Silva",
@@ -92,8 +92,8 @@ class CreateCustomerServiceTest {
         when(customerRepository.findByCpf("12345678901")).thenReturn(Optional.of(existingCustomer));
 
         // Act & Assert
-        CustomerAlreadyExistsException exception = assertThrows(
-            CustomerAlreadyExistsException.class,
+        ResourceConflictException exception = assertThrows(
+            ResourceConflictException.class,
             () -> createCustomerService.create(command)
         );
 
