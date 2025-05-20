@@ -2,11 +2,6 @@ package br.com.postech.soat.order.adapters.in.http.controller;
 
 import br.com.postech.soat.commons.application.mediator.Mediator;
 import br.com.postech.soat.openapi.api.OrderApi;
-import br.com.postech.soat.openapi.model.CategoryDto;
-import br.com.postech.soat.openapi.model.DiscountDto;
-import br.com.postech.soat.openapi.model.OrderItemDto;
-import br.com.postech.soat.openapi.model.OrderStatusDto;
-import br.com.postech.soat.openapi.model.PostOrders201ResponseDiscountsInnerDto;
 import br.com.postech.soat.openapi.model.PostOrders201ResponseDto;
 import br.com.postech.soat.openapi.model.PostOrdersRequestDto;
 import br.com.postech.soat.order.adapters.in.http.controller.mapper.CreateOrderCommandMapper;
