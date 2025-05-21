@@ -1,12 +1,18 @@
 package br.com.postech.soat.order.adapters.in.http.controller.mapper;
 
-import br.com.postech.soat.openapi.model.*;
-import br.com.postech.soat.order.core.domain.model.*;
+import br.com.postech.soat.openapi.model.CategoryDto;
+import br.com.postech.soat.openapi.model.DiscountDto;
+import br.com.postech.soat.openapi.model.OrderItemDto;
+import br.com.postech.soat.openapi.model.OrderStatusDto;
+import br.com.postech.soat.openapi.model.PostOrders201ResponseDiscountsInnerDto;
+import br.com.postech.soat.openapi.model.PostOrders201ResponseDto;
+import br.com.postech.soat.order.core.domain.model.Discount;
+import br.com.postech.soat.order.core.domain.model.Order;
+import br.com.postech.soat.order.core.domain.model.OrderItem;
+import java.util.UUID;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
-
-import java.util.UUID;
 
 @Mapper(imports = {OrderStatusDto.class, CategoryDto.class})
 public interface OrderResponseMapper {
