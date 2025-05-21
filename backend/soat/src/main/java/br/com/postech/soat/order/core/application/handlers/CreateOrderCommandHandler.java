@@ -1,4 +1,4 @@
-package br.com.postech.soat.order.core.application;
+package br.com.postech.soat.order.core.application.handlers;
 
 import br.com.postech.soat.commons.application.command.CommandHandler;
 import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;

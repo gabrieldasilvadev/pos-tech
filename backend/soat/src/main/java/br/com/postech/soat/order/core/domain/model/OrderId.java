@@ -8,9 +8,4 @@ public class OrderId extends Identifier {
     protected OrderId(UUID value) {
         super(value);
     }
-
-    @Override
-    public UUID generate() {
-        return UUID.randomUUID();
-    }
 }

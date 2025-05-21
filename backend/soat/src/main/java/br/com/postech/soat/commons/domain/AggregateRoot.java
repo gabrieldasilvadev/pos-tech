@@ -17,10 +17,6 @@ public abstract class AggregateRoot<ID extends Identifier> {
         return id;
     }
 
-    protected UUID generateId() {
-        return this.id.generate();
-    }
-
     protected void applyChange(DomainEvent event) {
         events.add(event);
     }

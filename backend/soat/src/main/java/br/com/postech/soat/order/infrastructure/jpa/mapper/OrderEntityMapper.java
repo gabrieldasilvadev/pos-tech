@@ -3,6 +3,7 @@ package br.com.postech.soat.order.infrastructure.jpa.mapper;
 import br.com.postech.soat.order.core.domain.model.Observation;
 import br.com.postech.soat.order.core.domain.model.Order;
 import br.com.postech.soat.order.infrastructure.jpa.entity.OrderEntity;
+import java.util.stream.Collectors;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -26,6 +27,6 @@ public interface OrderEntityMapper {
     default void mapObservations(Order order, @MappingTarget OrderEntity orderEntity) {
         orderEntity.setObservation(order.getObservations().stream()
                 .map(Observation::text)
-                .collect(java.util.stream.Collectors.joining(",")));
+                .collect(Collectors.joining(",")));
     }
 }

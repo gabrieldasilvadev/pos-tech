@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
 @SuppressWarnings("unchecked")
 public class MediatorImpl implements Mediator {
 
-    private final Map<Class<?>, CommandHandler<?, ?>> handlers = new HashMap<>();
+    private final Map<Class<? extends Command>, CommandHandler<?, ?>> handlers = new HashMap<>();
 
     public MediatorImpl(ApplicationContext context) {
         Map<String, CommandHandler> beans = context.getBeansOfType(CommandHandler.class);
         for (CommandHandler<?, ?> handler : beans.values()) {
             Class<?> commandClass = resolveCommandType(handler);
-            handlers.put(commandClass, handler);
+            handlers.put((Class<? extends Command>) commandClass, handler);
         }
     }
 

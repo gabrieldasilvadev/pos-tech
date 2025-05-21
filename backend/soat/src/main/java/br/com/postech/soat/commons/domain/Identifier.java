@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public abstract class Identifier {
+public abstract class Identifier extends ValueObject {
   private final UUID value;
 
   protected Identifier(UUID value) {
@@ -16,8 +16,6 @@ public abstract class Identifier {
   public UUID getValue() {
     return value;
   }
-
-  public abstract UUID generate();
 
   @Override
   public boolean equals(Object obj) {
