@@ -3,7 +3,6 @@ package br.com.postech.soat.order.adapters.in.http.controller.mapper;
 import br.com.postech.soat.openapi.model.DiscountDto;
 import br.com.postech.soat.openapi.model.OrderItemDto;
 import br.com.postech.soat.order.core.domain.model.Discount;
-import br.com.postech.soat.order.core.domain.model.DiscountId;
 import br.com.postech.soat.order.core.domain.model.OrderItem;
 import java.math.BigDecimal;
 import org.mapstruct.Mapper;
@@ -29,6 +28,6 @@ public interface OrderItemRequestMapper {
 
     default Discount mapDiscount(DiscountDto dto) {
         if (dto == null) return null;
-        return new Discount(new DiscountId(dto.getId()), new BigDecimal(dto.getValue()));
+        return new Discount(new BigDecimal(dto.getValue()));
     }
 }

@@ -1,9 +1,12 @@
 package br.com.postech.soat.order.core.domain.model;
 
+import br.com.postech.soat.commons.domain.ValueObject;
 import java.math.BigDecimal;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-public record Discount(
-    DiscountId id,
-    BigDecimal value
-) {
+@Getter
+@AllArgsConstructor
+public class Discount extends ValueObject {
+    private BigDecimal value;
 }

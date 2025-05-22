@@ -15,7 +15,6 @@ public interface DiscountMapper {
 
     DiscountMapper INSTANCE = Mappers.getMapper(DiscountMapper.class);
 
-    @Mapping(target = "id", expression = "java(new DiscountId(discountDto.getId()))")
     @Mapping(target = "value", expression = "java(new BigDecimal(discountDto.getValue()))")
     Discount mapFrom(DiscountDto discountDto);
 
