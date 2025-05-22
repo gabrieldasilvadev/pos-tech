@@ -1,39 +1,63 @@
 package br.com.postech.soat.product.adapters.in;
 
-import br.com.postech.soat.product.adapters.in.dto.CreateProductRequest;
-import br.com.postech.soat.product.adapters.in.dto.UpdateProductRequest;
-import br.com.postech.soat.product.core.domain.Product;
-import br.com.postech.soat.product.core.ports.in.IProductUseCase;
-import jakarta.validation.Valid;
+import br.com.postech.soat.openapi.api.ProductApi;
+import br.com.postech.soat.openapi.model.PostProducts201Response;
+import br.com.postech.soat.openapi.model.PostProductsRequest;
+import br.com.postech.soat.openapi.model.Product;
+import br.com.postech.soat.openapi.model.PutProductsRequest;
+import br.com.postech.soat.product.adapters.out.mapper.ProductMapper;
+import br.com.postech.soat.product.core.dto.CreateProductInput;
+import br.com.postech.soat.product.core.dto.CreateProductOutput;
+import br.com.postech.soat.product.core.dto.DeleteProductInput;
+import br.com.postech.soat.product.core.dto.UpdateProductInput;
+import br.com.postech.soat.product.core.dto.UpdateProductOutput;
+import br.com.postech.soat.product.core.ports.in.CreateProductUseCase;
+import br.com.postech.soat.product.core.ports.in.DeleteProductUseCase;
+import br.com.postech.soat.product.core.ports.in.UpdateProductUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/products")
-public class ProductController {
-    private final IProductUseCase productUseCase;
+public class ProductController implements ProductApi {
+    private final CreateProductUseCase createUseCase;
+    private final UpdateProductUseCase updateUseCase;
+    private final DeleteProductUseCase deleteUseCase;
+    private final ProductMapper productMapper;
 
-    public ProductController (IProductUseCase productUseCase) {
-        this.productUseCase = productUseCase;
+    public ProductController (
+        CreateProductUseCase createUseCase,
+        UpdateProductUseCase updateUseCase,
+        DeleteProductUseCase deleteUseCase,
+        ProductMapper productMapper
+    ) {
+        this.createUseCase = createUseCase;
+        this.updateUseCase = updateUseCase;
+        this.deleteUseCase = deleteUseCase;
+        this.productMapper = productMapper;
     }
 
-    @PostMapping
-    public ResponseEntity<Product> create (@RequestBody @Valid CreateProductRequest request) {
-        Product created = productUseCase.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    @Override
+    public ResponseEntity<PostProducts201Response> postProducts(PostProductsRequest postProductRequest) {
+        CreateProductInput coreDto = productMapper.toCoreDto(postProductRequest);
+        CreateProductOutput created = createUseCase.create(coreDto);
+        PostProducts201Response response = productMapper.toResponse(created);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Product> update (@PathVariable UUID id, @RequestBody @Valid UpdateProductRequest request) {
-        request.setId(id);
-        Product updated = productUseCase.update(request);
-        return ResponseEntity.status(HttpStatus.OK).body(updated);
+    @Override
+    public ResponseEntity<Product> putProducts(UUID uuid, PutProductsRequest putProductRequest) {
+        UpdateProductInput input = productMapper.toUpdateInput(putProductRequest);
+        UpdateProductOutput output = updateUseCase.update(uuid, input);
+        Product response = productMapper.toResponse(output);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteProducts(UUID productId) {
+        DeleteProductInput input = productMapper.toDeleteInput(productId);
+        deleteUseCase.delete(input);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
