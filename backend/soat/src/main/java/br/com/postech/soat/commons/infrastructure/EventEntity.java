@@ -7,9 +7,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.Instant;
 import java.util.UUID;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "event_store")
+@Getter
+@NoArgsConstructor
 public class EventEntity {
   @Id
   @Column(name = "id", nullable = false)
@@ -33,39 +37,12 @@ public class EventEntity {
   @Column(name = "metadata", columnDefinition = "JSONB")
   private String metadata;
 
-  protected EventEntity() {
-  }
-
   public EventEntity(DomainEvent event) {
     this.eventId = event.getEventId();
-    this.aggregateId = event.getAggregateId().getId();
+    this.aggregateId = event.getAggregateId().getValue();
     this.eventType = event.getEventType();
     this.payload = event.toPayload();
     this.occurredOn = event.getOccurredOn();
     this.version = event.getVersion();
-  }
-
-  public UUID getEventId() {
-    return eventId;
-  }
-
-  public UUID getAggregateId() {
-    return aggregateId;
-  }
-
-  public String getEventType() {
-    return eventType;
-  }
-
-  public String getPayload() {
-    return payload;
-  }
-
-  public Instant getOccurredOn() {
-    return occurredOn;
-  }
-
-  public int getVersion() {
-    return version;
   }
 }
