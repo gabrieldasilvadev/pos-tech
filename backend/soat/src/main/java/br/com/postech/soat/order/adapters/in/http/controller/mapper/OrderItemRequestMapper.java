@@ -29,6 +29,6 @@ public interface OrderItemRequestMapper {
 
     default Discount mapDiscount(DiscountDto dto) {
         if (dto == null) return null;
-        return new Discount(new DiscountId(dto.getId()), new BigDecimal(dto.getValue()));
+        return new Discount(new BigDecimal(dto.getValue()));
     }
 }
