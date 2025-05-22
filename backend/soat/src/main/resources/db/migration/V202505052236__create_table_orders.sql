@@ -18,7 +18,6 @@ CREATE TABLE order_items (
     product_quantity INTEGER NOT NULL CHECK (product_quantity > 0),
     unit_price NUMERIC(18, 4) NOT NULL CHECK (unit_price > 0),
     discount_amount NUMERIC(18, 4) DEFAULT 0 CHECK (discount_amount >= 0),
-    observation VARCHAR(255),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ
 );

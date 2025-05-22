@@ -7,11 +7,11 @@ import java.util.UUID;
 
 public abstract class DomainEvent implements Serializable {
   private final UUID eventId;
-  private final Identifier<?> aggregateId;
+  private final Identifier aggregateId;
   private final Instant occurredOn;
   private final int version;
 
-  protected DomainEvent(UUID eventId, Identifier<?> aggregateId) {
+  protected DomainEvent(UUID eventId, Identifier aggregateId) {
     this.eventId = eventId;
     this.aggregateId = Objects.requireNonNull(aggregateId);
     this.occurredOn = Instant.now();
@@ -22,7 +22,7 @@ public abstract class DomainEvent implements Serializable {
     return eventId;
   }
 
-  public Identifier<?> getAggregateId() {
+  public Identifier getAggregateId() {
     return aggregateId;
   }
 
