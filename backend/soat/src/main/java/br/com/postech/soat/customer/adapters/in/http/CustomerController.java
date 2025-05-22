@@ -6,8 +6,8 @@ import br.com.postech.soat.customer.core.domain.model.Customer;
 import br.com.postech.soat.customer.core.ports.in.CreateCustomerUseCase;
 import br.com.postech.soat.customer.core.ports.in.FindCustomerUseCase;
 import br.com.postech.soat.openapi.api.CustomerApi;
-import br.com.postech.soat.openapi.model.CreateCustomerRequest;
-import br.com.postech.soat.openapi.model.FindCustomer200Response;
+import br.com.postech.soat.openapi.model.CreateCustomerRequestDto;
+import br.com.postech.soat.openapi.model.FindCustomer200ResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +29,7 @@ public class CustomerController implements CustomerApi {
     }
 
     @Override
-    public ResponseEntity<FindCustomer200Response> createCustomer(@RequestBody CreateCustomerRequest createCustomerRequest) {
+    public ResponseEntity<FindCustomer200ResponseDto> createCustomer(@RequestBody CreateCustomerRequestDto createCustomerRequest) {
         CreateCustomerCommand command = customerWebMapper.toCommand(createCustomerRequest);
 
         final var customer = createCustomerUseCase.create(command);
@@ -39,7 +39,7 @@ public class CustomerController implements CustomerApi {
     }
 
     @Override
-    public ResponseEntity<FindCustomer200Response> findCustomer(String cpf) {
+    public ResponseEntity<FindCustomer200ResponseDto> findCustomer(String cpf) {
         FindCustomerQuery query = new FindCustomerQuery(cpf);
         Customer customer = findCustomerUseCase.findByCpf(query);
         return ResponseEntity.ok(customerWebMapper.toResponse(customer));

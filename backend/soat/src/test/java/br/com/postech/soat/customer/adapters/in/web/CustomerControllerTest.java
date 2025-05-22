@@ -7,8 +7,8 @@ import br.com.postech.soat.customer.core.application.dto.FindCustomerQuery;
 import br.com.postech.soat.customer.core.domain.model.Customer;
 import br.com.postech.soat.customer.core.ports.in.CreateCustomerUseCase;
 import br.com.postech.soat.customer.core.ports.in.FindCustomerUseCase;
-import br.com.postech.soat.openapi.model.CreateCustomerRequest;
-import br.com.postech.soat.openapi.model.FindCustomer200Response;
+import br.com.postech.soat.openapi.model.CreateCustomerRequestDto;
+import br.com.postech.soat.openapi.model.FindCustomer200ResponseDto;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -51,7 +51,7 @@ class CustomerControllerTest {
         @DisplayName("Should create customer and return created status")
         void givenValidRequest_whenCreateCustomer_thenReturnCreatedWithCustomer() {
             // Arrange
-            CreateCustomerRequest request = new CreateCustomerRequest();
+            CreateCustomerRequestDto request = new CreateCustomerRequestDto();
             request.setName("John Doe");
             request.setEmail("john.doe@example.com");
             request.setCpf("12345678901");
@@ -72,7 +72,7 @@ class CustomerControllerTest {
                 .phone("11987654321")
                 .build();
 
-            FindCustomer200Response expectedResponse = new FindCustomer200Response();
+            FindCustomer200ResponseDto expectedResponse = new FindCustomer200ResponseDto();
             expectedResponse.setId(customer.getId().toString());
             expectedResponse.setName(customer.getName());
             expectedResponse.setEmail(customer.getEmail());
@@ -84,7 +84,7 @@ class CustomerControllerTest {
             when(customerWebMapper.toResponse(customer)).thenReturn(expectedResponse);
 
             // Act
-            ResponseEntity<FindCustomer200Response> response = customerController.createCustomer(request);
+            ResponseEntity<FindCustomer200ResponseDto> response = customerController.createCustomer(request);
 
             // Assert
             assertNotNull(response);
@@ -115,7 +115,7 @@ class CustomerControllerTest {
                 .phone("11987654321")
                 .build();
 
-            FindCustomer200Response expectedResponse = new FindCustomer200Response();
+            FindCustomer200ResponseDto expectedResponse = new FindCustomer200ResponseDto();
             expectedResponse.setId(customer.getId().toString());
             expectedResponse.setName(customer.getName());
             expectedResponse.setEmail(customer.getEmail());
@@ -126,7 +126,7 @@ class CustomerControllerTest {
             when(customerWebMapper.toResponse(customer)).thenReturn(expectedResponse);
 
             // Act
-            ResponseEntity<FindCustomer200Response> response = customerController.findCustomer(cpf);
+            ResponseEntity<FindCustomer200ResponseDto> response = customerController.findCustomer(cpf);
 
             // Assert
             assertNotNull(response);
@@ -151,7 +151,7 @@ class CustomerControllerTest {
                 .phone("11987654321")
                 .build();
 
-            FindCustomer200Response response = new FindCustomer200Response();
+            FindCustomer200ResponseDto response = new FindCustomer200ResponseDto();
 
             when(findCustomerUseCase.findByCpf(any(FindCustomerQuery.class))).thenReturn(customer);
             when(customerWebMapper.toResponse(customer)).thenReturn(response);
