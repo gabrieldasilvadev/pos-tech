@@ -33,7 +33,7 @@ public class Order extends AggregateRoot<OrderId> {
         order.observations = observations;
         order.discounts = discounts;
 
-        order.calculatePrice();
+        order.calculateOriginalPrice();
         order.calculateDiscount();
         order.calculateTotalPriceWithDiscount();
         return order;
@@ -43,27 +43,21 @@ public class Order extends AggregateRoot<OrderId> {
         this.status = OrderStatus.IN_PREPARATION;
     }
 
-    public BigDecimal calculateDiscount() {
-        BigDecimal discount = discounts.stream()
-            .map(Discount::value)
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        this.discountAmount = discount;
-        return discount;
+    public void calculateDiscount() {
+        this.discountAmount =
+            discounts.stream()
+                .map(Discount::getValue)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public BigDecimal calculatePrice() {
-        BigDecimal originalPrice = orderItems.stream()
+    public void calculateOriginalPrice() {
+
+        this.originalPrice = orderItems.stream()
             .map(OrderItem::getPrice)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        this.originalPrice = originalPrice;
-        return originalPrice;
     }
 
-    public BigDecimal calculateTotalPriceWithDiscount() {
-        BigDecimal totalWithDiscount = calculatePrice().subtract(calculateDiscount());
-        this.totalPrice = totalWithDiscount;
-        return totalWithDiscount;
+    public void calculateTotalPriceWithDiscount() {
+        this.totalPrice = this.originalPrice.subtract(this.discountAmount);
     }
 }

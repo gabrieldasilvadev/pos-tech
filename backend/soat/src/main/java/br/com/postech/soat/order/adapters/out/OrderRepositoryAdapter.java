@@ -27,7 +27,7 @@ public class OrderRepositoryAdapter implements OrderRepository {
     @Override
     public Order sendOrder(Order order) {
         order.prepare();
-        OrderEntity orderEntity = OrderEntityMapper.INSTANCE.mapFrom(order);
+        OrderEntity orderEntity = OrderEntityMapper.INSTANCE.toEntity(order);
         orderJpaRepository.save(orderEntity);
         logger.info("Order saved : {}", orderEntity);
 

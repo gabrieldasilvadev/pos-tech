@@ -36,13 +36,13 @@ public interface OrderResponseMapper {
 
     default DiscountDto toDiscountDto(Discount discount) {
         return DiscountDto.builder()
-            .value(discount.value().doubleValue())
+            .value(discount.getValue().doubleValue())
             .build();
     }
 
     default PostOrders201ResponseDiscountsInnerDto toDiscountInnerDto(Discount discount) {
         return PostOrders201ResponseDiscountsInnerDto.builder()
-            .amount(discount.value().doubleValue())
+            .amount(discount.getValue().doubleValue())
             .build();
     }
 }

@@ -3,7 +3,6 @@ package br.com.postech.soat.order.adapters.in.http.controller.mapper;
 import br.com.postech.soat.openapi.model.DiscountDto;
 import br.com.postech.soat.openapi.model.OrderItemDto;
 import br.com.postech.soat.order.core.domain.model.Discount;
-import br.com.postech.soat.order.core.domain.model.DiscountId;
 import br.com.postech.soat.order.core.domain.model.OrderItem;
 import java.math.BigDecimal;
 import org.mapstruct.Mapper;

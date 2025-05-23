@@ -21,8 +21,7 @@ public interface OrderEntityMapper {
     @Mapping(target = "discountAmount", source = "discountAmount")
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "observation", ignore = true)
-    OrderEntity mapFrom(Order order);
+    OrderEntity toEntity(Order order);
 
     @AfterMapping
     default void mapObservations(Order order, @MappingTarget OrderEntity orderEntity) {

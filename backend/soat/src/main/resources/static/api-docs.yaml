@@ -18,51 +18,20 @@ paths:
     get:
       tags:
         - Customer
-      summary: Buscar clientes (todos ou por CPF)
-      description: Busca todos os clientes cadastrados ou realiza filtro por CPF
-      operationId: getClients
+      summary: Buscar cliente por CPF
+      description: Busca cliente por CPF
+      operationId: findCustomer
       parameters:
         - $ref: '#/components/parameters/CpfParam'
       responses:
         '200':
-          description: Cliente(s) encontrado(s)
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Customer'
-              examples:
-                ExemploClientePorCPF:
-                  value:
-                    - id: 01fc4570-8b23-11ed-a1eb-0242ac120002
-                      cpf: '12345678900'
-                      name: Maria Oliveira
-                      email: maria@example.com
-                ExemploListaClientes:
-                  value:
-                    - id: 01fc4570-8b23-11ed-a1eb-0242ac120002
-                      cpf: '12345678900'
-                      name: Maria Oliveira
-                      email: maria@example.com
-                    - id: 01fc4570-8b23-11ed-a1eb-0242ac120003
-                      cpf: '12345678901'
-                      name: Joe Doe
-                      email: joe@doe.com
-        '204':
-          description: Nenhum cliente retornado
+          $ref: '#/components/responses/CustomerResponse'
         '400':
-          description: Requisição inválida. Verique os dados enviados.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
         '500':
-          description: Erro interno no servidor
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/ErrorResponse'
       servers:
         - url: 'http://localhost:8080'
           description: Localhost
@@ -71,18 +40,18 @@ paths:
         - Customer
       summary: Criar cliente
       description: Cria um cliente
-      operationId: postClients
+      operationId: createCustomer
       requestBody:
-        $ref: '#/components/requestBodies/ClientRequest'
+        $ref: '#/components/requestBodies/CustomerRequest'
       responses:
         '201':
-          description: Cliente cadastrado com sucesso
+          $ref: '#/components/responses/CustomerResponse'
         '400':
-          description: Requisição inválida. Verifique os dados enviados.
+          $ref: '#/components/responses/ErrorResponse'
         '409':
-          description: Duplicidade
+          $ref: '#/components/responses/ErrorResponse'
         '500':
-          description: Erro interno no servidor
+          $ref: '#/components/responses/ErrorResponse'
       servers:
         - url: 'http://localhost:8080'
           description: Localhost
@@ -295,7 +264,8 @@ components:
       schema:
         type: string
   requestBodies:
-    ClientRequest:
+    CustomerRequest:
+      description: ''
       content:
         application/json:
           schema:
@@ -303,14 +273,27 @@ components:
             properties:
               cpf:
                 type: string
+                pattern: '^\d{11}$'
                 minLength: 11
                 maxLength: 11
-                example: '12345678901'
+                example: '53731833697'
               name:
                 type: string
+                minLength: 3
+                maxLength: 255
+                example: João Cardoso
               email:
                 type: string
                 format: email
+                pattern: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+                maxLength: 255
+                example: joao.cardoso@email.com
+              phone:
+                type: string
+                pattern: '^(?:[1-9]{2})(?:[9]{1})?(?:[0-9]{8})$'
+                minLength: 10
+                maxLength: 111
+                example: '1134567890'
             required:
               - cpf
               - name
@@ -421,6 +404,46 @@ components:
                 customerId: 241fae7b-0210-4d29-a928-90653c9a9a89
                 orderId: 241fae7b-0210-4d29-a928-90653c9a9a89
   responses:
+    CustomerResponse:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+              email:
+                type: string
+              cpf:
+                type: string
+              phone:
+                type: string
+          examples:
+            Example 1:
+              value:
+                id: 77a73531-d3ab-443e-b46a-6ff7ee5d5d29
+                name: Chaves
+                email: chaves@email.com
+                cpf: '33400276170'
+                phone: ''
+    ErrorResponse:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+              message:
+                type: string
+              error:
+                type: array
+                items:
+                  type: string
     OrderCreatedResponse:
       description: Example response
       content:
