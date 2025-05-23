@@ -1,11 +1,12 @@
 package br.com.postech.soat.customer.core.domain.model;
 
+import br.com.postech.soat.customer.core.domain.util.MaskUtil;
 import br.com.postech.soat.customer.core.domain.valueobject.CPF;
 import br.com.postech.soat.customer.core.domain.valueobject.CustomerId;
-import java.util.UUID;
 import br.com.postech.soat.customer.core.domain.valueobject.Email;
 import br.com.postech.soat.customer.core.domain.valueobject.Name;
 import br.com.postech.soat.customer.core.domain.valueobject.Phone;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,4 +33,14 @@ public class Customer {
         );
     }
 
+    @Override
+    public String toString() {
+        return "Customer{" +
+            "id=" + id +
+            ", cpf='" + MaskUtil.maskCpf(cpf) + '\'' +
+            ", name='" + name + '\'' +
+            ", email='" + MaskUtil.maskEmail(email) + '\'' +
+            ", phone='" + MaskUtil.maskPhone(phone) + '\'' +
+            '}';
+    }
 }

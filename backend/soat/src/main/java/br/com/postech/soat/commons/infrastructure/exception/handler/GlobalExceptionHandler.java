@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDto> handleNotFoundException(NotFoundException e) {
         ErrorResponseDto errorResponse = new ErrorResponseDto()
             .status(404)
-            .message("Entidade não encontrada")
+            .message("Entity not found")
             .error(Collections.singletonList(e.getMessage()));
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDto> handleResourceConflictException(ResourceConflictException e) {
         ErrorResponseDto errorResponse = new ErrorResponseDto()
             .status(409)
-            .message("Conflito de recursos")
+            .message("Resource conflict")
             .error(Collections.singletonList(e.getMessage()));
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDto> handleDomainException(BaseException e) {
         ErrorResponseDto errorResponse = new ErrorResponseDto()
             .status(400)
-            .message("Requisição inválida")
+            .message("Bad request")
             .error(Collections.singletonList(e.getMessage()));
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
