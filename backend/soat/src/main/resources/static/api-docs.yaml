@@ -395,9 +395,15 @@ components:
                 $ref: '#/components/schemas/UUID'
               orderId:
                 $ref: '#/components/schemas/UUID'
+              paymentMethod:
+                $ref: '#/components/schemas/PaymentMethod'
+              amount:
+                $ref: '#/components/schemas/Money'
             required:
               - customerId
               - orderId
+              - paymentMethod
+              - amount
           examples:
             Example 1:
               value:
@@ -540,35 +546,6 @@ components:
                 paymentStatus: APPROVED
                 processedAt: '2025-05-20T00:00:00Z'
   schemas:
-    Customer:
-      type: object
-      title: Client
-      description: Modelo de cliente no banco de dados
-      properties:
-        id:
-          type: string
-          format: uuid
-        cpf:
-          type: string
-          pattern: '^\d{11}$'
-          minLength: 11
-          maxLength: 11
-          example: '12345678901'
-        name:
-          type: string
-        email:
-          type: string
-          format: email
-      required:
-        - id
-        - cpf
-        - name
-        - email
-      example:
-        id: 123e4567-e89b-12d3-a456-426614174000
-        cpf: '12345678901'
-        name: John Doe
-        email: john@doe.com
     ErrorResponse:
       type: object
       title: ErrorResponse
@@ -647,6 +624,12 @@ components:
           $ref: '#/components/schemas/Money'
       required:
         - value
+    PaymentMethod:
+      type: string
+      enum:
+        - PIX
+      title: PaymentMethod
+      readOnly: true
     DiscountType:
       type: string
       enum:
@@ -670,6 +653,9 @@ components:
       enum:
         - APPROVED
         - DECLINED
+        - FAILED
+        - PENDING
+        - FINISHED
       title: PaymentStatus
       description: Representa o resultado do processamento de uma tentativa de pagamento durante o fluxo de checkout
       readOnly: true

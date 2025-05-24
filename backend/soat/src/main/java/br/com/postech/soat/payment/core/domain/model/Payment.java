@@ -37,12 +37,12 @@ public class Payment extends AggregateRoot<PaymentId> {
         this.processedAt = processedAt;
     }
 
-    public static Payment initiate(OrderId orderId, CustomerId customerId, String paymentMethod, BigDecimal amount) {
+    public static Payment initiate(OrderId orderId, CustomerId customerId, PaymentMethod paymentMethod, BigDecimal amount) {
         Payment payment = new Payment(PaymentId.generate());
         payment.orderId = orderId;
         payment.customerId = customerId;
         payment.amount = amount;
-        payment.method = PaymentMethod.entryOf(paymentMethod);
+        payment.method = paymentMethod;
         payment.status = PaymentStatus.PENDING;
         payment.createdAt = Instant.now();
         return payment;

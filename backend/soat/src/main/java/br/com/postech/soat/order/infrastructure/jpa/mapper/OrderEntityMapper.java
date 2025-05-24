@@ -19,6 +19,7 @@ public interface OrderEntityMapper {
     @Mapping(target = "status", source = "status")
     @Mapping(target = "totalPrice", source = "totalPrice")
     @Mapping(target = "discountAmount", source = "discountAmount")
+    @Mapping(target = "observation", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     OrderEntity toEntity(Order order);
@@ -26,7 +27,7 @@ public interface OrderEntityMapper {
     @AfterMapping
     default void mapObservations(Order order, @MappingTarget OrderEntity orderEntity) {
         orderEntity.setObservation(order.getObservations().stream()
-                .map(Observation::getText)
-                .collect(Collectors.joining(",")));
+            .map(Observation::getText)
+            .collect(Collectors.joining(",")));
     }
 }

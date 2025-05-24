@@ -1,10 +1,10 @@
-package br.com.postech.soat.payment.core.application.services;
+package br.com.postech.soat.payment.core.application.services.command;
 
 import br.com.postech.soat.commons.application.command.CommandHandler;
 import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;
 import br.com.postech.soat.payment.core.ports.out.GatewayOperationResult;
 import br.com.postech.soat.payment.core.ports.out.PaymentGateway;
-import br.com.postech.soat.payment.core.application.commands.InitiatePaymentCommand;
+import br.com.postech.soat.payment.core.application.services.command.model.InitiatePaymentCommand;
 import br.com.postech.soat.payment.core.domain.model.Payment;
 import br.com.postech.soat.payment.core.domain.model.PaymentId;
 import br.com.postech.soat.payment.core.ports.out.PaymentRepository;
