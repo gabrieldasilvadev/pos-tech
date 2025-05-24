@@ -27,9 +27,9 @@ public class CreateOrderCommandHandler implements CommandHandler<CreateOrderComm
                 command.discounts(),
                 command.observations()
             );
-
+            order.prepare();
             logger.info("Domain order created: {}", order);
-            return orderRepository.sendOrder(order);
+            return orderRepository.save(order);
         } catch (Exception e) {
             logger.error("Error creating order: {}", e.getMessage(), e);
             throw e;

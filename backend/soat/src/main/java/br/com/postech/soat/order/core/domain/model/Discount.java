@@ -8,5 +8,5 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class Discount extends ValueObject {
-    private BigDecimal value;
+    private final BigDecimal value;
 }

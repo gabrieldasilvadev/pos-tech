@@ -26,7 +26,7 @@ public interface OrderEntityMapper {
     @AfterMapping
     default void mapObservations(Order order, @MappingTarget OrderEntity orderEntity) {
         orderEntity.setObservation(order.getObservations().stream()
-                .map(Observation::text)
+                .map(Observation::getText)
                 .collect(Collectors.joining(",")));
     }
 }

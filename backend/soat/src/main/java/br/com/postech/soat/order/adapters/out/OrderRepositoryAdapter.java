@@ -25,8 +25,7 @@ public class OrderRepositoryAdapter implements OrderRepository {
     private final Logger logger = LoggerFactory.getLogger(OrderRepositoryAdapter.class);
 
     @Override
-    public Order sendOrder(Order order) {
-        order.prepare();
+    public Order save(Order order) {
         OrderEntity orderEntity = OrderEntityMapper.INSTANCE.toEntity(order);
         orderJpaRepository.save(orderEntity);
         logger.info("Order saved : {}", orderEntity);

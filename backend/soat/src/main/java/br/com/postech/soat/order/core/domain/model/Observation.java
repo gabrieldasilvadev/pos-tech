@@ -1,6 +1,11 @@
 package br.com.postech.soat.order.core.domain.model;
 
-public record Observation(
-    String text
-) {
+import br.com.postech.soat.commons.domain.ValueObject;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
+public class Observation extends ValueObject {
+    final private String text;
 }
