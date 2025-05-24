@@ -25,11 +25,14 @@ public class ReprocessPendingPayments {
         logger.info("Reprocessing {} pending payments", pendingPayments.size());
         for (Payment payment : pendingPayments) {
             GatewayOperationResult result = paymentGateway.processPayment(payment);
-            if (result == GatewayOperationResult.SUCCESS) {
-                payment.approve();
-            } else {
+
+            if (result == GatewayOperationResult.FAILURE) {
+                logger.error("Payment processing failed for payment ID: {}", payment.getId());
                 payment.fail();
             }
+
+            payment.approve();
+            logger.info("Payment processed successfully for payment ID: {}", payment.getId());
             paymentRepository.save(payment);
         }
     }
