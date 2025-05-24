@@ -1,5 +1,6 @@
 package br.com.postech.soat.customer.adapters.out.persistence;
 
+import br.com.postech.soat.customer.core.domain.util.MaskUtil;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -47,5 +48,16 @@ public class CustomerEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "CustomerEntity{" +
+            "id=" + id +
+            ", cpf='" + MaskUtil.maskCpf(cpf) + '\'' +
+            ", name='" + name + '\'' +
+            ", email='" + MaskUtil.maskEmail(email) + '\'' +
+            ", phone='" + MaskUtil.maskPhone(phone) + '\'' +
+            '}';
     }
 }
