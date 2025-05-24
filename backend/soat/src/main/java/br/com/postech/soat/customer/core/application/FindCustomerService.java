@@ -19,6 +19,6 @@ public class FindCustomerService implements FindCustomerUseCase {
     @Override
     public Customer findByCpf(FindCustomerQuery query) {
         return customerRepository.findByCpf(query.cpf())
-            .orElseThrow(() -> new NotFoundException("Cliente não encontrado para o CPF: " + query.cpf()));
+            .orElseThrow(() -> new NotFoundException("Customer not found for the document identifier: " + query.cpf()));
     }
 }
