@@ -2,6 +2,7 @@ package br.com.postech.soat.payment.infrastructure.mercadopago.rest;
 
 import br.com.postech.soat.payment.core.domain.model.PaymentId;
 import br.com.postech.soat.payment.core.ports.in.ProcessPaymentNotificationUseCase;
+import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,10 +12,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("MercadoPago Webhook Controller Tests")

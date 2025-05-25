@@ -19,12 +19,12 @@ public class OrderItem extends AggregateRoot<OrderItemId> {
     }
 
     public OrderItem(
-                     UUID productId,
-                     String name,
-                     Integer quantity,
-                     BigDecimal price,
-                     String category,
-                     Discount discount) {
+        UUID productId,
+        String name,
+        Integer quantity,
+        BigDecimal price,
+        String category,
+        Discount discount) {
         super(new OrderItemId(UUID.randomUUID()));
         this.productId = productId;
         this.name = name;

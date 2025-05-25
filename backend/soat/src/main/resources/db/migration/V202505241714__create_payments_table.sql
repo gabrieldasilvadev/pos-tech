@@ -12,7 +12,7 @@ CREATE TABLE payments
     customer_id    UUID                        NOT NULL,
     payment_method VARCHAR(255)                NOT NULL,
     amount         NUMERIC(18, 4)              NOT NULL,
-    status         payment_status NOT NULL,
+    status         payment_status              NOT NULL,
     created_at     TIMESTAMP(6) WITH TIME ZONE NOT NULL,
     processed_at   TIMESTAMP(6) WITH TIME ZONE
 );

@@ -2,15 +2,12 @@ package br.com.postech.soat.order.adapters.in.http.controller.mapper;
 
 import br.com.postech.soat.openapi.model.OrderItemDto;
 import br.com.postech.soat.order.core.domain.model.OrderItem;
-import br.com.postech.soat.order.core.domain.model.OrderItemId;
 import br.com.postech.soat.order.infrastructure.jpa.entity.OrderItemEntity;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
-import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(
