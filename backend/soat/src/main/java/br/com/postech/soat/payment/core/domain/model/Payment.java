@@ -65,7 +65,7 @@ public class Payment extends AggregateRoot<PaymentId> {
     }
 
     public void finish() {
-        if (this.status.equals(PaymentStatus.APPROVED)) {
+        if (!this.status.equals(PaymentStatus.APPROVED)) {
             throw new IllegalStateException("Payment cannot be finished from status " + this.status);
         }
         this.status = PaymentStatus.FINISHED;
