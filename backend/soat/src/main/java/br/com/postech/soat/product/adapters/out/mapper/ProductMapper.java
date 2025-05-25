@@ -3,11 +3,14 @@ package br.com.postech.soat.product.adapters.out.mapper;
 import br.com.postech.soat.product.adapters.out.persistence.entities.ProductEntity;
 import br.com.postech.soat.product.core.domain.model.Product;
 import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-@Component
+@Mapper
 public interface ProductMapper {
+
+    ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
+
     default Product toDomain(ProductEntity entity) {
         if (entity == null) {
             return null;

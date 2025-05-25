@@ -8,29 +8,25 @@ import br.com.postech.soat.product.core.domain.model.ProductId;
 import br.com.postech.soat.product.core.ports.out.ProductRepository;
 import java.util.Optional;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class ProductRepositoryImpl implements ProductRepository {
     private final ProductJpaRepository jpaRepository;
-    private final ProductMapper productMapper;
-
-    public ProductRepositoryImpl(ProductJpaRepository jpaRepository, ProductMapper productMapper) {
-        this.jpaRepository = jpaRepository;
-        this.productMapper = productMapper;
-    }
 
     @Override
     public Product save(Product product) {
-        ProductEntity entity = productMapper.toEntity(product);
+        ProductEntity entity = ProductMapper.INSTANCE.toEntity(product);
         final ProductEntity saved = jpaRepository.save(entity);
-        return productMapper.toDomain(saved);
+        return ProductMapper.INSTANCE.toDomain(saved);
     }
 
     @Override
     public Optional<Product> findById(UUID id) {
         return jpaRepository.findById(id)
-            .map(productMapper::toDomain);
+            .map(ProductMapper.INSTANCE::toDomain);
     }
 
     @Override
