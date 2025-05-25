@@ -1,0 +1,42 @@
+package br.com.postech.soat.product.adapters.out.mapper;
+
+import br.com.postech.soat.product.adapters.out.persistence.entities.ProductEntity;
+import br.com.postech.soat.product.core.domain.model.Product;
+import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
+
+@Mapper(componentModel = "spring")
+@Component
+public interface ProductMapper {
+    default Product toDomain(ProductEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+        return Product.builder()
+                .productId(entity.getId())
+                .sku(entity.getSku())
+                .active(entity.getActive())
+                .name(entity.getName())
+                .price(entity.getPrice())
+                .description(entity.getDescription())
+                .image(entity.getImage())
+                .category(entity.getCategory())
+                .build();
+    }
+
+    default ProductEntity toEntity(Product domain) {
+        if (domain == null) {
+            return null;
+        }
+        ProductEntity entity = new ProductEntity();
+        entity.setId(domain.getId().getValue());
+        entity.setSku(domain.getSku());
+        entity.setActive(domain.getActive());
+        entity.setName(domain.getName());
+        entity.setPrice(domain.getPrice());
+        entity.setDescription(domain.getDescription());
+        entity.setImage(domain.getImage());
+        entity.setCategory(domain.getCategory());
+        return entity;
+    }
+}

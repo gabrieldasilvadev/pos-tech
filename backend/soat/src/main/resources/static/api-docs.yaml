@@ -3,10 +3,11 @@ info:
   version: '1.0'
   title: PosTech - SOAT
   description: API para gerenciamento de clientes e pedidos no contexto da disciplina de Soluções de Arquitetura de Software.
+  termsOfService: ''
   contact:
-    email: hahmann96@gmail.com
-    name: Philipp Hahmann
-    url: 'https://github.com/philipphahmann'
+    email: ''
+    name: Bruno Cesar Philip Phahmann Shanderson Vieira Vinícius Andreghetti Gabriel da Silva
+    url: 'https://github.com/brunocesaromax https://github.com/philipphahmann https://github.com/shandersonvieira https://github.com/vinicius-ma https://github.com/gabrieldasilvadev'
   license:
     url: 'https://opensource.org/licenses/MIT'
     name: MIT License
@@ -82,27 +83,43 @@ paths:
         - Product
       summary: Criar produto
       description: 'Cria um novo produto no catálogo, exigindo dados como nome, SKU, preço e categoria.'
-      operationId: post-Produto
+      operationId: postProducts
       requestBody:
         $ref: '#/components/requestBodies/ProductCreateRequest'
       responses:
         '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                  message:
-                    type: string
+          $ref: '#/components/responses/CreateProduct201Response'
         '400':
-          description: Bad Request
+          description: 'Dados inválidos. Por favor, valide as informações.'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+      servers:
+        - url: 'http://localhost:8080'
+          description: Localhost
+  '/products/{productId}':
+    delete:
+      tags:
+        - Product
+      summary: Inativar produto
+      operationId: deleteProducts
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
         '500':
           description: Internal Server Error
       servers:
@@ -113,12 +130,19 @@ paths:
         - Product
       summary: Atualizar produto
       description: Atualiza um produto existente com base no identificador e nos novos dados enviados.
-      operationId: put-Produto
+      operationId: putProducts
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
       requestBody:
         $ref: '#/components/requestBodies/ProductUpdateRequest'
       responses:
         '200':
-          description: Produto atualizado com sucesso.
+          $ref: '#/components/responses/UpdateProduct200Response'
         '400':
           description: Dados inválidos. Verifique os campos obrigatórios e o formato enviado.
           content:
@@ -137,30 +161,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-      servers:
-        - url: 'http://localhost:8080'
-          description: Localhost
-  '/products/{productId}':
-    delete:
-      tags:
-        - Product
-      summary: Inativar produto
-      operationId: delete-products-productId
-      parameters:
-        - name: productId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '204':
-          description: No Content
-        '400':
-          description: Bad Request
-        '404':
-          description: Not Found
-        '500':
-          description: Internal Server Error
       servers:
         - url: 'http://localhost:8080'
           description: Localhost
@@ -309,13 +309,13 @@ components:
               name:
                 type: string
               price:
-                type: number
+                $ref: '#/components/schemas/Money'
               description:
                 type: string
               image:
                 type: string
               category:
-                $ref: '#/components/schemas/Category'
+                $ref: '#/components/schemas/ProductCategory'
             required:
               - sku
               - name
@@ -323,6 +323,15 @@ components:
               - description
               - image
               - category
+          examples:
+            Example 1:
+              value:
+                sku: string
+                name: string
+                price: 0
+                description: string
+                image: string
+                category: SNACK
     ProductUpdateRequest:
       content:
         application/json:
@@ -332,13 +341,21 @@ components:
               name:
                 type: string
               price:
-                type: number
+                $ref: '#/components/schemas/Money'
               description:
                 type: string
               image:
                 type: string
               category:
-                $ref: '#/components/schemas/Category'
+                $ref: '#/components/schemas/ProductCategory'
+          examples:
+            Example 1:
+              value:
+                name: string
+                price: 0
+                description: string
+                image: string
+                category: SNACK
     CreateOrderRequest:
       description: 'Requisição para criação de um novo pedido contendo cliente, lista de itens e observações opcionais.'
       content:
@@ -376,12 +393,12 @@ components:
                   - productId: 241fae7b-0210-4d29-a928-90653c9a9a89
                     name: string
                     quantity: 2
-                    price: '1946.32'
+                    price: 1946.32
                     category: SNACK
                     discount:
-                      value: '12.4'
+                      value: 12.4
                 discounts:
-                  - value: '12.4'
+                  - value: 12.4
                 notes:
                   - Remover a salada
     PaymentRequest:
@@ -409,6 +426,8 @@ components:
               value:
                 customerId: 241fae7b-0210-4d29-a928-90653c9a9a89
                 orderId: 241fae7b-0210-4d29-a928-90653c9a9a89
+                paymentMethod: PIX
+                amount: 1946.32
   responses:
     CustomerResponse:
       description: ''
@@ -450,6 +469,39 @@ components:
                 type: array
                 items:
                   type: string
+    CreateProduct201Response:
+      description: Produto criado com sucesso!
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+              message:
+                type: string
+          examples:
+            Example 1:
+              value:
+                id: string
+                message: string
+    UpdateProduct200Response:
+      description: Produto atualizado com sucesso!
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Product'
+          examples:
+            Example 1:
+              value:
+                id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                sku: string
+                active: true
+                name: string
+                price: 0
+                description: string
+                image: string
+                category: SNACK
     OrderCreatedResponse:
       description: Example response
       content:
@@ -496,22 +548,20 @@ components:
               value:
                 OrderId: 241fae7b-0210-4d29-a928-90653c9a9a89
                 items:
-                  - id: 241fae7b-0210-4d29-a928-90653c9a9a89
+                  - productId: 241fae7b-0210-4d29-a928-90653c9a9a89
                     name: string
                     quantity: 2
-                    price: '1946.32'
+                    price: 1946.32
                     category: SNACK
                     discount:
-                      id: 241fae7b-0210-4d29-a928-90653c9a9a89
-                      value: '12.4'
+                      value: 1946.32
                 discounts:
-                  - discountId: 241fae7b-0210-4d29-a928-90653c9a9a89
-                    type: PERCENTAGE
-                    amount: '1946.32'
+                  - type: PERCENTAGE
+                    amount: 1946.32
                     reason: string
-                discountAmountTotal: '1946.32'
-                subtotal: '1946.32'
-                total: '1946.32'
+                discountAmountTotal: 1946.32
+                subtotal: 1946.32
+                total: 1946.32
                 status: RECEIVED
     PaymentResponse:
       description: Representa os dados retornados após o processamento de um pagamento durante o checkout de um pedido.
@@ -542,7 +592,7 @@ components:
               value:
                 orderId: 241fae7b-0210-4d29-a928-90653c9a9a89
                 paymentId: 241fae7b-0210-4d29-a928-90653c9a9a89
-                amount: '1946.32'
+                amount: 1946.32
                 paymentStatus: APPROVED
                 processedAt: '2025-05-20T00:00:00Z'
   schemas:
@@ -573,15 +623,21 @@ components:
       minLength: 36
       maxLength: 36
       example: 241fae7b-0210-4d29-a928-90653c9a9a89
-    Category:
+    Money:
+      type: number
+      title: Money
+      description: 'Valor monetário representado em formato brasileiro (R$), com suporte a casas decimais.'
+      format: double
+      readOnly: true
+      example: 1946.32
+    ProductCategory:
       type: string
       enum:
         - SNACK
         - DRINK
         - DESSERT
         - SIDE_DISH
-      title: Category
-      description: Categoria do produto dentro do pedido.
+      title: ProductCategory
     OrderItem:
       type: object
       title: OrderItem
@@ -610,13 +666,15 @@ components:
         - quantity
         - price
         - category
-    Money:
-      type: number
-      title: Money
-      description: 'Valor monetário representado em formato brasileiro (R$), com suporte a casas decimais.'
-      format: double
-      readOnly: true
-      example: '1946.32'
+    Category:
+      type: string
+      enum:
+        - SNACK
+        - DRINK
+        - DESSERT
+        - SIDE_DISH
+      title: Category
+      description: Categoria do produto dentro do pedido.
     Discount:
       type: object
       properties:
@@ -630,6 +688,35 @@ components:
         - PIX
       title: PaymentMethod
       readOnly: true
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        sku:
+          type: string
+        active:
+          type: boolean
+        name:
+          type: string
+        price:
+          $ref: '#/components/schemas/Money'
+        description:
+          type: string
+        image:
+          type: string
+        category:
+          $ref: '#/components/schemas/ProductCategory'
+      required:
+        - id
+        - sku
+        - active
+        - name
+        - price
+        - description
+        - image
+        - category
     DiscountType:
       type: string
       enum:
