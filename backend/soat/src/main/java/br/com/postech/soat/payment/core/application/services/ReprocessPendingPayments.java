@@ -29,10 +29,13 @@ public class ReprocessPendingPayments {
             if (result == GatewayOperationResult.FAILURE) {
                 logger.error("Payment processing failed for payment ID: {}", payment.getId());
                 payment.fail();
-            } else {
+                paymentRepository.save(payment);
                 payment.approve();
-                logger.info("Payment processed successfully for payment ID: {}", payment.getId());
+                return;
             }
+
+            payment.approve();
+            logger.info("Payment processed successfully for payment ID: {}", payment.getId());
 
             paymentRepository.save(payment);
         }
