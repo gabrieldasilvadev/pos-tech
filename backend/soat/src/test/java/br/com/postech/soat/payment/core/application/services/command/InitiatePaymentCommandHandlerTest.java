@@ -6,6 +6,7 @@ import br.com.postech.soat.payment.core.application.services.command.model.Initi
 import br.com.postech.soat.payment.core.domain.model.Payment;
 import br.com.postech.soat.payment.core.domain.model.PaymentId;
 import br.com.postech.soat.payment.core.domain.model.PaymentMethod;
+import br.com.postech.soat.payment.core.domain.model.PaymentStatus;
 import br.com.postech.soat.payment.core.ports.out.GatewayOperationResult;
 import br.com.postech.soat.payment.core.ports.out.PaymentGateway;
 import br.com.postech.soat.payment.core.ports.out.PaymentRepository;
@@ -68,7 +69,7 @@ class InitiatePaymentCommandHandlerTest {
         assertEquals(customerId, capturedPayment.getCustomerId());
         assertEquals(PaymentMethod.PIX, capturedPayment.getMethod());
         assertEquals(amount, capturedPayment.getAmount());
-        assertEquals(br.com.postech.soat.payment.core.domain.model.PaymentStatus.APPROVED, capturedPayment.getStatus());
+        assertEquals(PaymentStatus.APPROVED, capturedPayment.getStatus());
     }
 
     @Test
@@ -97,6 +98,6 @@ class InitiatePaymentCommandHandlerTest {
         assertEquals(customerId, capturedPayment.getCustomerId());
         assertEquals(PaymentMethod.PIX, capturedPayment.getMethod());
         assertEquals(amount, capturedPayment.getAmount());
-        assertEquals(br.com.postech.soat.payment.core.domain.model.PaymentStatus.FAILED, capturedPayment.getStatus());
+        assertEquals(PaymentStatus.FAILED, capturedPayment.getStatus());
     }
 }
