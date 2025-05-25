@@ -13,15 +13,15 @@ public interface ProductMapper {
             return null;
         }
         return Product.builder()
-                .productId(entity.getId())
-                .sku(entity.getSku())
-                .active(entity.getActive())
-                .name(entity.getName())
-                .price(entity.getPrice())
-                .description(entity.getDescription())
-                .image(entity.getImage())
-                .category(entity.getCategory())
-                .build();
+            .productId(entity.getId())
+            .sku(entity.getSku())
+            .active(entity.getActive())
+            .name(entity.getName())
+            .price(entity.getPrice())
+            .description(entity.getDescription())
+            .image(entity.getImage())
+            .category(entity.getCategory())
+            .build();
     }
 
     default ProductEntity toEntity(Product domain) {

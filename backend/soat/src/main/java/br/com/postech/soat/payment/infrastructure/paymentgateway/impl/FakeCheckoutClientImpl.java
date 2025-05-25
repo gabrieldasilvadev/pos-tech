@@ -5,16 +5,15 @@ import br.com.postech.soat.payment.core.domain.model.Payment;
 import br.com.postech.soat.payment.core.domain.model.PaymentId;
 import br.com.postech.soat.payment.core.domain.model.PaymentStatus;
 import br.com.postech.soat.payment.infrastructure.paymentgateway.FakeCheckoutClient;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
@@ -80,10 +79,10 @@ public class FakeCheckoutClientImpl implements FakeCheckoutClient {
 
         Payment payment = paymentStore.get(paymentId.getValue().toString());
         if (payment != null) {
-            return String.format("Payment details for ID: %s, Status: %s, Amount: %s", 
-                    paymentId.getValue(), 
-                    payment.getStatus(), 
-                    payment.getAmount());
+            return String.format("Payment details for ID: %s, Status: %s, Amount: %s",
+                paymentId.getValue(),
+                payment.getStatus(),
+                payment.getAmount());
         }
 
         return "Payment details for ID: " + paymentId.getValue() + ", Status: " + PaymentStatus.APPROVED;

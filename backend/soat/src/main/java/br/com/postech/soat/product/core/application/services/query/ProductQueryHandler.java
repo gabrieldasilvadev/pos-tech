@@ -5,7 +5,6 @@ import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;
 import br.com.postech.soat.commons.infrastructure.exception.NotFoundException;
 import br.com.postech.soat.product.core.application.services.query.model.ProductQuery;
 import br.com.postech.soat.product.core.domain.model.Product;
-import br.com.postech.soat.product.core.exception.ProductNotFoundException;
 import br.com.postech.soat.product.core.ports.out.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -22,7 +21,7 @@ public class ProductQueryHandler implements QueryHandler<ProductQuery, Product> 
     @Override
     public Product handle(ProductQuery query) {
         logger.info("Querying product with ID: {}", query.productId());
-        
+
         return productRepository.findById(query.productId().getValue())
             .orElseThrow(() -> new NotFoundException("Produto não encontrado"));
     }

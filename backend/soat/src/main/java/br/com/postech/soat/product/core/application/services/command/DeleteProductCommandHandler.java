@@ -4,7 +4,6 @@ import br.com.postech.soat.commons.application.command.CommandHandler;
 import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;
 import br.com.postech.soat.product.core.application.services.command.model.DeleteProductCommand;
 import br.com.postech.soat.product.core.domain.model.Product;
-import br.com.postech.soat.product.core.domain.model.ProductId;
 import br.com.postech.soat.product.core.exception.ProductNotFoundException;
 import br.com.postech.soat.product.core.ports.out.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,15 +21,15 @@ public class DeleteProductCommandHandler implements CommandHandler<DeleteProduct
     @Override
     public Void handle(DeleteProductCommand command) {
         logger.info("Deleting product with ID: {}", command.productId());
-        
+
         Product existingProduct = productRepository.findById(command.productId().getValue())
             .orElseThrow(() -> new ProductNotFoundException("Produto não encontrado"));
 
         existingProduct.deactivate();
         productRepository.save(existingProduct);
-        
+
         logger.info("Product deactivated with ID: {}", existingProduct.getId());
-        
+
         return null;
     }
 }

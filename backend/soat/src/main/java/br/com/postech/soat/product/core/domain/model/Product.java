@@ -34,8 +34,8 @@ public class Product extends AggregateRoot<ProductId> {
         this.category = category;
     }
 
-    public static Product create(String sku, String name, BigDecimal price, 
-                                String description, String image, Category category) {
+    public static Product create(String sku, String name, BigDecimal price,
+                                 String description, String image, Category category) {
         Product product = new Product(ProductId.generate());
         product.sku = sku;
         product.active = true;

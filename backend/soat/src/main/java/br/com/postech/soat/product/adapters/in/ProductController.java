@@ -11,11 +11,11 @@ import br.com.postech.soat.product.adapters.in.mapper.ProductQueryMapper;
 import br.com.postech.soat.product.core.application.services.query.model.ProductQuery;
 import br.com.postech.soat.product.core.domain.model.Product;
 import br.com.postech.soat.product.core.domain.model.ProductId;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor

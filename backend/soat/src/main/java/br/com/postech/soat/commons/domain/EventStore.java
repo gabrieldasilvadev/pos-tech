@@ -4,7 +4,7 @@ import java.util.List;
 
 @SuppressWarnings("rawtypes")
 public interface EventStore {
-  void save(Identifier aggregateId, List<DomainEvent> events);
+    void save(Identifier aggregateId, List<DomainEvent> events);
 
-  List<DomainEvent> getEventsFor(String aggregateId);
+    List<DomainEvent> getEventsFor(String aggregateId);
 }

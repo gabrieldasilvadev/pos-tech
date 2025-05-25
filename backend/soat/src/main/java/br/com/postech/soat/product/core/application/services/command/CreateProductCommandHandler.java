@@ -21,7 +21,7 @@ public class CreateProductCommandHandler implements CommandHandler<CreateProduct
     @Override
     public ProductId handle(CreateProductCommand command) {
         logger.info("Creating product with SKU: {}", command.sku());
-        
+
         final Product product = Product.create(
             command.sku(),
             command.name(),
@@ -33,7 +33,7 @@ public class CreateProductCommandHandler implements CommandHandler<CreateProduct
 
         final Product savedProduct = productRepository.save(product);
         logger.info("Product created with ID: {}", savedProduct.getId());
-        
+
         return savedProduct.getId();
     }
 }

@@ -7,8 +7,12 @@ import java.util.UUID;
 
 public interface ProductRepository {
     Product save(Product product);
+
     Optional<Product> findById(UUID id);
+
     Optional<Product> findById(ProductId id);
+
     boolean existsById(UUID uuid);
+
     boolean existsById(ProductId id);
 }

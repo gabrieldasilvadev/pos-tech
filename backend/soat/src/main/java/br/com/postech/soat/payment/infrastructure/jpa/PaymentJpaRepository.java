@@ -7,5 +7,5 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PaymentJpaRepository extends JpaRepository<PaymentEntity, UUID> {
-  List<PaymentEntity> findByStatus(PaymentStatus status);
+    List<PaymentEntity> findByStatus(PaymentStatus status);
 }

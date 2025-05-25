@@ -28,7 +28,8 @@ id=550e8400-e29b-41d4-a716-446655440000&topic=payment
 
 ## Response
 
-The webhook endpoint will return a `200 OK` response if the notification was received successfully, regardless of whether the payment was processed successfully or not.
+The webhook endpoint will return a `200 OK` response if the notification was received successfully, regardless of
+whether the payment was processed successfully or not.
 
 ## Processing Logic
 
@@ -41,7 +42,8 @@ When a webhook notification is received:
 
 ## Error Handling
 
-If an error occurs during processing, the system will log the error but still return a `200 OK` response to acknowledge receipt of the notification. This is to prevent MercadoPago from retrying the notification unnecessarily.
+If an error occurs during processing, the system will log the error but still return a `200 OK` response to acknowledge
+receipt of the notification. This is to prevent MercadoPago from retrying the notification unnecessarily.
 
 ## Testing the Webhook
 
@@ -60,8 +62,8 @@ Or using a tool like Postman:
 2. Set the URL to `http://localhost:8080/webhooks/mercado-pago`
 3. Set the Content-Type header to `application/x-www-form-urlencoded`
 4. Add the following form parameters:
-   - `id`: A valid payment ID
-   - `topic`: "payment"
+    - `id`: A valid payment ID
+    - `topic`: "payment"
 5. Send the request
 
 ## Simulating Different Scenarios

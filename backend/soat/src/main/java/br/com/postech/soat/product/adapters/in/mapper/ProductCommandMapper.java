@@ -5,12 +5,10 @@ import br.com.postech.soat.openapi.model.PutProductsRequestDto;
 import br.com.postech.soat.product.core.application.services.command.model.CreateProductCommand;
 import br.com.postech.soat.product.core.application.services.command.model.DeleteProductCommand;
 import br.com.postech.soat.product.core.application.services.command.model.UpdateProductCommand;
-import br.com.postech.soat.product.core.domain.model.ProductId;
+import java.util.UUID;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
-
-import java.util.UUID;
 
 @Mapper
 public interface ProductCommandMapper {

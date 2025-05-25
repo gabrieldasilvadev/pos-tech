@@ -1,15 +1,15 @@
 package br.com.postech.soat.order.core.domain.model;
 
 import br.com.postech.soat.customer.core.domain.model.CustomerId;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DisplayName("Order Tests")
 class OrderTest {
@@ -53,7 +53,7 @@ class OrderTest {
     @DisplayName("Should calculate original price")
     void shouldCalculateOriginalPrice() {
         CustomerId customerId = new CustomerId(UUID.randomUUID());
-        
+
         OrderItem item1 = new OrderItem(
             UUID.randomUUID(),
             "Product 1",
@@ -62,7 +62,7 @@ class OrderTest {
             "Category 1",
             null
         );
-        
+
         OrderItem item2 = new OrderItem(
             UUID.randomUUID(),
             "Product 2",
@@ -71,7 +71,7 @@ class OrderTest {
             "Category 2",
             null
         );
-        
+
         List<OrderItem> orderItems = List.of(item1, item2);
         List<Discount> discounts = new ArrayList<>();
         List<Observation> observations = new ArrayList<>();
@@ -86,10 +86,10 @@ class OrderTest {
     void shouldCalculateDiscountAmount() {
         CustomerId customerId = new CustomerId(UUID.randomUUID());
         List<OrderItem> orderItems = new ArrayList<>();
-        
+
         Discount discount1 = new Discount(new BigDecimal("5.00"));
         Discount discount2 = new Discount(new BigDecimal("3.00"));
-        
+
         List<Discount> discounts = List.of(discount1, discount2);
         List<Observation> observations = new ArrayList<>();
 
@@ -102,7 +102,7 @@ class OrderTest {
     @DisplayName("Should calculate total price with discount")
     void shouldCalculateTotalPriceWithDiscount() {
         CustomerId customerId = new CustomerId(UUID.randomUUID());
-        
+
         OrderItem item1 = new OrderItem(
             UUID.randomUUID(),
             "Product 1",
@@ -111,7 +111,7 @@ class OrderTest {
             "Category 1",
             null
         );
-        
+
         OrderItem item2 = new OrderItem(
             UUID.randomUUID(),
             "Product 2",
@@ -120,12 +120,12 @@ class OrderTest {
             "Category 2",
             null
         );
-        
+
         List<OrderItem> orderItems = List.of(item1, item2);
-        
+
         Discount discount1 = new Discount(new BigDecimal("5.00"));
         Discount discount2 = new Discount(new BigDecimal("3.00"));
-        
+
         List<Discount> discounts = List.of(discount1, discount2);
         List<Observation> observations = new ArrayList<>();
 

@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 public record CPF(String value) {
 
     private static final Pattern CPF_PATTERN = Pattern.compile("^\\d{11}$");
-    
+
     public CPF(String value) {
         String normalizedValue = normalize(value);
         validate(normalizedValue);

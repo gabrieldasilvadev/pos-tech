@@ -7,6 +7,8 @@ import br.com.postech.soat.payment.core.domain.model.PaymentId;
 import br.com.postech.soat.payment.core.domain.model.PaymentMethod;
 import br.com.postech.soat.payment.core.domain.model.PaymentStatus;
 import br.com.postech.soat.payment.core.ports.out.PaymentRepository;
+import java.math.BigDecimal;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,9 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -47,13 +46,13 @@ class MercadoPagoWebhookIntegrationTest {
         paymentId = PaymentId.generate();
 
         testPayment = Payment.builder()
-                .paymentId(paymentId.getValue())
-                .orderId(orderId)
-                .customerId(customerId)
-                .amount(new BigDecimal("100.00"))
-                .status(PaymentStatus.APPROVED)
-                .method(PaymentMethod.PIX)
-                .build();
+            .paymentId(paymentId.getValue())
+            .orderId(orderId)
+            .customerId(customerId)
+            .amount(new BigDecimal("100.00"))
+            .status(PaymentStatus.APPROVED)
+            .method(PaymentMethod.PIX)
+            .build();
 
         paymentRepository.save(testPayment);
     }
@@ -69,7 +68,7 @@ class MercadoPagoWebhookIntegrationTest {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", paymentId.getValue().toString())
                 .param("topic", "payment"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+            .andExpect(MockMvcResultMatchers.status().isOk());
 
         Payment updatedPayment = paymentRepository.findById(paymentId);
         assertNotNull(updatedPayment);
@@ -87,7 +86,7 @@ class MercadoPagoWebhookIntegrationTest {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", paymentId.getValue().toString())
                 .param("topic", "other_topic"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+            .andExpect(MockMvcResultMatchers.status().isOk());
 
         Payment updatedPayment = paymentRepository.findById(paymentId);
         assertNotNull(updatedPayment);
