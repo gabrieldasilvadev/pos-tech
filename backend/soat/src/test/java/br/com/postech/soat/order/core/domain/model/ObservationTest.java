@@ -13,7 +13,6 @@ class ObservationTest {
     void shouldCreateObservationWithText() {
         String text = "No onions please";
 
-        // Act
         Observation observation = new Observation(text);
 
         assertNotNull(observation);
