@@ -1,8 +1,9 @@
 package br.com.postech.soat.product.adapters.out.mapper;
 
-import br.com.postech.soat.openapi.model.PostProducts201Response;
-import br.com.postech.soat.openapi.model.PostProductsRequest;
-import br.com.postech.soat.openapi.model.PutProductsRequest;
+import br.com.postech.soat.openapi.model.PostProducts201ResponseDto;
+import br.com.postech.soat.openapi.model.PostProductsRequestDto;
+import br.com.postech.soat.openapi.model.ProductDto;
+import br.com.postech.soat.openapi.model.PutProductsRequestDto;
 import br.com.postech.soat.product.adapters.out.persistence.entities.ProductEntity;
 import br.com.postech.soat.product.core.domain.Product;
 import br.com.postech.soat.product.core.dto.CreateProductInput;
@@ -15,17 +16,17 @@ import java.util.UUID;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
-    CreateProductInput toCoreDto(PostProductsRequest request);
+    CreateProductInput toCoreDto(PostProductsRequestDto request);
 
-    PostProducts201Response toResponse(CreateProductOutput product);
+    PostProducts201ResponseDto toResponse(CreateProductOutput product);
 
     Product toDomain(ProductEntity entity);
 
     ProductEntity toEntity(Product domain);
 
-    UpdateProductInput toUpdateInput(PutProductsRequest request);
+    UpdateProductInput toUpdateInput(PutProductsRequestDto request);
 
-    br.com.postech.soat.openapi.model.Product toResponse(UpdateProductOutput product);
+    ProductDto toResponse(UpdateProductOutput product);
 
     DeleteProductInput toDeleteInput (UUID id);
 }
