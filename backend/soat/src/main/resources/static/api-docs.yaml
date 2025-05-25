@@ -1,95 +1,64 @@
 openapi: 3.0.3
 info:
-  title: PosTech - SOAT
   version: '1.0'
+  title: PosTech - SOAT
   description: API para gerenciamento de clientes e pedidos no contexto da disciplina de Soluções de Arquitetura de Software.
   contact:
     email: hahmann96@gmail.com
     name: Philipp Hahmann
     url: 'https://github.com/philipphahmann'
   license:
-    name: MIT License
     url: 'https://opensource.org/licenses/MIT'
+    name: MIT License
 servers:
   - url: 'http://localhost:8080'
     description: Localhost
-tags:
-  - name: Customer
-    description: Operações relacionadas a clientes
-  - name: Product
-    description: Operações relacionadas a produtos
-  - name: Order
-    description: Operações relacionadas aos pedidos
 paths:
   /customers:
     get:
-      summary: Buscar clientes (todos ou por CPF)
-      responses:
-        '200':
-          description: Cliente(s) encontrado(s)
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Customer'
-              examples:
-                ExemploClientePorCPF:
-                  value:
-                    - id: 01fc4570-8b23-11ed-a1eb-0242ac120002
-                      cpf: '12345678900'
-                      name: Maria Oliveira
-                      email: maria@example.com
-                ExemploListaClientes:
-                  value:
-                    - id: 01fc4570-8b23-11ed-a1eb-0242ac120002
-                      cpf: '12345678900'
-                      name: Maria Oliveira
-                      email: maria@example.com
-                    - id: 01fc4570-8b23-11ed-a1eb-0242ac120003
-                      cpf: '12345678901'
-                      name: Joe Doe
-                      email: joe@doe.com
-        '204':
-          description: Nenhum cliente retornado
-        '400':
-          description: Requisição inválida. Verique os dados enviados.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Erro interno no servidor
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      operationId: getClients
+      tags:
+        - Customer
+      summary: Buscar cliente por CPF
+      description: Busca cliente por CPF
+      operationId: findCustomer
       parameters:
         - $ref: '#/components/parameters/CpfParam'
-      description: Busca todos os clientes cadastrados ou realiza filtro por CPF
+      responses:
+        '200':
+          $ref: '#/components/responses/CustomerResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ErrorResponse'
+      servers:
+        - url: 'http://localhost:8080'
+          description: Localhost
+    post:
       tags:
         - Customer
-    post:
       summary: Criar cliente
+      description: Cria um cliente
+      operationId: createCustomer
+      requestBody:
+        $ref: '#/components/requestBodies/CustomerRequest'
       responses:
         '201':
-          description: Cliente cadastrado com sucesso
+          $ref: '#/components/responses/CustomerResponse'
         '400':
-          description: Requisição inválida. Verifique os dados enviados.
+          $ref: '#/components/responses/ErrorResponse'
         '409':
-          description: Duplicidade
+          $ref: '#/components/responses/ErrorResponse'
         '500':
-          description: Erro interno no servidor
-      operationId: postClients
-      requestBody:
-        $ref: '#/components/requestBodies/ClientRequest'
-      description: Cria um cliente
-      tags:
-        - Customer
-    parameters: []
+          $ref: '#/components/responses/ErrorResponse'
+      servers:
+        - url: 'http://localhost:8080'
+          description: Localhost
   /products:
     get:
+      tags:
+        - Product
       summary: 'Buscar produtos (todos, por ID ou por categoria)'
       description: Retorna todos os produtos cadastrados ou realiza filtros por ID ou categoria
       operationId: getProduct
@@ -105,11 +74,17 @@ paths:
           description: Requisição inválida
         '500':
           description: Erro interno ao buscar produtos
+      servers:
+        - url: 'http://localhost:8080'
+          description: Localhost
+    post:
       tags:
         - Product
-    post:
       summary: Criar produto
       description: 'Cria um novo produto no catálogo, exigindo dados como nome, SKU, preço e categoria.'
+      operationId: postProducts
+      requestBody:
+        $ref: '#/components/requestBodies/ProductCreateRequest'
       responses:
         '201':
           $ref: '#/components/responses/CreateProduct201Response'
@@ -121,22 +96,22 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: Internal Server Error
-      operationId: postProducts
-      requestBody:
-        $ref: '#/components/requestBodies/ProductCreateRequest'
+      servers:
+        - url: 'http://localhost:8080'
+          description: Localhost
+  '/products/{productId}':
+    delete:
       tags:
         - Product
-    parameters: []
-  '/products/{productId}':
-    parameters:
-      - schema:
-          type: string
-          format: uuid
-        name: productId
-        in: path
-        required: true
-    delete:
       summary: Inativar produto
+      operationId: deleteProducts
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
         '204':
           description: No Content
@@ -146,13 +121,24 @@ paths:
           description: Not Found
         '500':
           description: Internal Server Error
-      operationId: deleteProducts
-      tags:
-        - Product
+      servers:
+        - url: 'http://localhost:8080'
+          description: Localhost
     put:
-      summary: Atualizar produto
       tags:
         - Product
+      summary: Atualizar produto
+      description: Atualiza um produto existente com base no identificador e nos novos dados enviados.
+      operationId: putProducts
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/ProductUpdateRequest'
       responses:
         '200':
           $ref: '#/components/responses/UpdateProduct200Response'
@@ -174,71 +160,478 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-      operationId: putProducts
-      x-stoplight:
-        id: 9f1p50j19j0pv
-      description: Atualiza um produto existente com base no identificador e nos novos dados enviados.
-      requestBody:
-        $ref: '#/components/requestBodies/ProductUpdateRequest'
+      servers:
+        - url: 'http://localhost:8080'
+          description: Localhost
   /orders:
-    get:
-      summary: Buscar pedido
-      operationId: get-orders
+    post:
+      tags:
+        - Order
+      summary: Criar pedido
+      description: |-
+        Endpoint responsável por registrar um novo pedido realizado no totem.
+        Recebe uma lista de itens escolhidos pelo cliente, aplica validações de disponibilidade, calcula o subtotal, aplica descontos válidos.
+        Retorna o resumo completo do pedido contendo os itens, valores parciais, descontos aplicados e o valor total a ser pago.
+        O pedido permanece em estado pendente de pagamento até a confirmação via meio de pagamento associado.
+      operationId: post-orders
+      requestBody:
+        $ref: '#/components/requestBodies/CreateOrderRequest'
       responses:
-        '200':
-          description: Lista de pedidos
+        '201':
+          $ref: '#/components/responses/OrderCreatedResponse'
+      servers:
+        - url: 'http://localhost:8080'
+          description: Localhost
+  /payments:
+    post:
+      tags:
+        - Payment
+      summary: Iniciar processo de pagamento
+      description: Solicita o processamento de um pagamento associado a um pedido previamente criado. O endpoint aceita a requisição e retorna imediatamente com o identificador da transação de pagamento.
+      operationId: post-payments
+      requestBody:
+        $ref: '#/components/requestBodies/PaymentRequest'
+      responses:
+        '202':
+          description: 'Representa a resposta do sistema após o recebimento de uma solicitação de pagamento. Contém o identificador único da transação, que poderá ser utilizado para consultar o status do pagamento posteriormente.'
           content:
             application/json:
               schema:
+                type: object
+                properties:
+                  paymentId:
+                    $ref: '#/components/schemas/UUID'
+                required:
+                  - paymentId
+              examples:
+                Example 1:
+                  value:
+                    paymentId: 241fae7b-0210-4d29-a928-90653c9a9a89
+      servers:
+        - url: 'http://localhost:8080'
+          description: Localhost
+  '/payments/{paymentId}':
+    get:
+      tags:
+        - Payment
+      summary: Consultar pagamento
+      description: |-
+        Este endpoint permite consultar as informações de uma transação de pagamento previamente processada.
+        É útil para verificar o status final de um pagamento iniciado de forma assíncrona ou para exibir detalhes ao cliente ou sistemas internos.
+      operationId: get-payments-paymentId
+      parameters:
+        - name: paymentId
+          in: path
+          description: Identificador único da transação de pagamento gerada durante o processo de checkout.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/PaymentResponse'
+      servers:
+        - url: 'http://localhost:8080'
+          description: Localhost
+tags:
+  - name: Customer
+    description: Operações relacionadas a clientes
+  - name: Product
+    description: Operações relacionadas a produtos
+  - name: Order
+    description: Operações relacionadas aos pedidos
+components:
+  parameters:
+    CpfParam:
+      name: cpf
+      in: query
+      description: CPF do cliente no formato apenas números
+      schema:
+        type: string
+        pattern: '^\d{11}$'
+    CategoryParam:
+      name: category
+      in: query
+      description: Enum da categoria
+      required: false
+      schema:
+        type: string
+    ProductIdParam:
+      name: ProductIdParam
+      in: query
+      description: Id do produto
+      required: false
+      schema:
+        type: string
+  requestBodies:
+    CustomerRequest:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              cpf:
+                type: string
+                pattern: '^\d{11}$'
+                minLength: 11
+                maxLength: 11
+                example: '53731833697'
+              name:
+                type: string
+                minLength: 3
+                maxLength: 255
+                example: João Cardoso
+              email:
+                type: string
+                format: email
+                pattern: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+                maxLength: 255
+                example: joao.cardoso@email.com
+              phone:
+                type: string
+                pattern: '^(?:[1-9]{2})(?:[9]{1})?(?:[0-9]{8})$'
+                minLength: 10
+                maxLength: 111
+                example: '1134567890'
+            required:
+              - cpf
+              - name
+              - email
+    ProductCreateRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - sku
+              - name
+              - price
+              - description
+              - image
+              - category
+            properties:
+              sku:
+                type: string
+              name:
+                type: string
+              price:
+                $ref: '#/components/schemas/Money'
+              description:
+                type: string
+              image:
+                type: string
+              category:
+                $ref: '#/components/schemas/ProductCategory'
+          examples:
+            Example 1:
+              value:
+                sku: string
+                name: string
+                price: 0
+                description: string
+                image: string
+                category: SNACK
+    ProductUpdateRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              price:
+                $ref: '#/components/schemas/Money'
+              description:
+                type: string
+              image:
+                type: string
+              category:
+                $ref: '#/components/schemas/ProductCategory'
+          examples:
+            Example 1:
+              value:
+                name: string
+                price: 0
+                description: string
+                image: string
+                category: SNACK
+    CreateOrderRequest:
+      description: 'Requisição para criação de um novo pedido contendo cliente, lista de itens e observações opcionais.'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              CustomerId:
+                $ref: '#/components/schemas/UUID'
+              items:
+                type: array
+                minItems: 1
+                maxItems: 100
+                items:
+                  $ref: '#/components/schemas/OrderItem'
+              discounts:
+                type: array
+                readOnly: true
+                items:
+                  $ref: '#/components/schemas/Discount'
+              notes:
                 type: array
                 items:
+                  type: string
+                  readOnly: true
+                  example: Remover a salada
+            required:
+              - CustomerId
+              - items
+          examples:
+            Example 1:
+              value:
+                CustomerId: 241fae7b-0210-4d29-a928-90653c9a9a89
+                items:
+                  - productId: 241fae7b-0210-4d29-a928-90653c9a9a89
+                    name: string
+                    quantity: 2
+                    price: 1946.32
+                    category: SNACK
+                    discount:
+                      value: 12.4
+                discounts:
+                  - value: 12.4
+                notes:
+                  - Remover a salada
+    PaymentRequest:
+      description: Representa os dados necessários para iniciar o processo de pagamento de um pedido. Esse objeto é enviado no corpo da requisição.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              customerId:
+                $ref: '#/components/schemas/UUID'
+              orderId:
+                $ref: '#/components/schemas/UUID'
+              paymentMethod:
+                $ref: '#/components/schemas/PaymentMethod'
+              amount:
+                $ref: '#/components/schemas/Money'
+            required:
+              - customerId
+              - orderId
+              - paymentMethod
+              - amount
+          examples:
+            Example 1:
+              value:
+                customerId: 241fae7b-0210-4d29-a928-90653c9a9a89
+                orderId: 241fae7b-0210-4d29-a928-90653c9a9a89
+                paymentMethod: PIX
+                amount: 1946.32
+  responses:
+    CustomerResponse:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+              email:
+                type: string
+              cpf:
+                type: string
+              phone:
+                type: string
+          examples:
+            Example 1:
+              value:
+                id: 77a73531-d3ab-443e-b46a-6ff7ee5d5d29
+                name: Chaves
+                email: chaves@email.com
+                cpf: '33400276170'
+                phone: ''
+    ErrorResponse:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+              message:
+                type: string
+              error:
+                type: array
+                items:
+                  type: string
+    CreateProduct201Response:
+      description: Produto criado com sucesso!
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+              message:
+                type: string
+          examples:
+            Example 1:
+              value:
+                id: string
+                message: string
+    UpdateProduct200Response:
+      description: Produto atualizado com sucesso!
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Product'
+          examples:
+            Example 1:
+              value:
+                id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                sku: string
+                active: true
+                name: string
+                price: 0
+                description: string
+                image: string
+                category: SNACK
+    OrderCreatedResponse:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              OrderId:
+                $ref: '#/components/schemas/UUID'
+              items:
+                type: array
+                readOnly: true
+                items:
+                  $ref: '#/components/schemas/OrderItem'
+              discounts:
+                type: array
+                readOnly: true
+                items:
                   type: object
-      tags:
-        - Order
-    post:
-      summary: Criar pedido
-      operationId: post-orders
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-      responses:
-        '201':
-          description: Pedido criado com sucesso
-      tags:
-        - Order
-components:
+                  properties:
+                    type:
+                      $ref: '#/components/schemas/DiscountType'
+                    amount:
+                      $ref: '#/components/schemas/Money'
+                    reason:
+                      type: string
+              discountAmountTotal:
+                $ref: '#/components/schemas/Money'
+              subtotal:
+                $ref: '#/components/schemas/Money'
+              total:
+                $ref: '#/components/schemas/Money'
+              status:
+                $ref: '#/components/schemas/OrderStatus'
+            required:
+              - OrderId
+              - items
+              - discountAmountTotal
+              - subtotal
+              - total
+              - status
+          examples:
+            Example 1:
+              value:
+                OrderId: 241fae7b-0210-4d29-a928-90653c9a9a89
+                items:
+                  - id: 241fae7b-0210-4d29-a928-90653c9a9a89
+                    name: string
+                    quantity: 2
+                    price: '1946.32'
+                    category: SNACK
+                    discount:
+                      id: 241fae7b-0210-4d29-a928-90653c9a9a89
+                      value: '12.4'
+                discounts:
+                  - discountId: 241fae7b-0210-4d29-a928-90653c9a9a89
+                    type: PERCENTAGE
+                    amount: '1946.32'
+                    reason: string
+                discountAmountTotal: '1946.32'
+                subtotal: '1946.32'
+                total: '1946.32'
+                status: RECEIVED
+    PaymentResponse:
+      description: Representa os dados retornados após o processamento de um pagamento durante o checkout de um pedido.
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              orderId:
+                $ref: '#/components/schemas/UUID'
+              paymentId:
+                $ref: '#/components/schemas/UUID'
+              amount:
+                $ref: '#/components/schemas/Money'
+              paymentStatus:
+                $ref: '#/components/schemas/PaymentStatus'
+              processedAt:
+                $ref: '#/components/schemas/DateTime'
+            required:
+              - orderId
+              - paymentId
+              - amount
+              - paymentStatus
+              - processedAt
+          examples:
+            Example 1:
+              value:
+                orderId: 241fae7b-0210-4d29-a928-90653c9a9a89
+                paymentId: 241fae7b-0210-4d29-a928-90653c9a9a89
+                amount: 1946.32
+                paymentStatus: APPROVED
+                processedAt: '2025-05-20T00:00:00Z'
   schemas:
-    Customer:
+    ErrorResponse:
       type: object
-      title: Client
-      description: Modelo de cliente no banco de dados
-      required:
-        - id
-        - cpf
-        - name
-        - email
+      title: ErrorResponse
+      description: Response de erro
       properties:
-        id:
+        status:
+          type: integer
+        message:
           type: string
-          format: uuid
-        cpf:
-          type: string
-          pattern: '^\d{11}$'
-          maxLength: 11
-          minLength: 11
-          example: '12345678901'
-        name:
-          type: string
-        email:
-          type: string
-          format: email
+        error:
+          type: array
+          items:
+            type: string
       example:
-        id: 123e4567-e89b-12d3-a456-426614174000
-        cpf: '12345678901'
-        name: John Doe
-        email: john@doe.com
+        status: 400
+        message: Requisição inválida
+        error:
+          - Campo obrigatório 'email' não informado
+    UUID:
+      type: string
+      title: UUID
+      description: Identificador único universal no formato UUID.
+      format: uuid
+      pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+      minLength: 36
+      maxLength: 36
+      example: 241fae7b-0210-4d29-a928-90653c9a9a89
+    ProductCategory:
+      type: string
+      enum:
+        - SNACK
+        - DRINK
+        - DESSERT
+        - SIDE_DISH
+      title: ProductCategory
     Product:
       type: object
       required:
@@ -261,7 +654,7 @@ components:
         name:
           type: string
         price:
-          type: number
+          $ref: '#/components/schemas/Money'
         description:
           type: string
         image:
@@ -274,133 +667,95 @@ components:
             - DESSERT
             - SIDE_DISH
     Category:
-      title: Category
+      type: string
       enum:
         - SNACK
         - DRINK
         - DESSERT
         - SIDE_DISH
-    ErrorResponse:
-      title: ErrorResponse
+      title: Category
+      description: Categoria do produto dentro do pedido.
+    OrderItem:
       type: object
-      description: Response de erro
+      title: OrderItem
+      description: 'Item individual de um pedido, contendo informações do produto e quantidade solicitada.'
       properties:
-        status:
-          type: integer
-        message:
+        productId:
+          $ref: '#/components/schemas/UUID'
+        name:
           type: string
-        error:
-          type: array
-          items:
-            type: string
-      example:
-        status: 400
-        message: Requisição inválida
-        error:
-          - Campo obrigatório 'email' não informado
-  parameters:
-    CpfParam:
-      name: cpf
-      in: query
-      schema:
-        type: string
-        pattern: '^\d{11}$'
-      description: CPF do cliente no formato apenas números
-    CategoryParam:
-      name: category
-      in: query
-      required: false
-      schema:
-        type: string
-      description: Enum da categoria
-    ProductIdParam:
-      name: ProductIdParam
-      in: query
-      required: false
-      schema:
-        type: string
-      description: Id do produto
-  requestBodies:
-    ClientRequest:
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-              - cpf
-              - name
-              - email
-            properties:
-              cpf:
-                type: string
-                minLength: 11
-                maxLength: 11
-                example: '12345678901'
-              name:
-                type: string
-              email:
-                type: string
-                format: email
-    ProductCreateRequest:
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-              - sku
-              - name
-              - price
-              - description
-              - image
-              - category
-            properties:
-              sku:
-                type: string
-              name:
-                type: string
-              price:
-                type: number
-              description:
-                type: string
-              image:
-                type: string
-              category:
-                $ref: '#/components/schemas/Category'
-    ProductUpdateRequest:
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              name:
-                type: string
-              price:
-                type: number
-              description:
-                type: string
-              image:
-                type: string
-              category:
-                $ref: '#/components/schemas/Category'
-  responses:
-    CreateProduct201Response:
-      description: Produto criado com sucesso!
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              id:
-                type: string
-                x-stoplight:
-                  id: wts9304thx8uu
-              message:
-                type: string
-                x-stoplight:
-                  id: lukg5rt7jkq8s
-    UpdateProduct200Response:
-      description: Produto atualizado com sucesso!
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Product'
+        quantity:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 100
+          readOnly: true
+          example: 2
+        price:
+          $ref: '#/components/schemas/Money'
+        category:
+          $ref: '#/components/schemas/Category'
+        discount:
+          $ref: '#/components/schemas/Discount'
+      required:
+        - productId
+        - name
+        - quantity
+        - price
+        - category
+    Money:
+      type: number
+      title: Money
+      description: 'Valor monetário representado em formato brasileiro (R$), com suporte a casas decimais.'
+      format: double
+      readOnly: true
+      example: 1946.32
+    Discount:
+      type: object
+      properties:
+        value:
+          $ref: '#/components/schemas/Money'
+      required:
+        - value
+    PaymentMethod:
+      type: string
+      enum:
+        - PIX
+      title: PaymentMethod
+      readOnly: true
+    DiscountType:
+      type: string
+      enum:
+        - PERCENTAGE
+        - FIXED
+      title: DiscountType
+      readOnly: true
+    OrderStatus:
+      type: string
+      enum:
+        - RECEIVED
+        - AWAITING_PAYMENT
+        - PAID
+        - IN_PREPARATION
+        - DONE
+        - DELIVERED
+      title: OrderStatus
+      readOnly: true
+    PaymentStatus:
+      type: string
+      enum:
+        - APPROVED
+        - DECLINED
+        - FAILED
+        - PENDING
+        - FINISHED
+      title: PaymentStatus
+      description: Representa o resultado do processamento de uma tentativa de pagamento durante o fluxo de checkout
+      readOnly: true
+    DateTime:
+      type: string
+      title: DateTime
+      format: date-time
+      pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,9})?(Z|[+-]\d{2}:\d{2})$'
+      readOnly: true
+      example: '2025-05-20T00:00:00Z'
