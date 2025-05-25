@@ -24,6 +24,12 @@ public class MediatorImpl implements Mediator {
             Class<?> commandClass = resolveCommandType(handler);
             handlers.put((Class<? extends Command>) commandClass, handler);
         }
+
+        Map<String, QueryHandler> queryBeans = context.getBeansOfType(QueryHandler.class);
+        for (QueryHandler<?, ?> handler : queryBeans.values()) {
+            Class<?> queryClass = ResolvableType.forClass(QueryHandler.class, handler.getClass()).getGeneric(0).resolve();
+            queryHandlers.put((Class<? extends Query>) queryClass, handler);
+        }
     }
 
     @Override
