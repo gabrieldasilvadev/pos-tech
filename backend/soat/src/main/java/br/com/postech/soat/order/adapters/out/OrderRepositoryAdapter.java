@@ -13,9 +13,9 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 @RequiredArgsConstructor
 @Monitorable
 public class OrderRepositoryAdapter implements OrderRepository {
@@ -25,8 +25,7 @@ public class OrderRepositoryAdapter implements OrderRepository {
     private final Logger logger = LoggerFactory.getLogger(OrderRepositoryAdapter.class);
 
     @Override
-    public Order sendOrder(Order order) {
-        order.prepare();
+    public Order save(Order order) {
         OrderEntity orderEntity = OrderEntityMapper.INSTANCE.toEntity(order);
         orderJpaRepository.save(orderEntity);
         logger.info("Order saved : {}", orderEntity);
