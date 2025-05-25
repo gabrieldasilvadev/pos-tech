@@ -39,7 +39,6 @@ class CreateOrderCommandHandlerTest {
     @Test
     @DisplayName("Should handle create order command successfully")
     void shouldHandleCreateOrderCommandSuccessfully() {
-        // Arrange
         CustomerId customerId = new CustomerId(UUID.randomUUID());
         
         OrderItem orderItem = new OrderItem(
@@ -67,10 +66,8 @@ class CreateOrderCommandHandlerTest {
         
         when(orderRepository.save(any(Order.class))).thenReturn(createdOrder);
         
-        // Act
         Order result = createOrderCommandHandler.handle(command);
         
-        // Assert
         assertNotNull(result);
         assertEquals(OrderStatus.IN_PREPARATION, result.getStatus());
         assertEquals(customerId, result.getCustomerId());
@@ -87,7 +84,6 @@ class CreateOrderCommandHandlerTest {
     @Test
     @DisplayName("Should handle create order command with exception")
     void shouldHandleCreateOrderCommandWithException() {
-        // Arrange
         CustomerId customerId = new CustomerId(UUID.randomUUID());
         List<OrderItem> orderItems = new ArrayList<>();
         List<Discount> discounts = new ArrayList<>();
@@ -102,7 +98,6 @@ class CreateOrderCommandHandlerTest {
         
         when(orderRepository.save(any(Order.class))).thenThrow(new RuntimeException("Test exception"));
         
-        // Act & Assert
         try {
             createOrderCommandHandler.handle(command);
         } catch (Exception e) {

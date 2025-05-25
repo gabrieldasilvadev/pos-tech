@@ -14,7 +14,6 @@ class OrderItemTest {
     @Test
     @DisplayName("Should create an order item with all properties")
     void shouldCreateOrderItemWithAllProperties() {
-        // Arrange
         UUID productId = UUID.randomUUID();
         String name = "Test Product";
         Integer quantity = 2;
@@ -22,7 +21,6 @@ class OrderItemTest {
         String category = "Test Category";
         Discount discount = new Discount(new BigDecimal("5.00"));
 
-        // Act
         OrderItem orderItem = new OrderItem(
             productId,
             name,
@@ -32,7 +30,6 @@ class OrderItemTest {
             discount
         );
 
-        // Assert
         assertNotNull(orderItem);
         assertNotNull(orderItem.getId());
         assertEquals(productId, orderItem.getProductId());
@@ -46,14 +43,12 @@ class OrderItemTest {
     @Test
     @DisplayName("Should create an order item without discount")
     void shouldCreateOrderItemWithoutDiscount() {
-        // Arrange
         UUID productId = UUID.randomUUID();
         String name = "Test Product";
         Integer quantity = 1;
         BigDecimal price = new BigDecimal("10.00");
         String category = "Test Category";
 
-        // Act
         OrderItem orderItem = new OrderItem(
             productId,
             name,
@@ -63,7 +58,6 @@ class OrderItemTest {
             null
         );
 
-        // Assert
         assertNotNull(orderItem);
         assertNotNull(orderItem.getId());
         assertEquals(productId, orderItem.getProductId());

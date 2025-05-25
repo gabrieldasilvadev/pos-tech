@@ -40,7 +40,6 @@ class OrderRepositoryAdapterTest {
     @Test
     @DisplayName("Should save order and order items")
     void shouldSaveOrderAndOrderItems() {
-        // Arrange
         CustomerId customerId = new CustomerId(UUID.randomUUID());
         
         OrderItem orderItem = new OrderItem(
@@ -64,10 +63,8 @@ class OrderRepositoryAdapterTest {
         when(orderJpaRepository.save(any(OrderEntity.class))).thenReturn(savedOrderEntity);
         when(orderItemJpaRepository.saveAll(anyList())).thenReturn(List.of(savedOrderItemEntity));
         
-        // Act
         Order savedOrder = orderRepositoryAdapter.save(order);
         
-        // Assert
         assertNotNull(savedOrder);
         assertEquals(order.getId(), savedOrder.getId());
         assertEquals(1, savedOrder.getOrderItems().size());

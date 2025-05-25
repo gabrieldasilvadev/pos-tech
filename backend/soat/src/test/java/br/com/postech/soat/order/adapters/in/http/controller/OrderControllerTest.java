@@ -43,7 +43,6 @@ class OrderControllerTest {
     @Test
     @DisplayName("Should create order successfully")
     void shouldCreateOrderSuccessfully() {
-        // Arrange
         UUID customerId = UUID.randomUUID();
         PostOrdersRequestDto request = new PostOrdersRequestDto();
         request.setCustomerId(customerId);
@@ -77,10 +76,8 @@ class OrderControllerTest {
 
         when(mediator.send(any(CreateOrderCommand.class))).thenReturn(createdOrder);
 
-        // Act
         ResponseEntity<PostOrders201ResponseDto> response = orderController.postOrders(request);
 
-        // Assert
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());

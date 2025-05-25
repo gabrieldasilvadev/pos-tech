@@ -17,16 +17,13 @@ class OrderTest {
     @Test
     @DisplayName("Should create an order with received status")
     void shouldCreateOrderWithReceivedStatus() {
-        // Arrange
         CustomerId customerId = new CustomerId(UUID.randomUUID());
         List<OrderItem> orderItems = new ArrayList<>();
         List<Discount> discounts = new ArrayList<>();
         List<Observation> observations = new ArrayList<>();
 
-        // Act
         Order order = Order.receive(customerId, orderItems, discounts, observations);
 
-        // Assert
         assertNotNull(order);
         assertEquals(OrderStatus.RECEIVED, order.getStatus());
         assertEquals(customerId, order.getCustomerId());
@@ -41,24 +38,20 @@ class OrderTest {
     @Test
     @DisplayName("Should prepare an order")
     void shouldPrepareOrder() {
-        // Arrange
         CustomerId customerId = new CustomerId(UUID.randomUUID());
         List<OrderItem> orderItems = new ArrayList<>();
         List<Discount> discounts = new ArrayList<>();
         List<Observation> observations = new ArrayList<>();
         Order order = Order.receive(customerId, orderItems, discounts, observations);
 
-        // Act
         order.prepare();
 
-        // Assert
         assertEquals(OrderStatus.IN_PREPARATION, order.getStatus());
     }
 
     @Test
     @DisplayName("Should calculate original price")
     void shouldCalculateOriginalPrice() {
-        // Arrange
         CustomerId customerId = new CustomerId(UUID.randomUUID());
         
         OrderItem item1 = new OrderItem(
@@ -83,17 +76,14 @@ class OrderTest {
         List<Discount> discounts = new ArrayList<>();
         List<Observation> observations = new ArrayList<>();
 
-        // Act
         Order order = Order.receive(customerId, orderItems, discounts, observations);
 
-        // Assert
         assertEquals(new BigDecimal("30.00"), order.getOriginalPrice());
     }
 
     @Test
     @DisplayName("Should calculate discount amount")
     void shouldCalculateDiscountAmount() {
-        // Arrange
         CustomerId customerId = new CustomerId(UUID.randomUUID());
         List<OrderItem> orderItems = new ArrayList<>();
         
@@ -103,17 +93,14 @@ class OrderTest {
         List<Discount> discounts = List.of(discount1, discount2);
         List<Observation> observations = new ArrayList<>();
 
-        // Act
         Order order = Order.receive(customerId, orderItems, discounts, observations);
 
-        // Assert
         assertEquals(new BigDecimal("8.00"), order.getDiscountAmount());
     }
 
     @Test
     @DisplayName("Should calculate total price with discount")
     void shouldCalculateTotalPriceWithDiscount() {
-        // Arrange
         CustomerId customerId = new CustomerId(UUID.randomUUID());
         
         OrderItem item1 = new OrderItem(
@@ -142,10 +129,8 @@ class OrderTest {
         List<Discount> discounts = List.of(discount1, discount2);
         List<Observation> observations = new ArrayList<>();
 
-        // Act
         Order order = Order.receive(customerId, orderItems, discounts, observations);
 
-        // Assert
         assertEquals(new BigDecimal("30.00"), order.getOriginalPrice());
         assertEquals(new BigDecimal("8.00"), order.getDiscountAmount());
         assertEquals(new BigDecimal("22.00"), order.getTotalPrice());
