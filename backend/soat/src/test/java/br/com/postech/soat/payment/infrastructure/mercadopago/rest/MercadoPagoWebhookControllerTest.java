@@ -1,0 +1,52 @@
+package br.com.postech.soat.payment.infrastructure.mercadopago.rest;
+
+import br.com.postech.soat.payment.core.domain.model.PaymentId;
+import br.com.postech.soat.payment.core.ports.in.ProcessPaymentNotificationUseCase;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+@DisplayName("MercadoPago Webhook Controller Tests")
+class MercadoPagoWebhookControllerTest {
+
+    @Mock
+    private ProcessPaymentNotificationUseCase notificationService;
+
+    @InjectMocks
+    private MercadoPagoWebhookController controller;
+
+    @Test
+    @DisplayName("Should process payment notification when topic is payment")
+    void shouldProcessPaymentNotificationWhenTopicIsPayment() {
+        String paymentId = UUID.randomUUID().toString();
+        String topic = "payment";
+
+        ResponseEntity<Void> response = controller.receive(paymentId, topic);
+
+        verify(notificationService, times(1)).processPaymentNotification(PaymentId.of(paymentId));
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Should not process payment notification when topic is not payment")
+    void shouldNotProcessPaymentNotificationWhenTopicIsNotPayment() {
+        String paymentId = UUID.randomUUID().toString();
+        String topic = "other_topic";
+
+        ResponseEntity<Void> response = controller.receive(paymentId, topic);
+
+        verify(notificationService, never()).processPaymentNotification(any());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+}
