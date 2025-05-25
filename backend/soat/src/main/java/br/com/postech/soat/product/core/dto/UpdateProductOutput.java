@@ -1,11 +1,12 @@
 package br.com.postech.soat.product.core.dto;
 
 import br.com.postech.soat.product.core.domain.Category;
+import br.com.postech.soat.product.core.domain.model.ProductId;
 import java.math.BigDecimal;
 import java.util.UUID;
 
 public class UpdateProductOutput {
-    private UUID id;
+    private ProductId id;
     private String sku;
     private String name;
     private Boolean active;
@@ -15,7 +16,7 @@ public class UpdateProductOutput {
     private Category category;
 
     public UpdateProductOutput(
-        UUID id,
+        ProductId id,
         String sku,
         String name,
         BigDecimal price,
@@ -34,7 +35,8 @@ public class UpdateProductOutput {
         this.active = active;
     }
 
-    public UUID getId() { return id; }
+    public ProductId getId() { return id; }
+    public UUID getIdValue() { return id.getValue(); }
     public String getSku() { return sku; }
     public String getName() { return name; }
     public Boolean getActive() { return active; }

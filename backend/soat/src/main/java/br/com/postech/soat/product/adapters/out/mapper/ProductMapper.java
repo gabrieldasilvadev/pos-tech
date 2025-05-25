@@ -1,32 +1,42 @@
 package br.com.postech.soat.product.adapters.out.mapper;
 
-import br.com.postech.soat.openapi.model.PostProducts201ResponseDto;
-import br.com.postech.soat.openapi.model.PostProductsRequestDto;
-import br.com.postech.soat.openapi.model.ProductDto;
-import br.com.postech.soat.openapi.model.PutProductsRequestDto;
 import br.com.postech.soat.product.adapters.out.persistence.entities.ProductEntity;
-import br.com.postech.soat.product.core.domain.Product;
-import br.com.postech.soat.product.core.dto.CreateProductInput;
-import br.com.postech.soat.product.core.dto.CreateProductOutput;
-import br.com.postech.soat.product.core.dto.DeleteProductInput;
-import br.com.postech.soat.product.core.dto.UpdateProductInput;
-import br.com.postech.soat.product.core.dto.UpdateProductOutput;
+import br.com.postech.soat.product.core.domain.model.Product;
 import org.mapstruct.Mapper;
-import java.util.UUID;
+import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring")
+@Component
 public interface ProductMapper {
-    CreateProductInput toCoreDto(PostProductsRequestDto request);
+    default Product toDomain(ProductEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+        return Product.builder()
+                .productId(entity.getId())
+                .sku(entity.getSku())
+                .active(entity.getActive())
+                .name(entity.getName())
+                .price(entity.getPrice())
+                .description(entity.getDescription())
+                .image(entity.getImage())
+                .category(entity.getCategory())
+                .build();
+    }
 
-    PostProducts201ResponseDto toResponse(CreateProductOutput product);
-
-    Product toDomain(ProductEntity entity);
-
-    ProductEntity toEntity(Product domain);
-
-    UpdateProductInput toUpdateInput(PutProductsRequestDto request);
-
-    ProductDto toResponse(UpdateProductOutput product);
-
-    DeleteProductInput toDeleteInput (UUID id);
+    default ProductEntity toEntity(Product domain) {
+        if (domain == null) {
+            return null;
+        }
+        ProductEntity entity = new ProductEntity();
+        entity.setId(domain.getId().getValue());
+        entity.setSku(domain.getSku());
+        entity.setActive(domain.getActive());
+        entity.setName(domain.getName());
+        entity.setPrice(domain.getPrice());
+        entity.setDescription(domain.getDescription());
+        entity.setImage(domain.getImage());
+        entity.setCategory(domain.getCategory());
+        return entity;
+    }
 }
