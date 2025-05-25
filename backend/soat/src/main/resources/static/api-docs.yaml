@@ -328,7 +328,7 @@ components:
               value:
                 sku: string
                 name: string
-                price: 0
+                price: 32.43
                 description: string
                 image: string
                 category: SNACK
