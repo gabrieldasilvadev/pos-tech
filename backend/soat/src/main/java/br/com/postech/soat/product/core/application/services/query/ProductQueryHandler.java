@@ -23,6 +23,6 @@ public class ProductQueryHandler implements QueryHandler<ProductQuery, Product> 
         logger.info("Querying product with ID: {}", query.productId());
 
         return productRepository.findById(query.productId().getValue())
-            .orElseThrow(() -> new NotFoundException("Produto não encontrado"));
+            .orElseThrow(() -> new NotFoundException("Product not found with ID: " + query.productId().getValue()));
     }
 }

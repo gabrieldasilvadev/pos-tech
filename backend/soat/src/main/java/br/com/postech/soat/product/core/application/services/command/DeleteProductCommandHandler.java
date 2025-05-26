@@ -23,7 +23,7 @@ public class DeleteProductCommandHandler implements UnitCommandHandler<DeletePro
     logger.info("Deleting product with ID: {}", command.productId());
 
     Product existingProduct = productRepository.findById(command.productId().getValue())
-      .orElseThrow(() -> new NotFoundException("Produto não encontrado"));
+      .orElseThrow(() -> new NotFoundException("Product not found with ID: " + command.productId().getValue()));
 
     existingProduct.deactivate();
     productRepository.save(existingProduct);

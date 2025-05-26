@@ -24,7 +24,7 @@ public class UpdateProductCommandHandler implements CommandHandler<UpdateProduct
         logger.info("Updating product with ID: {}", command.productId());
 
         Product existingProduct = productRepository.findById(command.productId().getValue())
-            .orElseThrow(() -> new NotFoundException("Produto não encontrado"));
+            .orElseThrow(() -> new NotFoundException("Product not found with ID: " + command.productId().getValue()));
 
         existingProduct.update(
             command.name(),
