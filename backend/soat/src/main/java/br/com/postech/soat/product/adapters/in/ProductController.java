@@ -2,15 +2,19 @@ package br.com.postech.soat.product.adapters.in;
 
 import br.com.postech.soat.commons.application.mediator.Mediator;
 import br.com.postech.soat.openapi.api.ProductApi;
+import br.com.postech.soat.openapi.model.GetProduct200ResponseInnerDto;
 import br.com.postech.soat.openapi.model.PostProducts201ResponseDto;
 import br.com.postech.soat.openapi.model.PostProductsRequestDto;
+import br.com.postech.soat.openapi.model.ProductCategoryDto;
 import br.com.postech.soat.openapi.model.ProductDto;
 import br.com.postech.soat.openapi.model.PutProductsRequestDto;
 import br.com.postech.soat.product.adapters.in.mapper.ProductCommandMapper;
 import br.com.postech.soat.product.adapters.in.mapper.ProductQueryMapper;
 import br.com.postech.soat.product.core.application.services.query.model.ProductQuery;
+import br.com.postech.soat.product.core.domain.Category;
 import br.com.postech.soat.product.core.domain.model.Product;
 import br.com.postech.soat.product.core.domain.model.ProductId;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +25,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ProductController implements ProductApi {
     private final Mediator mediator;
+
+    @Override
+    public ResponseEntity<List<GetProduct200ResponseInnerDto>> getProduct(String sku, String category) {
+
+        List<Product> result = mediator.send(ProductCommandMapper.INSTANCE.toCommand(Category.entryOf(category), sku));
+
+        return ResponseEntity.ok(result.stream().map(product -> GetProduct200ResponseInnerDto.builder()
+            .id(product.getId().getValue())
+            .name(product.getName())
+            .sku(product.getSku())
+            .description(product.getDescription())
+            .price(product.getPrice().doubleValue())
+            .active(product.getActive())
+            .image(product.getImage())
+            .category(ProductCategoryDto.fromValue(product.getCategory().name()))
+            .build()).toList());
+    }
 
     @Override
     public ResponseEntity<PostProducts201ResponseDto> postProducts(PostProductsRequestDto postProductRequest) {
