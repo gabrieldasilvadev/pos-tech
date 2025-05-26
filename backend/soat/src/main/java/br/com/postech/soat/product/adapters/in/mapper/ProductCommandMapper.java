@@ -1,18 +1,25 @@
 package br.com.postech.soat.product.adapters.in.mapper;
 
 import br.com.postech.soat.openapi.model.PostProductsRequestDto;
+import br.com.postech.soat.product.core.application.services.command.model.GetProductCommand;
 import br.com.postech.soat.openapi.model.PutProductsRequestDto;
 import br.com.postech.soat.product.core.application.services.command.model.CreateProductCommand;
 import br.com.postech.soat.product.core.application.services.command.model.DeleteProductCommand;
 import br.com.postech.soat.product.core.application.services.command.model.UpdateProductCommand;
 import java.util.UUID;
+import br.com.postech.soat.product.core.domain.Category;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.NullValueMappingStrategy;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
 public interface ProductCommandMapper {
     ProductCommandMapper INSTANCE = Mappers.getMapper(ProductCommandMapper.class);
+
+    @Mapping(target = "category", source = "category")
+    @Mapping(target = "sku", source = "sku")
+    GetProductCommand toCommand(Category category, String sku);
 
     @Mapping(target = "sku", source = "postProductsRequestDto.sku")
     @Mapping(target = "name", source = "postProductsRequestDto.name")

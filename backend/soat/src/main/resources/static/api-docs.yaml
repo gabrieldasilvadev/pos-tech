@@ -64,11 +64,17 @@ paths:
       description: Retorna todos os produtos cadastrados ou realiza filtros por ID ou categoria
       operationId: getProduct
       parameters:
-        - $ref: '#/components/parameters/ProductIdParam'
+        - $ref: '#/components/parameters/SKU'
         - $ref: '#/components/parameters/CategoryParam'
       responses:
         '200':
-          description: OK
+          description: Lista de produtos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProductList200Response"
         '204':
           description: Nenhum produto encontrado
         '400':
@@ -256,10 +262,11 @@ components:
       required: false
       schema:
         type: string
-    ProductIdParam:
-      name: ProductIdParam
+        enum: [SNACK, DRINK, DESSERT, SIDE_DISH]
+    SKU:
+      name: SKU
       in: query
-      description: Id do produto
+      description: SKU do produto
       required: false
       schema:
         type: string
@@ -596,6 +603,28 @@ components:
                 paymentStatus: APPROVED
                 processedAt: '2025-05-20T00:00:00Z'
   schemas:
+    ProductList200Response:
+      type: object
+      title: ProductList200Response
+      description: Produto
+      properties:
+        id:
+          type: string
+          format: uuid
+        sku:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        active:
+          type: boolean
+        image:
+          type: string
+        category:
+          type: string
     ErrorResponse:
       type: object
       title: ErrorResponse

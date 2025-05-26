@@ -6,8 +6,10 @@ import br.com.postech.soat.product.adapters.out.persistence.entities.repositorie
 import br.com.postech.soat.product.core.domain.model.Product;
 import br.com.postech.soat.product.core.domain.model.ProductId;
 import br.com.postech.soat.product.core.ports.out.ProductRepository;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,6 +20,12 @@ public class ProductRepositoryImpl implements ProductRepository {
     public ProductRepositoryImpl(ProductJpaRepository jpaRepository, ProductMapper productMapper) {
         this.jpaRepository = jpaRepository;
         this.productMapper = productMapper;
+    }
+
+    @Override
+    public List<Product> findAll(Specification<ProductEntity> spec) {
+        List<ProductEntity> result = jpaRepository.findAll(spec);
+        return result.stream().map(productMapper::toDomain).toList();
     }
 
     @Override
