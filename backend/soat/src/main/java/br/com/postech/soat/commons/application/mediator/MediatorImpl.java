@@ -20,23 +20,20 @@ public class MediatorImpl implements Mediator {
     private final Map<Class<? extends Command>, UnitCommandHandler<?>> unitCommandHandlers = new HashMap<>();
 
     public MediatorImpl(ApplicationContext context) {
-        Map<String, CommandHandler> beans = context.getBeansOfType(CommandHandler.class);
-        for (CommandHandler<?, ?> handler : beans.values()) {
-            Class<?> commandClass = resolveCommandType(handler);
-            handlers.put((Class<? extends Command>) commandClass, handler);
-        }
 
-        Map<String, QueryHandler> queryBeans = context.getBeansOfType(QueryHandler.class);
-        for (QueryHandler<?, ?> handler : queryBeans.values()) {
-            Class<?> queryClass = ResolvableType.forClass(QueryHandler.class, handler.getClass()).getGeneric(0).resolve();
-            queryHandlers.put((Class<? extends Query>) queryClass, handler);
-        }
+        context.getBeansOfType(CommandHandler.class).values()
+            .forEach(commandHandler ->
+                handlers.put((Class<? extends Command>) resolveCommandType(commandHandler), commandHandler));
 
-        Map<String, UnitCommandHandler> unitBeans = context.getBeansOfType(UnitCommandHandler.class);
-        for (UnitCommandHandler<?> handler : unitBeans.values()) {
-            Class<?> commandClass = resolveCommandType(handler);
-            unitCommandHandlers.put((Class<? extends Command>) commandClass, handler);
-        }
+        context.getBeansOfType(QueryHandler.class).values()
+            .forEach(queryHandler ->
+                queryHandlers.put((Class<? extends Query>) queryHandler.getClass(), queryHandler));
+
+        context.getBeansOfType(UnitCommandHandler.class)
+            .values()
+            .forEach(handler ->
+                unitCommandHandlers.put((Class<? extends Command>) resolveCommandType(handler), handler));
+
     }
 
     @Override
