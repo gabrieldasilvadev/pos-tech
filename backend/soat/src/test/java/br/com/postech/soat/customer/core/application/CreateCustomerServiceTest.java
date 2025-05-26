@@ -97,7 +97,7 @@ class CreateCustomerServiceTest {
             () -> createCustomerService.create(command)
         );
 
-        assertEquals("Cliente com CPF 12345678901 já existe", exception.getMessage());
+        assertEquals("Customer with document identifier: 12345678901, already exists", exception.getMessage());
         verify(customerRepository).findByCpf("12345678901");
     }
 
@@ -173,3 +173,4 @@ class CreateCustomerServiceTest {
         );
     }
 }
+

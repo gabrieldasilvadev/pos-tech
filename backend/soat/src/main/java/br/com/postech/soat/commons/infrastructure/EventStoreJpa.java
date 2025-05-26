@@ -23,10 +23,10 @@ public class EventStoreJpa implements EventStore {
     }
 
     @Override
-    public List<DomainEvent> getEventsFor(String aggregateId) {
+    public List<DomainEvent> getEventsFor(Identifier aggregateId) {
         String jpql = "SELECT e FROM EventEntity e WHERE e.aggregateId = :aggregateId ORDER BY e.version";
         return em.createQuery(jpql, EventEntity.class)
-            .setParameter("aggregateId", aggregateId)
+            .setParameter("aggregateId", aggregateId.getValue())
             .getResultList()
             .stream()
             .map(this::deserializeEvent)
@@ -42,10 +42,10 @@ public class EventStoreJpa implements EventStore {
         }
     }
 
-    private int getCurrentVersion(String aggregateId) {
+    private int getCurrentVersion(Identifier aggregateId) {
         String jpql = "SELECT MAX(e.version) FROM EventEntity e WHERE e.aggregateId = :aggregateId";
         Integer version = em.createQuery(jpql, Integer.class)
-            .setParameter("aggregateId", aggregateId)
+            .setParameter("aggregateId", aggregateId.getValue())
             .getSingleResult();
         return version != null ? version : 0;
     }

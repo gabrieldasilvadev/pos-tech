@@ -2,10 +2,10 @@ package br.com.postech.soat.product.core.application.services.command;
 
 import br.com.postech.soat.commons.application.command.CommandHandler;
 import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;
+import br.com.postech.soat.commons.infrastructure.exception.NotFoundException;
 import br.com.postech.soat.product.core.application.services.command.model.UpdateProductCommand;
 import br.com.postech.soat.product.core.domain.model.Product;
 import br.com.postech.soat.product.core.domain.model.ProductId;
-import br.com.postech.soat.product.core.exception.ProductNotFoundException;
 import br.com.postech.soat.product.core.ports.out.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -24,7 +24,7 @@ public class UpdateProductCommandHandler implements CommandHandler<UpdateProduct
         logger.info("Updating product with ID: {}", command.productId());
 
         Product existingProduct = productRepository.findById(command.productId().getValue())
-            .orElseThrow(() -> new ProductNotFoundException("Produto não encontrado"));
+            .orElseThrow(() -> new NotFoundException("Product not found with ID: " + command.productId().getValue()));
 
         existingProduct.update(
             command.name(),

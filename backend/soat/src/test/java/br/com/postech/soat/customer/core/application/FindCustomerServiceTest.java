@@ -75,7 +75,7 @@ class FindCustomerServiceTest {
             () -> findCustomerService.findByCpf(query)
         );
 
-        assertEquals("Cliente não encontrado para o CPF: " + cpf, exception.getMessage());
+        assertEquals("Customer not found for the document identifier: " + cpf, exception.getMessage());
         verify(customerRepository).findByCpf(cpf);
     }
 }

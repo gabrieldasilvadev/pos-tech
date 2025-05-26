@@ -3,8 +3,6 @@ package br.com.postech.soat.product.adapters.out.persistence.entities;
 import br.com.postech.soat.product.core.domain.Category;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
@@ -45,8 +43,7 @@ public class ProductEntity {
     @Column(nullable = false)
     private String image;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(nullable = false, columnDefinition = "product_category")
     private Category category;
 }
