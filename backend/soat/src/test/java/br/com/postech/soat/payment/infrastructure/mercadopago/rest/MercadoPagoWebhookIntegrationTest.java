@@ -43,16 +43,12 @@ class MercadoPagoWebhookIntegrationTest {
     void setUp() {
         OrderId orderId = new OrderId(UUID.randomUUID());
         CustomerId customerId = new CustomerId(UUID.randomUUID());
-        paymentId = PaymentId.generate();
 
-        testPayment = Payment.builder()
-            .paymentId(paymentId.getValue())
-            .orderId(orderId)
-            .customerId(customerId)
-            .amount(new BigDecimal("100.00"))
-            .status(PaymentStatus.APPROVED)
-            .method(PaymentMethod.PIX)
-            .build();
+        testPayment = Payment.initiate(orderId, customerId, PaymentMethod.PIX, new BigDecimal("100.00"));
+
+        testPayment.approve();
+
+        paymentId = testPayment.getId();
 
         paymentRepository.save(testPayment);
     }
