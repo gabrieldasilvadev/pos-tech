@@ -20,11 +20,10 @@ public class MediatorImpl implements Mediator {
     private final Map<Class<? extends Command>, UnitCommandHandler<?>> unitCommandHandlers = new HashMap<>();
 
     public MediatorImpl(ApplicationContext context) {
-        Map<String, CommandHandler> beans = context.getBeansOfType(CommandHandler.class);
-        for (CommandHandler<?, ?> handler : beans.values()) {
-            Class<?> commandClass = resolveCommandType(handler);
-            handlers.put((Class<? extends Command>) commandClass, handler);
-        }
+
+        context.getBeansOfType(CommandHandler.class).values()
+            .forEach(commandHandler ->
+                handlers.put((Class<? extends Command>) resolveCommandType(commandHandler), commandHandler));
 
         context.getBeansOfType(QueryHandler.class).values()
             .forEach(queryHandler ->
