@@ -52,7 +52,6 @@ class ProductControllerTest {
             .active(true)
             .build();
 
-        // Configuração padrão para o mock, que será usada em todos os testes
         lenient().when(mediator.send(any(Query.class))).thenReturn(Collections.singletonList(product));
         lenient().when(mediator.send(any(ProductQuery.class))).thenReturn(Collections.singletonList(product));
         lenient().when(mediator.send(any(GetProductCommand.class))).thenReturn(Collections.singletonList(product));
@@ -60,14 +59,11 @@ class ProductControllerTest {
 
     @Test
     void getProduct_whenCategoryAndSkuProvided_shouldReturnOk() {
-        // Arrange
         String sku = "Test SKU";
         String category = "DRINK";
 
-        // Act
         ResponseEntity<List<GetProduct200ResponseInnerDto>> response = productController.getProduct(sku, category);
 
-        // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(1, response.getBody().size());
@@ -85,13 +81,10 @@ class ProductControllerTest {
 
     @Test
     void getProduct_whenOnlyCategoryProvided_shouldReturnOk() {
-        // Arrange
         String category = "DRINK";
 
-        // Act
         ResponseEntity<List<GetProduct200ResponseInnerDto>> response = productController.getProduct(null, category);
 
-        // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(1, response.getBody().size());
@@ -109,14 +102,11 @@ class ProductControllerTest {
 
     @Test
     void getProduct_whenOnlySkuProvided_shouldReturnOk() {
-        // Arrange
         String sku = "Test SKU";
-        String category = "DRINK"; // Categoria padrão para evitar exceção
+        String category = "DRINK";
 
-        // Act
         ResponseEntity<List<GetProduct200ResponseInnerDto>> response = productController.getProduct(sku, category);
 
-        // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(1, response.getBody().size());
@@ -134,13 +124,10 @@ class ProductControllerTest {
 
     @Test
     void getProduct_whenNoFilterProvided_shouldReturnOk() {
-        // Arrange
-        String category = "DRINK"; // Categoria padrão para evitar exceção
+        String category = "DRINK";
 
-        // Act
         ResponseEntity<List<GetProduct200ResponseInnerDto>> response = productController.getProduct(null, category);
 
-        // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(1, response.getBody().size());
@@ -158,18 +145,14 @@ class ProductControllerTest {
 
     @Test
     void getProduct_whenNoProductsFound_shouldReturnOkWithEmptyList() {
-        // Arrange
         String sku = "NonExistentSKU";
         String category = "DRINK";
 
-        // Sobrescrever o mock padrão para este teste específico
         when(mediator.send(any(Query.class))).thenReturn(Collections.emptyList());
         when(mediator.send(any(GetProductCommand.class))).thenReturn(Collections.emptyList());
 
-        // Act
         ResponseEntity<List<GetProduct200ResponseInnerDto>> response = productController.getProduct(sku, category);
 
-        // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(0, response.getBody().size());
