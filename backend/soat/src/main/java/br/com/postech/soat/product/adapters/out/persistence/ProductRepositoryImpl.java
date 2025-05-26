@@ -1,8 +1,10 @@
 package br.com.postech.soat.product.adapters.out.persistence;
 
+import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;
 import br.com.postech.soat.product.adapters.out.mapper.ProductMapper;
 import br.com.postech.soat.product.adapters.out.persistence.entities.ProductEntity;
 import br.com.postech.soat.product.adapters.out.persistence.entities.repositories.ProductJpaRepository;
+import br.com.postech.soat.product.adapters.out.persistence.specification.ProductSpecification;
 import br.com.postech.soat.product.core.domain.model.Product;
 import br.com.postech.soat.product.core.domain.model.ProductId;
 import br.com.postech.soat.product.core.ports.out.ProductRepository;
@@ -15,12 +17,16 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Monitorable
 public class ProductRepositoryImpl implements ProductRepository {
     private final ProductJpaRepository jpaRepository;
 
     @Override
-    public List<Product> findAll(Specification<ProductEntity> spec) {
+    public List<Product> findAll(Product product) {
+
+        Specification<ProductEntity> spec = ProductSpecification.fromDomain(product);
         List<ProductEntity> result = jpaRepository.findAll(spec);
+
         return result.stream().map(ProductMapper.INSTANCE::toDomain).toList();
     }
 

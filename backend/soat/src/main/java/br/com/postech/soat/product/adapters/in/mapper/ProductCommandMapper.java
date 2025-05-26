@@ -8,6 +8,8 @@ import br.com.postech.soat.product.core.application.services.command.model.Delet
 import br.com.postech.soat.product.core.application.services.command.model.UpdateProductCommand;
 import java.util.UUID;
 import br.com.postech.soat.product.core.domain.Category;
+import br.com.postech.soat.product.core.domain.model.Product;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.NullValueMappingStrategy;
@@ -17,9 +19,13 @@ import org.mapstruct.factory.Mappers;
 public interface ProductCommandMapper {
     ProductCommandMapper INSTANCE = Mappers.getMapper(ProductCommandMapper.class);
 
-    @Mapping(target = "category", source = "category")
-    @Mapping(target = "sku", source = "sku")
-    GetProductCommand toCommand(Category category, String sku);
+    default GetProductCommand toCommand(Category category, String sku) {
+        Product product = Product.builder()
+                .sku(sku)
+                .category(category)
+                .build();
+        return new GetProductCommand(product);
+    }
 
     @Mapping(target = "sku", source = "postProductsRequestDto.sku")
     @Mapping(target = "name", source = "postProductsRequestDto.name")
@@ -40,3 +46,4 @@ public interface ProductCommandMapper {
     @Mapping(target = "productId", expression = "java(ProductId.of(uuid))")
     DeleteProductCommand toCommand(UUID uuid);
 }
+

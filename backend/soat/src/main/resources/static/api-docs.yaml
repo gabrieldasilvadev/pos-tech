@@ -3,10 +3,10 @@ info:
   version: '1.0'
   title: PosTech - SOAT
   description: API para gerenciamento de clientes e pedidos no contexto da disciplina de Soluções de Arquitetura de Software.
+  termsOfService: ''
   license:
     url: 'https://opensource.org/licenses/MIT'
     name: MIT License
-  termsOfService: ''
 servers:
   - url: 'http://localhost:8080'
     description: Localhost
@@ -64,13 +64,7 @@ paths:
         - $ref: '#/components/parameters/CategoryParam'
       responses:
         '200':
-          description: Lista de produtos
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/ProductList200Response"
+          $ref: '#/components/responses/Product200ListResponse'
         '204':
           description: Nenhum produto encontrado
         '400':
@@ -258,7 +252,11 @@ components:
       required: false
       schema:
         type: string
-        enum: [SNACK, DRINK, DESSERT, SIDE_DISH]
+        enum:
+          - SNACK
+          - DRINK
+          - DESSERT
+          - SIDE_DISH
     SKU:
       name: SKU
       in: query
@@ -306,13 +304,6 @@ components:
         application/json:
           schema:
             type: object
-            required:
-              - sku
-              - name
-              - price
-              - description
-              - image
-              - category
             properties:
               sku:
                 type: string
@@ -326,6 +317,13 @@ components:
                 type: string
               category:
                 $ref: '#/components/schemas/ProductCategory'
+            required:
+              - sku
+              - name
+              - price
+              - description
+              - image
+              - category
           examples:
             Example 1:
               value:
@@ -598,29 +596,43 @@ components:
                 amount: 1946.32
                 paymentStatus: APPROVED
                 processedAt: '2025-05-20T00:00:00Z'
+    Product200ListResponse:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  $ref: '#/components/schemas/UUID'
+                sku:
+                  type: string
+                name:
+                  type: string
+                description:
+                  type: string
+                price:
+                  $ref: '#/components/schemas/Money'
+                active:
+                  type: boolean
+                image:
+                  type: string
+                category:
+                  $ref: '#/components/schemas/ProductCategory'
+          examples:
+            Example 1:
+              value:
+                - id: 241fae7b-0210-4d29-a928-90653c9a9a89
+                  sku: string
+                  name: string
+                  description: string
+                  price: 1946.32
+                  active: true
+                  image: string
+                  category: SNACK
   schemas:
-    ProductList200Response:
-      type: object
-      title: ProductList200Response
-      description: Produto
-      properties:
-        id:
-          type: string
-          format: uuid
-        sku:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
-        price:
-          type: number
-        active:
-          type: boolean
-        image:
-          type: string
-        category:
-          type: string
     ErrorResponse:
       type: object
       title: ErrorResponse
@@ -648,6 +660,12 @@ components:
       minLength: 36
       maxLength: 36
       example: 241fae7b-0210-4d29-a928-90653c9a9a89
+    Money:
+      type: number
+      title: Money
+      description: 'Valor monetário representado em formato brasileiro (R$), com suporte a casas decimais.'
+      format: double
+      example: 1946.32
     ProductCategory:
       type: string
       enum:
@@ -656,44 +674,6 @@ components:
         - DESSERT
         - SIDE_DISH
       title: ProductCategory
-    Product:
-      type: object
-      required:
-        - id
-        - sku
-        - active
-        - name
-        - price
-        - description
-        - image
-        - category
-      properties:
-        id:
-          type: string
-          format: uuid
-        sku:
-          type: string
-        active:
-          type: boolean
-        name:
-          type: string
-        price:
-          $ref: '#/components/schemas/Money'
-        description:
-          type: string
-        image:
-          type: string
-        category:
-          $ref: '#/components/schemas/ProductCategory'
-    Category:
-      type: string
-      enum:
-        - SNACK
-        - DRINK
-        - DESSERT
-        - SIDE_DISH
-      title: Category
-      description: Categoria do produto dentro do pedido.
     OrderItem:
       type: object
       title: OrderItem
@@ -722,15 +702,15 @@ components:
         - quantity
         - price
         - category
-    Money:
-      type: number
-      title: Money
-      description: 'Valor monetário representado em formato brasileiro (R$), com suporte a casas decimais.'
-      format: double
-      # REMOVIDO: readOnly: true
-      example: 1946.32
-      x-examples:
-        Example 1: 1946.32
+    Category:
+      type: string
+      enum:
+        - SNACK
+        - DRINK
+        - DESSERT
+        - SIDE_DISH
+      title: Category
+      description: Categoria do produto dentro do pedido.
     Discount:
       type: object
       properties:
@@ -744,6 +724,35 @@ components:
         - PIX
       title: PaymentMethod
       readOnly: true
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        sku:
+          type: string
+        active:
+          type: boolean
+        name:
+          type: string
+        price:
+          $ref: '#/components/schemas/Money'
+        description:
+          type: string
+        image:
+          type: string
+        category:
+          $ref: '#/components/schemas/ProductCategory'
+      required:
+        - id
+        - sku
+        - active
+        - name
+        - price
+        - description
+        - image
+        - category
     DiscountType:
       type: string
       enum:
