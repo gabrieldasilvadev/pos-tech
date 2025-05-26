@@ -40,7 +40,7 @@ public class ProductController implements ProductApi {
 
     @Override
     public ResponseEntity<Void> deleteProducts(UUID productId) {
-        mediator.send(ProductCommandMapper.INSTANCE.toCommand(productId));
+        mediator.sendUnit(ProductCommandMapper.INSTANCE.toCommand(productId));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

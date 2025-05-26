@@ -12,11 +12,12 @@ import org.springframework.core.ResolvableType;
 import org.springframework.stereotype.Component;
 
 @Component
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class MediatorImpl implements Mediator {
 
     private final Map<Class<? extends Command>, CommandHandler<?, ?>> handlers = new HashMap<>();
     private final Map<Class<? extends Query>, QueryHandler<?, ?>> queryHandlers = new HashMap<>();
+    private final Map<Class<? extends Command>, UnitCommandHandler<?>> unitCommandHandlers = new HashMap<>();
 
     public MediatorImpl(ApplicationContext context) {
         Map<String, CommandHandler> beans = context.getBeansOfType(CommandHandler.class);
@@ -29,6 +30,12 @@ public class MediatorImpl implements Mediator {
         for (QueryHandler<?, ?> handler : queryBeans.values()) {
             Class<?> queryClass = ResolvableType.forClass(QueryHandler.class, handler.getClass()).getGeneric(0).resolve();
             queryHandlers.put((Class<? extends Query>) queryClass, handler);
+        }
+
+        Map<String, UnitCommandHandler> unitBeans = context.getBeansOfType(UnitCommandHandler.class);
+        for (UnitCommandHandler<?> handler : unitBeans.values()) {
+            Class<?> commandClass = resolveCommandType(handler);
+            unitCommandHandlers.put((Class<? extends Command>) commandClass, handler);
         }
     }
 
@@ -43,11 +50,11 @@ public class MediatorImpl implements Mediator {
 
     @Override
     public void sendUnit(Command command) {
-        UnitCommandHandler<Command> handler = (UnitCommandHandler<Command>) handlers.get(command.getClass());
-        if (handler == null) {
-            throw new IllegalStateException("No handler found for command: " + command.getClass().getName());
+        UnitCommandHandler<Command> unitCommandHandler = (UnitCommandHandler<Command>) unitCommandHandlers.get(command.getClass());
+        if (unitCommandHandler == null) {
+            throw new IllegalStateException("No unitCommandHandler found for command: " + command.getClass().getName());
         }
-        handler.handle(command);
+        unitCommandHandler.handle(command);
     }
 
     @Override
@@ -63,6 +70,11 @@ public class MediatorImpl implements Mediator {
 
     private Class<?> resolveCommandType(CommandHandler<?, ?> handler) {
         ResolvableType type = ResolvableType.forClass(CommandHandler.class, handler.getClass());
+        return type.getGeneric(0).resolve();
+    }
+
+    private Class<?> resolveCommandType(UnitCommandHandler<?> handler) {
+        ResolvableType type = ResolvableType.forClass(UnitCommandHandler.class, handler.getClass());
         return type.getGeneric(0).resolve();
     }
 }
