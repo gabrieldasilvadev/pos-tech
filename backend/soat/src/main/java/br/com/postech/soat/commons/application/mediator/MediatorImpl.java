@@ -7,6 +7,7 @@ import br.com.postech.soat.commons.application.query.Query;
 import br.com.postech.soat.commons.application.query.QueryHandler;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.ResolvableType;
 import org.springframework.stereotype.Component;
@@ -39,18 +40,18 @@ public class MediatorImpl implements Mediator {
     @Override
     public <C extends Command, R> R send(C command) {
         CommandHandler<C, R> handler = (CommandHandler<C, R>) handlers.get(command.getClass());
-        if (handler == null) {
-            throw new IllegalStateException("No handler found for command: " + command.getClass().getName());
-        }
+
+        Objects.requireNonNull(handler, "No handler found for command: " + command.getClass().getName());
+
         return handler.handle(command);
     }
 
     @Override
     public void sendUnit(Command command) {
         UnitCommandHandler<Command> unitCommandHandler = (UnitCommandHandler<Command>) unitCommandHandlers.get(command.getClass());
-        if (unitCommandHandler == null) {
-            throw new IllegalStateException("No unitCommandHandler found for command: " + command.getClass().getName());
-        }
+
+        Objects.requireNonNull(unitCommandHandler, "No unitCommandHandler found for command: " + command.getClass().getName());
+
         unitCommandHandler.handle(command);
     }
 
@@ -58,9 +59,7 @@ public class MediatorImpl implements Mediator {
     public <Q extends Query, R> R send(Q query) {
         QueryHandler<Q, R> handler = (QueryHandler<Q, R>) queryHandlers.get(query.getClass());
 
-        if (handler == null) {
-            throw new IllegalStateException("No handler found for query: " + query.getClass().getName());
-        }
+        Objects.requireNonNull(handler, "No handler found for query: " + query.getClass().getName());
 
         return handler.handle(query);
     }
