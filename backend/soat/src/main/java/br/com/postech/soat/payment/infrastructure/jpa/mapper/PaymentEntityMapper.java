@@ -19,6 +19,7 @@ public interface PaymentEntityMapper {
     @Mapping(target = "status", source = "status")
     PaymentEntity mapFrom(Payment payment);
 
+    @Mapping(target = "paymentId", source = "id")
     @Mapping(target = "orderId.value", source = "orderId")
     @Mapping(target = "customerId.value", source = "customerId")
     @Mapping(target = "method", source = "method")

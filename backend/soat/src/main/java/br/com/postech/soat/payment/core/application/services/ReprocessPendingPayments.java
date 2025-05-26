@@ -30,7 +30,6 @@ public class ReprocessPendingPayments {
                 logger.error("Payment processing failed for payment ID: {}", payment.getId());
                 payment.fail();
                 paymentRepository.save(payment);
-                payment.approve();
                 return;
             }
 
