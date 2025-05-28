@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: soat
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/soat}
+    username: ${DB_USER:admin}
+    password: ${DB_PASSWORD:123456}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: ${DB_SHOW_SQL:true}
+    properties:
+      hibernate:
+        format_sql: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    placeholder-replacement: false
+
+springdoc:
+  swagger-ui:
+    path: /docs
+management:
+  endpoints:
+    web:
+      base-path: /

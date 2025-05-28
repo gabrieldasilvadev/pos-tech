@@ -1,0 +1,11 @@
+package br.com.postech.soat.product.adapters.out.persistence.entities.repositories;
+
+import br.com.postech.soat.product.adapters.out.persistence.entities.ProductEntity;
+import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ProductJpaRepository extends JpaRepository<ProductEntity, UUID>, JpaSpecificationExecutor<ProductEntity> {
+}
