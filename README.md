@@ -88,13 +88,13 @@ export $(cat .env | xargs) && ./mvnw test
 ##### Swagger
 
 ```
-http://localhost:8080/api/swagger-ui/index.html
+http://localhost:8080/swagger-ui/index.html
 ```
 
 ##### Health Check
 
 ```
-http://localhost:8080/api/health
+http://localhost:8080/health
 ```
 
 ### Utilizando o docker-compose
@@ -116,11 +116,11 @@ docker-compose up -d
 ##### Para validar se todos os serviços estão up acesse:
 
 ```
-http://0.0.0.0:8081/api/health
+http://0.0.0.0:8080/health
 ```
 
 ##### Api docs:
 
 ```
-http://0.0.0.0:8081/api/swagger-ui/index.html
+http://0.0.0.0:8080/swagger-ui/index.html
 ```
