@@ -12,7 +12,9 @@ COPY src ./src
 
 RUN ./mvnw package -DskipTests --batch-mode
 
-FROM gcr.io/distroless/java21-debian12
+FROM eclipse-temurin:21-jre-alpine
+
+RUN apk add --no-cache curl
 
 WORKDIR /app
 
