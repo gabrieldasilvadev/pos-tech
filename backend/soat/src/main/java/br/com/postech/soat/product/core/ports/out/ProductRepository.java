@@ -18,4 +18,6 @@ public interface ProductRepository {
     boolean existsById(UUID uuid);
 
     boolean existsById(ProductId id);
+
+    boolean existsBySku(String sku);
 }
