@@ -97,7 +97,7 @@ http://localhost:8080/swagger-ui/index.html
 http://localhost:8080/health
 ```
 
-### Utilizando o docker-compose
+### Utilizando o docker compose
 
 ##### Criar o arquivo .env a partir do arquivo de exemplo pos-tech/backend/soat/contrib/env.example ou exportar as variáveis de ambiente abaixo:
 
@@ -107,10 +107,10 @@ export DB_USER=<DB_USER>
 export DB_PASSWORD=<DB_PASSWORD>
 ```
 
-##### Executar o docker-compose
+##### Executar o docker compose
 
 ```sh
-docker-compose up -d
+docker compose up -d
 ```
 
 ##### Para validar se todos os serviços estão up acesse:
