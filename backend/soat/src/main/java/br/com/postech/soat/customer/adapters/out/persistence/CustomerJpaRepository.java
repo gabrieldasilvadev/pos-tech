@@ -9,4 +9,10 @@ import org.springframework.stereotype.Repository;
 public interface CustomerJpaRepository extends JpaRepository<CustomerEntity, UUID> {
 
     Optional<CustomerEntity> findByCpf(String cpf);
+
+    boolean existsByCpf(String cpf);
+
+    boolean existsByEmail(String email);
+
+    boolean existsByPhone(String phone);
 }

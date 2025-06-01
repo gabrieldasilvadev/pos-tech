@@ -8,7 +8,6 @@ import br.com.postech.soat.customer.core.domain.exception.InvalidNameException;
 import br.com.postech.soat.customer.core.domain.exception.InvalidPhoneException;
 import br.com.postech.soat.customer.core.domain.model.Customer;
 import br.com.postech.soat.customer.core.ports.out.CustomerRepository;
-import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -53,7 +53,9 @@ class CreateCustomerServiceTest {
             .phone("11987654321")
             .build();
 
-        when(customerRepository.findByCpf("12345678901")).thenReturn(Optional.empty());
+        when(customerRepository.existsByCpf("12345678901")).thenReturn(false);
+        when(customerRepository.existsByEmail("joao@example.com")).thenReturn(false);
+        when(customerRepository.existsByPhone("11987654321")).thenReturn(false);
         when(customerRepository.save(any(Customer.class))).thenReturn(expectedCustomer);
 
         // Act
@@ -66,7 +68,9 @@ class CreateCustomerServiceTest {
         assertEquals(expectedCustomer.getCpf(), result.getCpf());
         assertEquals(expectedCustomer.getPhone(), result.getPhone());
 
-        verify(customerRepository).findByCpf("12345678901");
+        verify(customerRepository).existsByCpf("12345678901");
+        verify(customerRepository).existsByEmail("joao@example.com");
+        verify(customerRepository).existsByPhone("11987654321");
         verify(customerRepository).save(any(Customer.class));
     }
 
@@ -89,7 +93,9 @@ class CreateCustomerServiceTest {
             .phone("11999999999")
             .build();
 
-        when(customerRepository.findByCpf("12345678901")).thenReturn(Optional.of(existingCustomer));
+        when(customerRepository.existsByCpf("12345678901")).thenReturn(true);
+        when(customerRepository.existsByEmail("joao@example.com")).thenReturn(false);
+        when(customerRepository.existsByPhone("11987654321")).thenReturn(false);
 
         // Act & Assert
         ResourceConflictException exception = assertThrows(
@@ -97,8 +103,99 @@ class CreateCustomerServiceTest {
             () -> createCustomerService.create(command)
         );
 
-        assertEquals("Customer with document identifier: 12345678901, already exists", exception.getMessage());
-        verify(customerRepository).findByCpf("12345678901");
+        assertEquals("Customer registration failed. Conflicts found: CPF: 12345678901",
+            exception.getMessage());
+        verify(customerRepository).existsByCpf("12345678901");
+        verify(customerRepository).existsByEmail("joao@example.com");
+        verify(customerRepository).existsByPhone("11987654321");
+        verify(customerRepository, never()).save(any(Customer.class));
+    }
+
+    @Test
+    @DisplayName("Should throw ResourceConflictException when email already exists")
+    void givenExistingEmail_whenCreate_thenThrowResourceConflictException() {
+        // Arrange
+        CreateCustomerCommand command = new CreateCustomerCommand(
+            "João Silva",
+            "joao@example.com",
+            "12345678901",
+            "11987654321"
+        );
+
+        when(customerRepository.existsByCpf("12345678901")).thenReturn(false);
+        when(customerRepository.existsByEmail("joao@example.com")).thenReturn(true);
+        when(customerRepository.existsByPhone("11987654321")).thenReturn(false);
+
+        // Act & Assert
+        ResourceConflictException exception = assertThrows(
+            ResourceConflictException.class,
+            () -> createCustomerService.create(command)
+        );
+
+        assertEquals("Customer registration failed. Conflicts found: Email: joao@example.com",
+            exception.getMessage());
+        verify(customerRepository).existsByCpf("12345678901");
+        verify(customerRepository).existsByEmail("joao@example.com");
+        verify(customerRepository).existsByPhone("11987654321");
+        verify(customerRepository, never()).save(any(Customer.class));
+    }
+
+    @Test
+    @DisplayName("Should throw ResourceConflictException when phone already exists")
+    void givenExistingPhone_whenCreate_thenThrowResourceConflictException() {
+        // Arrange
+        CreateCustomerCommand command = new CreateCustomerCommand(
+            "João Silva",
+            "joao@example.com",
+            "12345678901",
+            "11987654321"
+        );
+
+        when(customerRepository.existsByCpf("12345678901")).thenReturn(false);
+        when(customerRepository.existsByEmail("joao@example.com")).thenReturn(false);
+        when(customerRepository.existsByPhone("11987654321")).thenReturn(true);
+
+        // Act & Assert
+        ResourceConflictException exception = assertThrows(
+            ResourceConflictException.class,
+            () -> createCustomerService.create(command)
+        );
+
+        assertEquals("Customer registration failed. Conflicts found: Phone: 11987654321",
+            exception.getMessage());
+        verify(customerRepository).existsByCpf("12345678901");
+        verify(customerRepository).existsByEmail("joao@example.com");
+        verify(customerRepository).existsByPhone("11987654321");
+        verify(customerRepository, never()).save(any(Customer.class));
+    }
+
+    @Test
+    @DisplayName("Should throw ResourceConflictException when multiple fields already exists")
+    void givenMultipleExistingFields_whenCreate_thenThrowResourceConflictException() {
+        // Arrange
+        CreateCustomerCommand command = new CreateCustomerCommand(
+            "João Silva",
+            "joao@example.com",
+            "12345678901",
+            "11987654321"
+        );
+
+        when(customerRepository.existsByCpf("12345678901")).thenReturn(true);
+        when(customerRepository.existsByEmail("joao@example.com")).thenReturn(true);
+        when(customerRepository.existsByPhone("11987654321")).thenReturn(true);
+
+        // Act & Assert
+        ResourceConflictException exception = assertThrows(
+            ResourceConflictException.class,
+            () -> createCustomerService.create(command)
+        );
+
+        assertEquals("Customer registration failed. Conflicts found: CPF: 12345678901, " +
+            "Email: joao@example.com, Phone: 11987654321", exception.getMessage());
+        verify(customerRepository).existsByCpf("12345678901");
+        verify(customerRepository).existsByEmail("joao@example.com");
+        verify(customerRepository).existsByPhone("11987654321");
+        verify(customerRepository, never()).save(any(Customer.class));
     }
 
     @Test
@@ -108,7 +205,7 @@ class CreateCustomerServiceTest {
         CreateCustomerCommand command = new CreateCustomerCommand(
             "João Silva",
             "joao@example.com",
-            "123", // CPF inválido (muito curto)
+            "123", // Invalid CPF (very short)
             "11987654321"
         );
 
@@ -125,7 +222,7 @@ class CreateCustomerServiceTest {
         // Arrange
         CreateCustomerCommand command = new CreateCustomerCommand(
             "João Silva",
-            "email-invalido", // Email inválido
+            "email-invalido", // Invalid Email
             "12345678901",
             "11987654321"
         );
@@ -142,7 +239,7 @@ class CreateCustomerServiceTest {
     void givenInvalidName_whenCreate_thenThrowInvalidNameException() {
         // Arrange
         CreateCustomerCommand command = new CreateCustomerCommand(
-            "", // Nome inválido (vazio)
+            "", // Invalid name (empty)
             "joao@example.com",
             "12345678901",
             "11987654321"
@@ -163,7 +260,7 @@ class CreateCustomerServiceTest {
             "João Silva",
             "joao@example.com",
             "12345678901",
-            "123" // Telefone inválido (muito curto)
+            "123" // Invalid phone (very short)
         );
 
         // Act & Assert

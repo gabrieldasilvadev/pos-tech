@@ -42,4 +42,19 @@ public class CustomerJpaAdapter implements CustomerRepository {
 
         return Optional.empty();
     }
+
+    @Override
+    public boolean existsByCpf(String cpf) {
+        return customerJpaRepository.existsByCpf(cpf);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return customerJpaRepository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean existsByPhone(String phone) {
+        return customerJpaRepository.existsByPhone(phone);
+    }
 }

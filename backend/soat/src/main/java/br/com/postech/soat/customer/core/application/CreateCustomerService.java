@@ -10,6 +10,8 @@ import br.com.postech.soat.customer.core.domain.valueobject.Name;
 import br.com.postech.soat.customer.core.domain.valueobject.Phone;
 import br.com.postech.soat.customer.core.ports.in.CreateCustomerUseCase;
 import br.com.postech.soat.customer.core.ports.out.CustomerRepository;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,11 +34,12 @@ public class CreateCustomerService implements CreateCustomerUseCase {
             Email email = new Email(command.email());
             Phone phone = new Phone(command.phone());
 
-            customerRepository.findByCpf(cpf.value())
-                .ifPresent(c -> {
-                    throw new ResourceConflictException(
-                        "Customer with document identifier: " + cpf.value() + ", already exists");
-                });
+            List<String> conflicts = validateUniqueFields(cpf, email, phone);
+
+            if (!conflicts.isEmpty()) {
+                throw new ResourceConflictException(
+                    "Customer registration failed. Conflicts found: " + String.join(", ", conflicts));
+            }
 
             final Customer customer = Customer.create(name, email, cpf, phone);
             logger.info("Domain customer created: {}", customer);
@@ -46,5 +49,24 @@ public class CreateCustomerService implements CreateCustomerUseCase {
             logger.error("Error creating customer: {}", e.getMessage(), e);
             throw e;
         }
+    }
+
+    private List<String> validateUniqueFields(CPF cpf, Email email, Phone phone) {
+        List<String> conflicts = new ArrayList<>();
+
+        if (customerRepository.existsByCpf(cpf.value())) {
+            conflicts.add("CPF: " + cpf.value());
+        }
+
+        if (customerRepository.existsByEmail(email.value())) {
+            conflicts.add("Email: " + email.value());
+        }
+
+        if (phone != null && phone.value() != null &&
+            customerRepository.existsByPhone(phone.value())) {
+            conflicts.add("Phone: " + phone.value());
+        }
+
+        return conflicts;
     }
 }
