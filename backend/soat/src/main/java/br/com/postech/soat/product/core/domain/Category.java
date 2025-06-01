@@ -1,7 +1,6 @@
 package br.com.postech.soat.product.core.domain;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
+import br.com.postech.soat.product.core.domain.exception.InvalidCategoryException;
 import java.util.Arrays;
 
 public enum Category {
@@ -10,12 +9,12 @@ public enum Category {
     DESSERT,
     SIDE_DISH;
 
-    public static Category entryOf(String value) {
-        if (value == null) return null;
+    public static Category entryOf(String category) {
+        if (category == null) return null;
         return Arrays.stream(Category.values()).map(Category::name)
-            .filter(name -> name.equalsIgnoreCase(value))
+            .filter(name -> name.equalsIgnoreCase(category))
             .findFirst()
             .map(Category::valueOf)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Invalid category - " + value));
+            .orElseThrow(() -> new InvalidCategoryException(category));
     }
 }
