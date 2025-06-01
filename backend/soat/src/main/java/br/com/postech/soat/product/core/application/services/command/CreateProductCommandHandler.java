@@ -2,6 +2,7 @@ package br.com.postech.soat.product.core.application.services.command;
 
 import br.com.postech.soat.commons.application.command.CommandHandler;
 import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;
+import br.com.postech.soat.commons.infrastructure.exception.ResourceConflictException;
 import br.com.postech.soat.product.core.application.services.command.model.CreateProductCommand;
 import br.com.postech.soat.product.core.domain.model.Product;
 import br.com.postech.soat.product.core.domain.model.ProductId;
@@ -21,6 +22,10 @@ public class CreateProductCommandHandler implements CommandHandler<CreateProduct
     @Override
     public ProductId handle(CreateProductCommand command) {
         logger.info("Creating product with SKU: {}", command.sku());
+
+        if (productRepository.existsBySku(command.sku())) {
+            throw new ResourceConflictException("Product with SKU '" + command.sku() + "' already exists");
+        }
 
         final Product product = Product.create(
             command.sku(),
