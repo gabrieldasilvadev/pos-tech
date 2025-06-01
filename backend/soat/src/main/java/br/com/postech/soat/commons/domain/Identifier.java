@@ -24,4 +24,9 @@ public abstract class Identifier extends ValueObject {
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
+
+    @Override
+    public String toString() {
+        return value.toString();
+    }
 }
