@@ -1,10 +1,7 @@
 package br.com.postech.soat.commons.infrastructure.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
-
-public class UnprocessableEntityException extends ResponseStatusException {
+public class UnprocessableEntityException extends BaseException {
     public UnprocessableEntityException(String message) {
-        super(HttpStatus.UNPROCESSABLE_ENTITY, message);
+        super(message);
     }
 }
