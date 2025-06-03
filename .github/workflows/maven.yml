@@ -26,4 +26,4 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Run tests
-      run: mvn clean compile test
+      run: mvn clean compile test -file ./backend/soat/pom.xml
