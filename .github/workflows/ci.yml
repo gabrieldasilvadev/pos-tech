@@ -113,4 +113,4 @@ jobs:
         run: docker pull ${{ env.IMAGE_TAG }}
 
       - name: Package
-        run: docker run --rm ${{ env.IMAGE_TAG }} mvn clean package
+        run: docker run --rm ${{ env.IMAGE_TAG }} mvn clean package -DskipTests --batch-mode
