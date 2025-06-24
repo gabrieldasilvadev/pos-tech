@@ -55,7 +55,7 @@ jobs:
         run: docker pull ${{ env.IMAGE_TAG }}
 
       - name: test
-        run: docker run --privileged -v ${{ github.workspace }}/coverage:/app/backend/soat/target/site/jacoco/ --rm ${{ env.IMAGE_TAG }} dockerd & sleep 5 && mvn clean compile test -f ./pom.xml
+        run: docker run --privileged -v ${{ github.workspace }}/coverage:/app/backend/soat/target/site/jacoco/ --rm ${{ env.IMAGE_TAG }} dockerd & sleep 5 && mvn clean compile test -file ./backend/soat/pom.xml
 
       - name: Show JaCoCo Coverage
         run: |
@@ -113,19 +113,4 @@ jobs:
         run: docker pull ${{ env.IMAGE_TAG }}
 
       - name: Package
-        run: docker run --rm ${{ env.IMAGE_TAG }} mvn clean package -file ./pom.xml
-# jobs:
-#   build:
-
-#     runs-on: ubuntu-latest
-
-#     steps:
-#     - uses: actions/checkout@v4
-#     - name: Set up JDK 21
-#       uses: actions/setup-java@v4
-#       with:
-#         java-version: '21'
-#         distribution: 'temurin'
-#         cache: maven
-#     - name: Run tests
-#       run: mvn clean compile test -file ./backend/soat/pom.xml
+        run: docker run --rm ${{ env.IMAGE_TAG }} mvn clean package -file ./backend/soat/pom.xml
