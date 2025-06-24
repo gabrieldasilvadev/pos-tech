@@ -34,8 +34,7 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v4
         with:
-          context: .
-          file: ./backend/soat/Dockerfile
+          context: ./backend/soat
           push: true
           no-cache: true
           target: builder
