@@ -37,6 +37,8 @@ jobs:
           context: .
           file: ./backend/soat/Dockerfile
           push: true
+          no-cache: true
+          target: builder
           tags: ${{ env.IMAGE_TAG }}
 
   UnitTest:
