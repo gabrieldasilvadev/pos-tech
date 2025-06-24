@@ -35,6 +35,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
+          file: ./backend/soat
           push: true
           tags: ${{ env.IMAGE_TAG }}
 
