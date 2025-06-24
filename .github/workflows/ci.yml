@@ -55,7 +55,7 @@ jobs:
         run: docker pull ${{ env.IMAGE_TAG }}
 
       - name: test
-        run: docker run --privileged -v ${{ github.workspace }}/coverage:/app/backend/soat/target/site/jacoco/ --rm ${{ env.IMAGE_TAG }} dockerd & sleep 5 && mvn clean compile test
+        run: docker run --privileged -v ${{ github.workspace }}/coverage:/app/backend/soat/target/site/jacoco/ --rm ${{ env.IMAGE_TAG }} sh -c "dockerd & sleep 5 && mvn clean compile test"
 
       - name: Show JaCoCo Coverage
         run: |
