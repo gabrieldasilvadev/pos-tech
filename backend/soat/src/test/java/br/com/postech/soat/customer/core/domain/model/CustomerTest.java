@@ -17,21 +17,20 @@ class CustomerTest {
         Phone phone = new Phone("11999999999");
         Customer customer = Customer.create(name, email, cpf, phone);
         assertNotNull(customer.getId());
-        assertEquals("João Silva", customer.getName());
-        assertEquals("joao@mail.com", customer.getEmail());
-        assertEquals("12345678901", customer.getCpf());
-        assertEquals("11999999999", customer.getPhone());
+        assertEquals("João Silva", customer.getName().value());
+        assertEquals("joao@mail.com", customer.getEmail().value());
+        assertEquals("12345678901", customer.getCpf().value());
+        assertEquals("11999999999", customer.getPhone().value());
     }
 
     @Test
     void givenCustomer_whenToString_thenReturnMaskedSensitiveData() {
-        Customer customer = Customer.builder()
-            .id(UUID.randomUUID())
-            .name("Maria")
-            .cpf("12345678901")
-            .email("maria@mail.com")
-            .phone("11999999999")
-            .build();
+        Customer customer = Customer.create(
+            new Name("Maria"),
+            new Email("maria@mail.com"),
+            new CPF("12345678901"),
+            new Phone("11999999999")
+        );
         String toString = customer.toString();
         assertTrue(toString.contains("*****"));
         assertTrue(toString.contains("@"));

@@ -6,7 +6,6 @@ import br.com.postech.soat.customer.core.domain.valueobject.CustomerId;
 import br.com.postech.soat.customer.core.domain.valueobject.Email;
 import br.com.postech.soat.customer.core.domain.valueobject.Name;
 import br.com.postech.soat.customer.core.domain.valueobject.Phone;
-import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,30 +16,30 @@ import lombok.Getter;
 @Builder
 public class Customer {
 
-    private final UUID id;
-    private final String name;
-    private final String cpf;
-    private final String email;
-    private final String phone;
+    private final CustomerId id;
+    private final Name name;
+    private final CPF cpf;
+    private final Email email;
+    private final Phone phone;
 
     public static Customer create(Name name, Email email, CPF cpf, Phone phone) {
         return new Customer(
-            CustomerId.generate().value(),
-            name.value(),
-            cpf.value(),
-            email.value(),
-            phone.value()
+            CustomerId.generate(),
+            name,
+            cpf,
+            email,
+            phone
         );
     }
 
     @Override
     public String toString() {
         return "Customer{" +
-            "id=" + id +
-            ", cpf='" + MaskUtil.maskCpf(cpf) + '\'' +
-            ", name='" + name + '\'' +
-            ", email='" + MaskUtil.maskEmail(email) + '\'' +
-            ", phone='" + MaskUtil.maskPhone(phone) + '\'' +
+            "id=" + id.value() +
+            ", cpf='" + MaskUtil.maskCpf(cpf.value()) + '\'' +
+            ", name='" + name.value() + '\'' +
+            ", email='" + MaskUtil.maskEmail(email.value()) + '\'' +
+            ", phone='" + MaskUtil.maskPhone(phone.value()) + '\'' +
             '}';
     }
 }

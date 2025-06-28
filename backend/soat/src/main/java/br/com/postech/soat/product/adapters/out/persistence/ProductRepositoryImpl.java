@@ -57,4 +57,9 @@ public class ProductRepositoryImpl implements ProductRepository {
     public boolean existsById(ProductId id) {
         return existsById(id.getValue());
     }
+
+    @Override
+    public boolean existsBySku(String sku) {
+        return jpaRepository.existsBySku(sku);
+    }
 }

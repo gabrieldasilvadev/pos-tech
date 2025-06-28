@@ -28,7 +28,7 @@ public class MediatorImpl implements Mediator {
 
         context.getBeansOfType(QueryHandler.class).values()
             .forEach(queryHandler ->
-                queryHandlers.put((Class<? extends Query>) queryHandler.getClass(), queryHandler));
+                queryHandlers.put((Class<? extends Query>) resolveQueryType(queryHandler), queryHandler));
 
         context.getBeansOfType(UnitCommandHandler.class)
             .values()
@@ -71,6 +71,11 @@ public class MediatorImpl implements Mediator {
 
     private Class<?> resolveCommandType(UnitCommandHandler<?> handler) {
         ResolvableType type = ResolvableType.forClass(UnitCommandHandler.class, handler.getClass());
+        return type.getGeneric(0).resolve();
+    }
+
+    private Class<?> resolveQueryType(QueryHandler<?, ?> handler) {
+        ResolvableType type = ResolvableType.forClass(QueryHandler.class, handler.getClass());
         return type.getGeneric(0).resolve();
     }
 }
