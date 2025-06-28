@@ -1,38 +1,31 @@
 package br.com.postech.soat.customer.adapters.in.http;
 
-import br.com.postech.soat.customer.core.application.dto.CreateCustomerCommand;
-import br.com.postech.soat.customer.core.application.dto.FindCustomerQuery;
-import br.com.postech.soat.customer.core.domain.model.Customer;
+import br.com.postech.soat.customer.core.application.dto.CreateCustomerRequest;
+import br.com.postech.soat.customer.core.application.dto.FindCustomerRequest;
 import br.com.postech.soat.customer.core.ports.in.CreateCustomerUseCase;
 import br.com.postech.soat.customer.core.ports.in.FindCustomerUseCase;
 import br.com.postech.soat.openapi.api.CustomerApi;
 import br.com.postech.soat.openapi.model.CreateCustomerRequestDto;
 import br.com.postech.soat.openapi.model.FindCustomer200ResponseDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 public class CustomerController implements CustomerApi {
 
-    private final FindCustomerUseCase findCustomerUseCase;
     private final CreateCustomerUseCase createCustomerUseCase;
+    private final FindCustomerUseCase findCustomerUseCase;
     private final CustomerWebMapper customerWebMapper;
-
-    public CustomerController(FindCustomerUseCase findCustomerUseCase,
-                              CreateCustomerUseCase createCustomerUseCase,
-                              CustomerWebMapper customerWebMapper) {
-        this.findCustomerUseCase = findCustomerUseCase;
-        this.createCustomerUseCase = createCustomerUseCase;
-        this.customerWebMapper = customerWebMapper;
-    }
 
     @Override
     public ResponseEntity<FindCustomer200ResponseDto> createCustomer(@RequestBody CreateCustomerRequestDto createCustomerRequest) {
-        CreateCustomerCommand command = customerWebMapper.toCommand(createCustomerRequest);
+        CreateCustomerRequest request = customerWebMapper.toRequest(createCustomerRequest);
 
-        final var customer = createCustomerUseCase.create(command);
+        final var customer = createCustomerUseCase.execute(request);
 
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(customerWebMapper.toResponse(customer));
@@ -40,8 +33,8 @@ public class CustomerController implements CustomerApi {
 
     @Override
     public ResponseEntity<FindCustomer200ResponseDto> findCustomer(String cpf) {
-        FindCustomerQuery query = new FindCustomerQuery(cpf);
-        Customer customer = findCustomerUseCase.findByCpf(query);
+        FindCustomerRequest request = new FindCustomerRequest(cpf);
+        var customer = findCustomerUseCase.execute(request);
         return ResponseEntity.ok(customerWebMapper.toResponse(customer));
     }
 }

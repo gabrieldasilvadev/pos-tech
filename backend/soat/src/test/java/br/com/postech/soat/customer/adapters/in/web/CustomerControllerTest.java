@@ -2,9 +2,13 @@ package br.com.postech.soat.customer.adapters.in.web;
 
 import br.com.postech.soat.customer.adapters.in.http.CustomerController;
 import br.com.postech.soat.customer.adapters.in.http.CustomerWebMapper;
-import br.com.postech.soat.customer.core.application.dto.CreateCustomerCommand;
-import br.com.postech.soat.customer.core.application.dto.FindCustomerQuery;
+import br.com.postech.soat.customer.core.application.dto.CreateCustomerRequest;
+import br.com.postech.soat.customer.core.application.dto.FindCustomerRequest;
 import br.com.postech.soat.customer.core.domain.model.Customer;
+import br.com.postech.soat.customer.core.domain.valueobject.CPF;
+import br.com.postech.soat.customer.core.domain.valueobject.Email;
+import br.com.postech.soat.customer.core.domain.valueobject.Name;
+import br.com.postech.soat.customer.core.domain.valueobject.Phone;
 import br.com.postech.soat.customer.core.ports.in.CreateCustomerUseCase;
 import br.com.postech.soat.customer.core.ports.in.FindCustomerUseCase;
 import br.com.postech.soat.openapi.model.CreateCustomerRequestDto;
@@ -57,30 +61,29 @@ class CustomerControllerTest {
             request.setCpf("12345678901");
             request.setPhone("11987654321");
 
-            CreateCustomerCommand command = new CreateCustomerCommand(
+            CreateCustomerRequest requestModel = new CreateCustomerRequest(
                 "John Doe",
                 "john.doe@example.com",
                 "12345678901",
                 "11987654321"
             );
 
-            Customer customer = Customer.builder()
-                .id(UUID.randomUUID())
-                .name("John Doe")
-                .email("john.doe@example.com")
-                .cpf("12345678901")
-                .phone("11987654321")
-                .build();
+            Customer customer = Customer.create(
+                new Name("John Doe"),
+                new Email("john.doe@example.com"),
+                new CPF("12345678901"),
+                new Phone("11987654321")
+            );
 
             FindCustomer200ResponseDto expectedResponse = new FindCustomer200ResponseDto();
-            expectedResponse.setId(customer.getId().toString());
-            expectedResponse.setName(customer.getName());
-            expectedResponse.setEmail(customer.getEmail());
-            expectedResponse.setCpf(customer.getCpf());
-            expectedResponse.setPhone(customer.getPhone());
+            expectedResponse.setId(customer.getId().value().toString());
+            expectedResponse.setName(customer.getName().value());
+            expectedResponse.setEmail(customer.getEmail().value());
+            expectedResponse.setCpf(customer.getCpf().value());
+            expectedResponse.setPhone(customer.getPhone().value());
 
-            when(customerWebMapper.toCommand(request)).thenReturn(command);
-            when(createCustomerUseCase.create(command)).thenReturn(customer);
+            when(customerWebMapper.toRequest(request)).thenReturn(requestModel);
+            when(createCustomerUseCase.execute(requestModel)).thenReturn(customer);
             when(customerWebMapper.toResponse(customer)).thenReturn(expectedResponse);
 
             // Act
@@ -91,8 +94,8 @@ class CustomerControllerTest {
             assertEquals(HttpStatus.CREATED, response.getStatusCode());
             assertEquals(expectedResponse, response.getBody());
 
-            verify(customerWebMapper).toCommand(request);
-            verify(createCustomerUseCase).create(command);
+            verify(customerWebMapper).toRequest(request);
+            verify(createCustomerUseCase).execute(requestModel);
             verify(customerWebMapper).toResponse(customer);
         }
     }
@@ -107,22 +110,21 @@ class CustomerControllerTest {
             // Arrange
             String cpf = "12345678901";
 
-            Customer customer = Customer.builder()
-                .id(UUID.randomUUID())
-                .name("John Doe")
-                .email("john.doe@example.com")
-                .cpf(cpf)
-                .phone("11987654321")
-                .build();
+            Customer customer = Customer.create(
+                new Name("John Doe"),
+                new Email("john.doe@example.com"),
+                new CPF(cpf),
+                new Phone("11987654321")
+            );
 
             FindCustomer200ResponseDto expectedResponse = new FindCustomer200ResponseDto();
-            expectedResponse.setId(customer.getId().toString());
-            expectedResponse.setName(customer.getName());
-            expectedResponse.setEmail(customer.getEmail());
-            expectedResponse.setCpf(customer.getCpf());
-            expectedResponse.setPhone(customer.getPhone());
+            expectedResponse.setId(customer.getId().value().toString());
+            expectedResponse.setName(customer.getName().value());
+            expectedResponse.setEmail(customer.getEmail().value());
+            expectedResponse.setCpf(customer.getCpf().value());
+            expectedResponse.setPhone(customer.getPhone().value());
 
-            when(findCustomerUseCase.findByCpf(any(FindCustomerQuery.class))).thenReturn(customer);
+            when(findCustomerUseCase.execute(any(FindCustomerRequest.class))).thenReturn(customer);
             when(customerWebMapper.toResponse(customer)).thenReturn(expectedResponse);
 
             // Act
@@ -133,7 +135,7 @@ class CustomerControllerTest {
             assertEquals(HttpStatus.OK, response.getStatusCode());
             assertEquals(expectedResponse, response.getBody());
 
-            verify(findCustomerUseCase).findByCpf(any(FindCustomerQuery.class));
+            verify(findCustomerUseCase).execute(any(FindCustomerRequest.class));
             verify(customerWebMapper).toResponse(customer);
         }
 
@@ -143,28 +145,27 @@ class CustomerControllerTest {
             // Arrange
             String cpf = "12345678901";
 
-            Customer customer = Customer.builder()
-                .id(UUID.randomUUID())
-                .name("John Doe")
-                .email("john.doe@example.com")
-                .cpf(cpf)
-                .phone("11987654321")
-                .build();
+            Customer customer = Customer.create(
+                new Name("John Doe"),
+                new Email("john.doe@example.com"),
+                new CPF(cpf),
+                new Phone("11987654321")
+            );
 
             FindCustomer200ResponseDto response = new FindCustomer200ResponseDto();
 
-            when(findCustomerUseCase.findByCpf(any(FindCustomerQuery.class))).thenReturn(customer);
+            when(findCustomerUseCase.execute(any(FindCustomerRequest.class))).thenReturn(customer);
             when(customerWebMapper.toResponse(customer)).thenReturn(response);
 
             // Act
             customerController.findCustomer(cpf);
 
             // Assert - Here we use a capture to verify the exact query that was passed
-            ArgumentCaptor<FindCustomerQuery> queryCaptor = ArgumentCaptor.forClass(FindCustomerQuery.class);
-            verify(findCustomerUseCase).findByCpf(queryCaptor.capture());
+            ArgumentCaptor<FindCustomerRequest> requestCaptor = ArgumentCaptor.forClass(FindCustomerRequest.class);
+            verify(findCustomerUseCase).execute(requestCaptor.capture());
 
-            FindCustomerQuery capturedQuery = queryCaptor.getValue();
-            assertEquals(cpf, capturedQuery.cpf());
+            FindCustomerRequest capturedRequest = requestCaptor.getValue();
+            assertEquals(cpf, capturedRequest.cpf());
         }
     }
 }

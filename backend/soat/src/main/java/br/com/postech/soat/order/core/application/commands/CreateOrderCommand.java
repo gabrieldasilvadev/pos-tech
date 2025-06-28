@@ -1,7 +1,7 @@
 package br.com.postech.soat.order.core.application.commands;
 
 import br.com.postech.soat.commons.application.command.Command;
-import br.com.postech.soat.customer.core.domain.model.CustomerId;
+import br.com.postech.soat.customer.core.domain.valueobject.CustomerId;
 import br.com.postech.soat.order.core.domain.model.Discount;
 import br.com.postech.soat.order.core.domain.model.Observation;
 import br.com.postech.soat.order.core.domain.model.OrderItem;

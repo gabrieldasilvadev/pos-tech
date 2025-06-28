@@ -1,7 +1,7 @@
 package br.com.postech.soat.order.core.domain.model;
 
 import br.com.postech.soat.commons.domain.AggregateRoot;
-import br.com.postech.soat.customer.core.domain.model.CustomerId;
+import br.com.postech.soat.customer.core.domain.valueobject.CustomerId;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
