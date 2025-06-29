@@ -16,6 +16,10 @@ spring:
     baseline-on-migrate: true
     placeholder-replacement: false
 
+server:
+  error:
+    include-stacktrace: never
+
 springdoc:
   swagger-ui:
     path: /docs

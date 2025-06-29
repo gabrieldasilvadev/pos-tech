@@ -1,4 +1,4 @@
-package br.com.postech.soat.product.adapters.in.mapper;
+package br.com.postech.soat.product.adapters.in.http;
 
 import br.com.postech.soat.openapi.model.ProductCategoryDto;
 import br.com.postech.soat.openapi.model.ProductDto;
@@ -20,12 +20,12 @@ public interface ProductQueryMapper {
     ProductQuery toQuery(UUID uuid);
 
     @Mapping(target = "id", source = "product.id.value")
-    @Mapping(target = "sku", source = "product.sku")
+    @Mapping(target = "sku", source = "product.sku.value")
     @Mapping(target = "active", source = "product.active")
-    @Mapping(target = "name", source = "product.name")
-    @Mapping(target = "price", source = "product.price")
-    @Mapping(target = "description", source = "product.description")
-    @Mapping(target = "image", source = "product.image")
-    @Mapping(target = "category", expression = "java(ProductCategoryDto.fromValue(product.getCategory().name()))")
+    @Mapping(target = "name", source = "product.name.value")
+    @Mapping(target = "price", source = "product.price.value")
+    @Mapping(target = "description", source = "product.description.value")
+    @Mapping(target = "image", source = "product.image.value")
+    @Mapping(target = "category", expression = "java(ProductCategoryDto.fromValue(product.getCategory().category().toString()))")
     ProductDto toResponse(Product product);
 }

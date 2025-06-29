@@ -8,11 +8,12 @@ public enum Category {
     DESSERT,
     SIDE_DISH;
 
-    public static Category entryOf(String value) {
+    public static Category entryOf(String category) {
+        if (category == null) return null;
         return Arrays.stream(Category.values()).map(Category::name)
-            .filter(name -> name.equalsIgnoreCase(value))
+            .filter(name -> name.equalsIgnoreCase(category))
             .findFirst()
             .map(Category::valueOf)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid category: " + value));
+            .orElseThrow(() -> new IllegalArgumentException("Invalid category: " + category));
     }
 }

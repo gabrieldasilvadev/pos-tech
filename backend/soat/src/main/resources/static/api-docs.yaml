@@ -479,13 +479,10 @@ components:
             properties:
               id:
                 type: string
-              message:
-                type: string
           examples:
             Example 1:
               value:
                 id: string
-                message: string
     UpdateProduct200Response:
       description: Produto atualizado com sucesso!
       content:

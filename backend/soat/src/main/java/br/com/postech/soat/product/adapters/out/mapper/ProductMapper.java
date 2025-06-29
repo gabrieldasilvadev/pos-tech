@@ -4,7 +4,6 @@ import br.com.postech.soat.product.adapters.out.persistence.entities.ProductEnti
 import br.com.postech.soat.product.core.domain.model.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import org.springframework.stereotype.Component;
 
 @Mapper
 public interface ProductMapper {
@@ -33,13 +32,13 @@ public interface ProductMapper {
         }
         ProductEntity entity = new ProductEntity();
         entity.setId(domain.getId().getValue());
-        entity.setSku(domain.getSku());
+        entity.setSku(domain.getSku().value());
         entity.setActive(domain.getActive());
-        entity.setName(domain.getName());
-        entity.setPrice(domain.getPrice());
-        entity.setDescription(domain.getDescription());
-        entity.setImage(domain.getImage());
-        entity.setCategory(domain.getCategory());
+        entity.setName(domain.getName().value());
+        entity.setPrice(domain.getPrice().value());
+        entity.setDescription(domain.getDescription().value());
+        entity.setImage(domain.getImage().value());
+        entity.setCategory(domain.getCategory().category());
         return entity;
     }
 }
