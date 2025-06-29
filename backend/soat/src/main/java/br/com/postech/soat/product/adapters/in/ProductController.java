@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ProductController implements ProductApi {
     private final ProductWebMapper productWebMapper;
-
     private final ProductRepository productRepository;
     private final CreateProductUseCase createProductUseCase;
     private final FindProductUseCase findProductUseCase;

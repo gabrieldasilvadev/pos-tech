@@ -1,15 +1,19 @@
 package br.com.postech.soat.product.adapters.in;
 
-import br.com.postech.soat.commons.application.mediator.Mediator;
-import br.com.postech.soat.commons.application.query.Query;
 import br.com.postech.soat.openapi.model.GetProduct200ResponseInnerDto;
 import br.com.postech.soat.openapi.model.ProductCategoryDto;
-import br.com.postech.soat.product.core.application.services.command.model.GetProductCommand;
-import br.com.postech.soat.product.core.application.services.query.model.ProductQuery;
+import br.com.postech.soat.product.adapters.in.http.ProductWebMapper;
+import br.com.postech.soat.product.core.application.dto.FindProductRequest;
 import br.com.postech.soat.product.core.domain.Category;
 import br.com.postech.soat.product.core.domain.model.Product;
+import br.com.postech.soat.product.core.ports.in.CreateProductUseCase;
+import br.com.postech.soat.product.core.ports.in.DeleteProductUseCase;
+import br.com.postech.soat.product.core.ports.in.FindProductUseCase;
+import br.com.postech.soat.product.core.ports.in.UpdateProductUseCase;
+import br.com.postech.soat.product.core.ports.out.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
@@ -23,21 +27,34 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 class ProductControllerTest {
 
     @Mock
-    private Mediator mediator;
+    private ProductWebMapper productWebMapper;
+    @Mock
+    private ProductRepository productRepository;
+    @Mock
+    private CreateProductUseCase createProductUseCase;
+    @Mock
+    private FindProductUseCase findProductUseCase;
+    @Mock
+    private UpdateProductUseCase updateProductUseCase;
+    @Mock
+    private DeleteProductUseCase deleteProductUseCase;
 
+    @InjectMocks
     private ProductController productController;
+
+//    private ProductController productController;
     private Product product;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        productController = new ProductController(mediator);
 
         UUID productIdValue = UUID.randomUUID();
 
@@ -52,9 +69,19 @@ class ProductControllerTest {
             .active(true)
             .build();
 
-        lenient().when(mediator.send(any(Query.class))).thenReturn(Collections.singletonList(product));
-        lenient().when(mediator.send(any(ProductQuery.class))).thenReturn(Collections.singletonList(product));
-        lenient().when(mediator.send(any(GetProductCommand.class))).thenReturn(Collections.singletonList(product));
+        GetProduct200ResponseInnerDto responseDto = new GetProduct200ResponseInnerDto()
+            .id(product.getId().getValue())
+            .name(product.getName().value())
+            .sku(product.getSku().value())
+            .description(product.getDescription().value())
+            .price(product.getPrice().value().doubleValue())
+            .active(product.getActive())
+            .image(product.getImage().value())
+            .category(ProductCategoryDto.fromValue(product.getCategory().value()));
+
+        lenient().when(productWebMapper.toListResponse(List.of(product))).thenReturn(List.of(responseDto));
+        lenient().when(findProductUseCase.findProduct(any(FindProductRequest.class), eq(productRepository)))
+            .thenReturn(List.of(product));
     }
 
     @Test
@@ -70,13 +97,13 @@ class ProductControllerTest {
 
         GetProduct200ResponseInnerDto responseDto = response.getBody().get(0);
         assertEquals(product.getId().getValue(), responseDto.getId());
-        assertEquals(product.getName(), responseDto.getName());
-        assertEquals(product.getSku(), responseDto.getSku());
-        assertEquals(product.getDescription(), responseDto.getDescription());
-        assertEquals(product.getPrice().doubleValue(), responseDto.getPrice());
+        assertEquals(product.getName().value(), responseDto.getName());
+        assertEquals(product.getSku().value(), responseDto.getSku());
+        assertEquals(product.getDescription().value(), responseDto.getDescription());
+        assertEquals(product.getPrice().value(), BigDecimal.valueOf(responseDto.getPrice()));
         assertEquals(product.getActive(), responseDto.getActive());
-        assertEquals(product.getImage(), responseDto.getImage());
-        assertEquals(ProductCategoryDto.fromValue(product.getCategory().name()), responseDto.getCategory());
+        assertEquals(product.getImage().value(), responseDto.getImage());
+        assertEquals(ProductCategoryDto.fromValue(product.getCategory().value()), responseDto.getCategory());
     }
 
     @Test
@@ -91,13 +118,13 @@ class ProductControllerTest {
 
         GetProduct200ResponseInnerDto responseDto = response.getBody().get(0);
         assertEquals(product.getId().getValue(), responseDto.getId());
-        assertEquals(product.getName(), responseDto.getName());
-        assertEquals(product.getSku(), responseDto.getSku());
-        assertEquals(product.getDescription(), responseDto.getDescription());
-        assertEquals(product.getPrice().doubleValue(), responseDto.getPrice());
+        assertEquals(product.getName().value(), responseDto.getName());
+        assertEquals(product.getSku().value(), responseDto.getSku());
+        assertEquals(product.getDescription().value(), responseDto.getDescription());
+        assertEquals(product.getPrice().value(), BigDecimal.valueOf(responseDto.getPrice()));
         assertEquals(product.getActive(), responseDto.getActive());
-        assertEquals(product.getImage(), responseDto.getImage());
-        assertEquals(ProductCategoryDto.fromValue(product.getCategory().name()), responseDto.getCategory());
+        assertEquals(product.getImage().value(), responseDto.getImage());
+        assertEquals(ProductCategoryDto.fromValue(product.getCategory().value()), responseDto.getCategory());
     }
 
     @Test
@@ -113,13 +140,13 @@ class ProductControllerTest {
 
         GetProduct200ResponseInnerDto responseDto = response.getBody().get(0);
         assertEquals(product.getId().getValue(), responseDto.getId());
-        assertEquals(product.getName(), responseDto.getName());
-        assertEquals(product.getSku(), responseDto.getSku());
-        assertEquals(product.getDescription(), responseDto.getDescription());
-        assertEquals(product.getPrice().doubleValue(), responseDto.getPrice());
+        assertEquals(product.getName().value(), responseDto.getName());
+        assertEquals(product.getSku().value(), responseDto.getSku());
+        assertEquals(product.getDescription().value(), responseDto.getDescription());
+        assertEquals(product.getPrice().value(), BigDecimal.valueOf(responseDto.getPrice()));
         assertEquals(product.getActive(), responseDto.getActive());
-        assertEquals(product.getImage(), responseDto.getImage());
-        assertEquals(ProductCategoryDto.fromValue(product.getCategory().name()), responseDto.getCategory());
+        assertEquals(product.getImage().value(), responseDto.getImage());
+        assertEquals(ProductCategoryDto.fromValue(product.getCategory().value()), responseDto.getCategory());
     }
 
     @Test
@@ -134,13 +161,13 @@ class ProductControllerTest {
 
         GetProduct200ResponseInnerDto responseDto = response.getBody().get(0);
         assertEquals(product.getId().getValue(), responseDto.getId());
-        assertEquals(product.getName(), responseDto.getName());
-        assertEquals(product.getSku(), responseDto.getSku());
-        assertEquals(product.getDescription(), responseDto.getDescription());
-        assertEquals(product.getPrice().doubleValue(), responseDto.getPrice());
+        assertEquals(product.getName().value(), responseDto.getName());
+        assertEquals(product.getSku().value(), responseDto.getSku());
+        assertEquals(product.getDescription().value(), responseDto.getDescription());
+        assertEquals(product.getPrice().value(), BigDecimal.valueOf(responseDto.getPrice()));
         assertEquals(product.getActive(), responseDto.getActive());
-        assertEquals(product.getImage(), responseDto.getImage());
-        assertEquals(ProductCategoryDto.fromValue(product.getCategory().name()), responseDto.getCategory());
+        assertEquals(product.getImage().value(), responseDto.getImage());
+        assertEquals(ProductCategoryDto.fromValue(product.getCategory().value()), responseDto.getCategory());
     }
 
     @Test
@@ -148,8 +175,10 @@ class ProductControllerTest {
         String sku = "NonExistentSKU";
         String category = "DRINK";
 
-        when(mediator.send(any(Query.class))).thenReturn(Collections.emptyList());
-        when(mediator.send(any(GetProductCommand.class))).thenReturn(Collections.emptyList());
+        when(findProductUseCase.findProduct(any(FindProductRequest.class), eq(productRepository)))
+            .thenReturn(Collections.emptyList());
+        when(productWebMapper.toListResponse(Collections.emptyList()))
+            .thenReturn(Collections.emptyList());
 
         ResponseEntity<List<GetProduct200ResponseInnerDto>> response = productController.getProduct(sku, category);
 
