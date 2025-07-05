@@ -1,7 +1,7 @@
 package br.com.postech.soat.order.adapters.in.http.controller;
 
 import br.com.postech.soat.commons.application.mediator.Mediator;
-import br.com.postech.soat.customer.core.domain.model.CustomerId;
+import br.com.postech.soat.customer.domain.valueobject.CustomerId;
 import br.com.postech.soat.openapi.model.CategoryDto;
 import br.com.postech.soat.openapi.model.OrderItemDto;
 import br.com.postech.soat.openapi.model.PostOrders201ResponseDto;

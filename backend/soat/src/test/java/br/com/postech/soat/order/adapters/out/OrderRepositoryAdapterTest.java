@@ -1,6 +1,6 @@
 package br.com.postech.soat.order.adapters.out;
 
-import br.com.postech.soat.customer.core.domain.model.CustomerId;
+import br.com.postech.soat.customer.domain.valueobject.CustomerId;
 import br.com.postech.soat.order.core.domain.model.Order;
 import br.com.postech.soat.order.core.domain.model.OrderItem;
 import br.com.postech.soat.order.infrastructure.jpa.OrderItemJpaRepository;
