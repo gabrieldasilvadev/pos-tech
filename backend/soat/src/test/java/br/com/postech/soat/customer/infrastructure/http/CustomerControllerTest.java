@@ -64,7 +64,7 @@ class CustomerControllerTest {
             expectedResponse.setPhone(customer.getPhone().value());
 
             // Mock repository behavior
-            when(customerRepository.findByCpf("12345678901")).thenReturn(Optional.empty());
+            when(customerRepository.exists("12345678901", "john.doe@example.com", "11987654321")).thenReturn(false);
             when(customerRepository.save(any(Customer.class))).thenReturn(customer);
 
             // Act
@@ -75,7 +75,7 @@ class CustomerControllerTest {
             assertEquals(HttpStatus.CREATED, response.getStatusCode());
             assertEquals(expectedResponse, response.getBody());
 
-            verify(customerRepository).findByCpf("12345678901");
+            verify(customerRepository).exists("12345678901", "john.doe@example.com", "11987654321");
             verify(customerRepository).save(any(Customer.class));
         }
     }
