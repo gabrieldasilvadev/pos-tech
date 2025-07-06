@@ -1,9 +1,6 @@
 name: Java CI
 
 on:
-  push:
-    branches: ["**"]
-    tags: ["*"]
   pull_request:
     branches: ["**"]
 
