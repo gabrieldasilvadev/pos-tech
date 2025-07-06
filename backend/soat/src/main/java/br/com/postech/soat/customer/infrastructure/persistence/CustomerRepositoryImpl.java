@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Monitorable
 @Repository
@@ -19,6 +20,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     private final CustomerJpaRepository customerJpaRepository;
     private final CustomerPersistenceMapper customerPersistenceMapper;
 
+    @Transactional
     @Override
     public Customer save(final Customer customer) {
         CustomerEntity customerEntity = customerPersistenceMapper.toEntity(customer);
@@ -29,6 +31,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         return customerPersistenceMapper.toModel(customerEntity);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Customer> findByCpf(String cpf) {
         var customerEntityOptional = customerJpaRepository.findByCpf(cpf);
@@ -41,5 +44,11 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         }
 
         return Optional.empty();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public boolean exists(String cpf, String email, String phone) {
+        return customerJpaRepository.existsByCpfOrEmailOrPhone(cpf, email, phone);
     }
 }

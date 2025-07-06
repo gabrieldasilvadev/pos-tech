@@ -1,14 +1,13 @@
 package br.com.postech.soat.customer.application.usecases;
 
-import br.com.postech.soat.commons.infrastructure.exception.ResourceConflictException;
 import br.com.postech.soat.customer.application.dto.CreateCustomerDto;
+import br.com.postech.soat.customer.application.repositories.CustomerRepository;
+import br.com.postech.soat.customer.domain.exception.CustomerAlreadyExistsException;
 import br.com.postech.soat.customer.domain.exception.InvalidCpfException;
 import br.com.postech.soat.customer.domain.exception.InvalidEmailException;
 import br.com.postech.soat.customer.domain.exception.InvalidNameException;
 import br.com.postech.soat.customer.domain.exception.InvalidPhoneException;
 import br.com.postech.soat.customer.domain.model.Customer;
-import br.com.postech.soat.customer.application.repositories.CustomerRepository;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -35,20 +35,20 @@ class CreateCustomerUseCaseTest {
 
     @Test
     @DisplayName("Should create a customer successfully when valid data is provided")
-    void givenValidCommand_whenCreate_thenReturnCustomer() {
+    void givenValidDto_whenCreate_thenReturnCustomer() {
         // Arrange
-        CreateCustomerDto command = new CreateCustomerDto(
+        CreateCustomerDto dto = new CreateCustomerDto(
             "João Silva",
             "joao@example.com",
             "12345678901",
             "11987654321"
         );
 
-        when(customerRepository.findByCpf("12345678901")).thenReturn(Optional.empty());
+        when(customerRepository.exists("12345678901", "joao@example.com", "11987654321")).thenReturn(false);
         when(customerRepository.save(any(Customer.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         // Act
-        Customer result = createCustomerUseCase.execute(command);
+        Customer result = createCustomerUseCase.execute(dto);
 
         // Assert
         assertNotNull(result);
@@ -57,44 +57,40 @@ class CreateCustomerUseCaseTest {
         assertEquals("12345678901", result.getCpf().value());
         assertEquals("11987654321", result.getPhone().value());
 
-        verify(customerRepository).findByCpf("12345678901");
+        verify(customerRepository).exists("12345678901", "joao@example.com", "11987654321");
         verify(customerRepository).save(any(Customer.class));
     }
 
     @Test
-    @DisplayName("Should throw ResourceConflictException when CPF already exists")
-    void givenExistingCpf_whenCreate_thenThrowResourceConflictException() {
+    @DisplayName("Should throw CustomerAlreadyExistsException when customer already exists by CPF, email or phone")
+    void givenExistingCustomerData_whenCreate_thenThrowCustomerAlreadyExistsException() {
         // Arrange
-        CreateCustomerDto command = new CreateCustomerDto(
+        CreateCustomerDto dto = new CreateCustomerDto(
             "João Silva",
             "joao@example.com",
             "12345678901",
             "11987654321"
         );
 
-        Customer existingCustomer = Customer.create(
-            new br.com.postech.soat.customer.domain.valueobject.Name("Existing Customer"),
-            new br.com.postech.soat.customer.domain.valueobject.Email("existing@example.com"),
-            new br.com.postech.soat.customer.domain.valueobject.CPF("12345678901"),
-            new br.com.postech.soat.customer.domain.valueobject.Phone("11999999999")
-        );
-        when(customerRepository.findByCpf("12345678901")).thenReturn(Optional.of(existingCustomer));
+        when(customerRepository.exists("12345678901", "joao@example.com", "11987654321"))
+            .thenReturn(true);
 
         // Act & Assert
-        ResourceConflictException exception = assertThrows(
-            ResourceConflictException.class,
-            () -> createCustomerUseCase.execute(command)
+        CustomerAlreadyExistsException exception = assertThrows(
+            CustomerAlreadyExistsException.class,
+            () -> createCustomerUseCase.execute(dto)
         );
 
-        assertEquals("Customer with document identifier: 12345678901, already exists", exception.getMessage());
-        verify(customerRepository).findByCpf("12345678901");
+        assertEquals("Customer registration failed due to business rule violation", exception.getMessage());
+        verify(customerRepository).exists("12345678901", "joao@example.com", "11987654321");
+        verify(customerRepository, never()).save(any(Customer.class));
     }
 
     @Test
     @DisplayName("Should throw InvalidCpfException when invalid CPF is provided")
     void givenInvalidCpf_whenCreate_thenThrowInvalidCpfException() {
         // Arrange
-        CreateCustomerDto command = new CreateCustomerDto(
+        CreateCustomerDto dto = new CreateCustomerDto(
             "João Silva",
             "joao@example.com",
             "123", // CPF inválido (muito curto)
@@ -104,7 +100,7 @@ class CreateCustomerUseCaseTest {
         // Act & Assert
         assertThrows(
             InvalidCpfException.class,
-            () -> createCustomerUseCase.execute(command)
+            () -> createCustomerUseCase.execute(dto)
         );
     }
 
@@ -112,7 +108,7 @@ class CreateCustomerUseCaseTest {
     @DisplayName("Should throw InvalidEmailException when invalid email is provided")
     void givenInvalidEmail_whenCreate_thenThrowInvalidEmailException() {
         // Arrange
-        CreateCustomerDto command = new CreateCustomerDto(
+        CreateCustomerDto dto = new CreateCustomerDto(
             "João Silva",
             "email-invalido", // Email inválido
             "12345678901",
@@ -122,7 +118,7 @@ class CreateCustomerUseCaseTest {
         // Act & Assert
         assertThrows(
             InvalidEmailException.class,
-            () -> createCustomerUseCase.execute(command)
+            () -> createCustomerUseCase.execute(dto)
         );
     }
 
@@ -130,7 +126,7 @@ class CreateCustomerUseCaseTest {
     @DisplayName("Should throw InvalidNameException when invalid name is provided")
     void givenInvalidName_whenCreate_thenThrowInvalidNameException() {
         // Arrange
-        CreateCustomerDto command = new CreateCustomerDto(
+        CreateCustomerDto dto = new CreateCustomerDto(
             "", // Nome inválido (vazio)
             "joao@example.com",
             "12345678901",
@@ -140,7 +136,7 @@ class CreateCustomerUseCaseTest {
         // Act & Assert
         assertThrows(
             InvalidNameException.class,
-            () -> createCustomerUseCase.execute(command)
+            () -> createCustomerUseCase.execute(dto)
         );
     }
 
@@ -148,7 +144,7 @@ class CreateCustomerUseCaseTest {
     @DisplayName("Should throw InvalidPhoneException when invalid phone is provided")
     void givenInvalidPhone_whenCreate_thenThrowInvalidPhoneException() {
         // Arrange
-        CreateCustomerDto command = new CreateCustomerDto(
+        CreateCustomerDto dto = new CreateCustomerDto(
             "João Silva",
             "joao@example.com",
             "12345678901",
@@ -158,7 +154,7 @@ class CreateCustomerUseCaseTest {
         // Act & Assert
         assertThrows(
             InvalidPhoneException.class,
-            () -> createCustomerUseCase.execute(command)
+            () -> createCustomerUseCase.execute(dto)
         );
     }
 }

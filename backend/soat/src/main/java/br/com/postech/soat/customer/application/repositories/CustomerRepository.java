@@ -8,4 +8,6 @@ public interface CustomerRepository {
     Customer save(Customer customer);
 
     Optional<Customer> findByCpf(String cpf);
+    
+    boolean exists(String cpf, String email, String phone);
 }
