@@ -5,6 +5,7 @@ import br.com.postech.soat.customer.core.domain.model.CustomerId;
 import br.com.postech.soat.order.core.domain.model.OrderId;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,19 +38,17 @@ public class Payment extends AggregateRoot<PaymentId> {
         this.processedAt = processedAt;
     }
 
-    public static Payment initiate(OrderId orderId, CustomerId customerId, PaymentMethod paymentMethod, BigDecimal amount) {
-        if (orderId == null) {
-            throw new IllegalArgumentException("OrderId cannot be null");
-        }
-        if (customerId == null) {
-            throw new IllegalArgumentException("CustomerId cannot be null");
-        }
-        if (paymentMethod == null) {
-            throw new IllegalArgumentException("Payment method cannot be null");
-        }
+    public static Payment initiate(OrderId orderId,
+                                   CustomerId customerId,
+                                   PaymentMethod paymentMethod,
+                                   BigDecimal amount) {
+        Objects.requireNonNull(orderId, "OrderId cannot be null");
+        Objects.requireNonNull(customerId, "CustomerId cannot be null");
+        Objects.requireNonNull(paymentMethod, "Payment method cannot be null");
         if (amount == null || amount.signum() <= 0) {
             throw new IllegalArgumentException("Amount must be positive");
         }
+
         Payment payment = new Payment(PaymentId.generate());
         payment.orderId = orderId;
         payment.customerId = customerId;
