@@ -1,6 +1,6 @@
 package br.com.postech.soat.payment.core.application.services;
 
-import br.com.postech.soat.payment.application.ProcessPaymentNotificationService;
+import br.com.postech.soat.payment.application.ProcessPaymentNotificationUseCase;
 import br.com.postech.soat.payment.domain.entity.Payment;
 import br.com.postech.soat.payment.domain.entity.PaymentId;
 import br.com.postech.soat.payment.application.repositories.PaymentRepository;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Process Payment Notification Service Tests")
-class ProcessPaymentNotificationServiceTest {
+class ProcessPaymentNotificationUseCaseTest {
 
     @Mock
     private PaymentRepository paymentRepository;
@@ -32,7 +32,7 @@ class ProcessPaymentNotificationServiceTest {
     private FakeCheckoutClient fakeCheckoutClient;
 
     @InjectMocks
-    private ProcessPaymentNotificationService service;
+    private ProcessPaymentNotificationUseCase service;
 
     @Test
     @DisplayName("Should process payment notification successfully")

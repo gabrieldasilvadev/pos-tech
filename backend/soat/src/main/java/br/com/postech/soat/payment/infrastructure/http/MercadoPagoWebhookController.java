@@ -1,7 +1,7 @@
-package br.com.postech.soat.payment.infrastructure;
+package br.com.postech.soat.payment.infrastructure.http;
 
-import br.com.postech.soat.payment.domain.entity.PaymentId;
 import br.com.postech.soat.payment.application.ProcessPaymentNotificationUseCase;
+import br.com.postech.soat.payment.domain.entity.PaymentId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
