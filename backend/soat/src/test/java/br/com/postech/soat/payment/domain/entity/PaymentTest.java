@@ -31,7 +31,7 @@ class PaymentTest {
         CustomerId customerId = new CustomerId(UUID.randomUUID());
         BigDecimal amount = new BigDecimal("100.00");
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+        NullPointerException exception = assertThrows(NullPointerException.class, () ->
             Payment.initiate(null, customerId, PaymentMethod.PIX, amount)
         );
         assertEquals("OrderId cannot be null", exception.getMessage());
@@ -43,7 +43,7 @@ class PaymentTest {
         OrderId orderId = new OrderId(UUID.randomUUID());
         BigDecimal amount = new BigDecimal("100.00");
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+        NullPointerException exception = assertThrows(NullPointerException.class, () ->
             Payment.initiate(orderId, null, PaymentMethod.PIX, amount)
         );
         assertEquals("CustomerId cannot be null", exception.getMessage());
@@ -56,7 +56,7 @@ class PaymentTest {
         CustomerId customerId = new CustomerId(UUID.randomUUID());
         BigDecimal amount = new BigDecimal("100.00");
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+        NullPointerException exception = assertThrows(NullPointerException.class, () ->
             Payment.initiate(orderId, customerId, null, amount)
         );
         assertEquals("Payment method cannot be null", exception.getMessage());
