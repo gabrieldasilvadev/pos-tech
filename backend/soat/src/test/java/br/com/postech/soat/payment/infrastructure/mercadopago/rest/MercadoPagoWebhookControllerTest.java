@@ -1,6 +1,6 @@
 package br.com.postech.soat.payment.infrastructure.mercadopago.rest;
 
-import br.com.postech.soat.payment.application.ProcessPaymentNotificationUseCase;
+import br.com.postech.soat.payment.application.command.ProcessPaymentNotificationCommandHandler;
 import br.com.postech.soat.payment.domain.entity.PaymentId;
 import br.com.postech.soat.payment.infrastructure.http.MercadoPagoWebhookController;
 import java.util.UUID;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 class MercadoPagoWebhookControllerTest {
 
     @Mock
-    private ProcessPaymentNotificationUseCase notificationService;
+    private ProcessPaymentNotificationCommandHandler notificationService;
 
     @InjectMocks
     private MercadoPagoWebhookController controller;
@@ -37,7 +37,7 @@ class MercadoPagoWebhookControllerTest {
 
         ResponseEntity<Void> response = controller.receive(paymentId, topic);
 
-        verify(notificationService, times(1)).processPaymentNotification(PaymentId.of(paymentId));
+        verify(notificationService, times(1)).handle(PaymentId.of(paymentId));
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
@@ -49,7 +49,7 @@ class MercadoPagoWebhookControllerTest {
 
         ResponseEntity<Void> response = controller.receive(paymentId, topic);
 
-        verify(notificationService, never()).processPaymentNotification(any());
+        verify(notificationService, never()).handle(any());
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 }

@@ -1,6 +1,6 @@
-package br.com.postech.soat.payment.core.application.services;
+package br.com.postech.soat.payment.core.application.services.command;
 
-import br.com.postech.soat.payment.application.ProcessPaymentNotificationUseCase;
+import br.com.postech.soat.payment.application.command.ProcessPaymentNotificationCommandHandler;
 import br.com.postech.soat.payment.domain.entity.Payment;
 import br.com.postech.soat.payment.domain.entity.PaymentId;
 import br.com.postech.soat.payment.application.repositories.PaymentRepository;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Process Payment Notification Service Tests")
-class ProcessPaymentNotificationUseCaseTest {
+class ProcessPaymentNotificationCommandHandlerTest {
 
     @Mock
     private PaymentRepository paymentRepository;
@@ -32,18 +32,18 @@ class ProcessPaymentNotificationUseCaseTest {
     private FakeCheckoutClient fakeCheckoutClient;
 
     @InjectMocks
-    private ProcessPaymentNotificationUseCase service;
+    private ProcessPaymentNotificationCommandHandler service;
 
     @Test
     @DisplayName("Should process payment notification successfully")
-    void shouldProcessPaymentNotificationSuccessfully() {
+    void shouldHandleSuccessfully() {
         PaymentId paymentId = PaymentId.of(UUID.randomUUID());
         Payment payment = mock(Payment.class);
 
         when(fakeCheckoutClient.getPaymentDetails(paymentId)).thenReturn("Payment details");
         when(paymentRepository.findById(paymentId)).thenReturn(payment);
 
-        service.processPaymentNotification(paymentId);
+        service.handle(paymentId);
 
         verify(fakeCheckoutClient, times(1)).getPaymentDetails(paymentId);
         verify(paymentRepository, times(1)).findById(paymentId);
@@ -57,7 +57,7 @@ class ProcessPaymentNotificationUseCaseTest {
         PaymentId paymentId = PaymentId.of(UUID.randomUUID());
         when(fakeCheckoutClient.getPaymentDetails(paymentId)).thenReturn("");
 
-        assertThrows(RuntimeException.class, () -> service.processPaymentNotification(paymentId));
+        assertThrows(RuntimeException.class, () -> service.handle(paymentId));
         verify(fakeCheckoutClient, times(1)).getPaymentDetails(paymentId);
         verify(paymentRepository, never()).findById(any());
         verify(paymentRepository, never()).save(any());
@@ -69,7 +69,7 @@ class ProcessPaymentNotificationUseCaseTest {
         PaymentId paymentId = PaymentId.of(UUID.randomUUID());
         when(fakeCheckoutClient.getPaymentDetails(paymentId)).thenReturn(null);
 
-        assertThrows(RuntimeException.class, () -> service.processPaymentNotification(paymentId));
+        assertThrows(RuntimeException.class, () -> service.handle(paymentId));
         verify(fakeCheckoutClient, times(1)).getPaymentDetails(paymentId);
         verify(paymentRepository, never()).findById(any());
         verify(paymentRepository, never()).save(any());

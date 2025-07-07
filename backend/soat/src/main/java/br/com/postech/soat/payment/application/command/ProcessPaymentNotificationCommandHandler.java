@@ -1,4 +1,4 @@
-package br.com.postech.soat.payment.application;
+package br.com.postech.soat.payment.application.command;
 
 import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;
 import br.com.postech.soat.payment.application.repositories.PaymentRepository;
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 @Service
 @Monitorable
 @RequiredArgsConstructor
-public class ProcessPaymentNotificationUseCase {
+public class ProcessPaymentNotificationCommandHandler {
   private final PaymentRepository paymentRepository;
   private final FakeCheckoutClient fakeCheckoutClient;
 
-  public void processPaymentNotification(PaymentId paymentId) {
+  public void handle(PaymentId paymentId) {
 
     final String paymentProcessed = fakeCheckoutClient.getPaymentDetails(paymentId);
     if (paymentProcessed == null || paymentProcessed.trim().isEmpty()) {
