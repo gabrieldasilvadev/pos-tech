@@ -5,7 +5,7 @@ import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;
 import br.com.postech.soat.payment.application.command.model.InitiatePaymentCommand;
 import br.com.postech.soat.payment.domain.entity.Payment;
 import br.com.postech.soat.payment.domain.entity.PaymentId;
-import br.com.postech.soat.payment.application.GatewayOperationResult;
+import br.com.postech.soat.payment.application.gateway.GatewayOperationResult;
 import br.com.postech.soat.payment.application.gateway.PaymentGateway;
 import br.com.postech.soat.payment.application.repositories.PaymentRepository;
 import lombok.RequiredArgsConstructor;

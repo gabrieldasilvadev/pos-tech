@@ -8,7 +8,7 @@ import br.com.postech.soat.payment.domain.entity.Payment;
 import br.com.postech.soat.payment.domain.entity.PaymentId;
 import br.com.postech.soat.payment.domain.entity.PaymentMethod;
 import br.com.postech.soat.payment.domain.entity.PaymentStatus;
-import br.com.postech.soat.payment.application.GatewayOperationResult;
+import br.com.postech.soat.payment.application.gateway.GatewayOperationResult;
 import br.com.postech.soat.payment.application.gateway.PaymentGateway;
 import br.com.postech.soat.payment.application.repositories.PaymentRepository;
 import java.math.BigDecimal;
