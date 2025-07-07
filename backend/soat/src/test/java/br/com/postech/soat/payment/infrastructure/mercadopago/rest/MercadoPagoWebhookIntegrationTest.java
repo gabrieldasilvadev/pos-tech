@@ -7,6 +7,7 @@ import br.com.postech.soat.payment.domain.entity.PaymentId;
 import br.com.postech.soat.payment.domain.entity.PaymentMethod;
 import br.com.postech.soat.payment.domain.entity.PaymentStatus;
 import br.com.postech.soat.payment.application.repositories.PaymentRepository;
+import br.com.postech.soat.payment.infrastructure.paymentgateway.FakeCheckoutClient;
 import java.math.BigDecimal;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,6 +39,9 @@ class MercadoPagoWebhookIntegrationTest extends PostgresTestContainerConfig {
     @Autowired
     private PaymentRepository paymentRepository;
 
+    @Autowired
+    private FakeCheckoutClient fakeCheckoutClient;
+
     private Payment testPayment;
     private PaymentId paymentId;
 
@@ -58,6 +62,7 @@ class MercadoPagoWebhookIntegrationTest extends PostgresTestContainerConfig {
     @Test
     @DisplayName("Should process webhook and update payment status")
     void shouldProcessWebhookAndUpdatePaymentStatus() throws Exception {
+        fakeCheckoutClient.createPayment(testPayment);
         Payment initialPayment = paymentRepository.findById(paymentId);
         assertNotNull(initialPayment);
         assertEquals(PaymentStatus.APPROVED, initialPayment.getStatus());

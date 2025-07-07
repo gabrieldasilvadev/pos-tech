@@ -38,6 +38,18 @@ public class Payment extends AggregateRoot<PaymentId> {
     }
 
     public static Payment initiate(OrderId orderId, CustomerId customerId, PaymentMethod paymentMethod, BigDecimal amount) {
+        if (orderId == null) {
+            throw new IllegalArgumentException("OrderId cannot be null");
+        }
+        if (customerId == null) {
+            throw new IllegalArgumentException("CustomerId cannot be null");
+        }
+        if (paymentMethod == null) {
+            throw new IllegalArgumentException("Payment method cannot be null");
+        }
+        if (amount == null || amount.signum() <= 0) {
+            throw new IllegalArgumentException("Amount must be positive");
+        }
         Payment payment = new Payment(PaymentId.generate());
         payment.orderId = orderId;
         payment.customerId = customerId;
