@@ -1,8 +1,9 @@
 package br.com.postech.soat.payment.core.application.services;
 
-import br.com.postech.soat.payment.core.domain.model.Payment;
-import br.com.postech.soat.payment.core.domain.model.PaymentId;
-import br.com.postech.soat.payment.core.ports.out.PaymentRepository;
+import br.com.postech.soat.payment.application.ProcessPaymentNotificationService;
+import br.com.postech.soat.payment.domain.entity.Payment;
+import br.com.postech.soat.payment.domain.entity.PaymentId;
+import br.com.postech.soat.payment.application.repositories.PaymentRepository;
 import br.com.postech.soat.payment.infrastructure.paymentgateway.FakeCheckoutClient;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;

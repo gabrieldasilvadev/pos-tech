@@ -2,11 +2,11 @@ package br.com.postech.soat.payment.infrastructure.mercadopago.rest;
 
 import br.com.postech.soat.customer.core.domain.model.CustomerId;
 import br.com.postech.soat.order.core.domain.model.OrderId;
-import br.com.postech.soat.payment.core.domain.model.Payment;
-import br.com.postech.soat.payment.core.domain.model.PaymentId;
-import br.com.postech.soat.payment.core.domain.model.PaymentMethod;
-import br.com.postech.soat.payment.core.domain.model.PaymentStatus;
-import br.com.postech.soat.payment.core.ports.out.PaymentRepository;
+import br.com.postech.soat.payment.domain.entity.Payment;
+import br.com.postech.soat.payment.domain.entity.PaymentId;
+import br.com.postech.soat.payment.domain.entity.PaymentMethod;
+import br.com.postech.soat.payment.domain.entity.PaymentStatus;
+import br.com.postech.soat.payment.application.repositories.PaymentRepository;
 import java.math.BigDecimal;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;

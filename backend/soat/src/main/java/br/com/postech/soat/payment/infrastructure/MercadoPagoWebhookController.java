@@ -1,0 +1,26 @@
+package br.com.postech.soat.payment.infrastructure;
+
+import br.com.postech.soat.payment.domain.entity.PaymentId;
+import br.com.postech.soat.payment.application.ProcessPaymentNotificationUseCase;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/webhooks/mercado-pago")
+@RequiredArgsConstructor
+public class MercadoPagoWebhookController {
+    private final ProcessPaymentNotificationUseCase notificationService;
+
+    @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    ResponseEntity<Void> receive(@RequestParam String id, @RequestParam String topic) {
+        if (topic.equals("payment")) {
+            notificationService.processPaymentNotification(PaymentId.of(id));
+        }
+        return ResponseEntity.ok().build();
+    }
+}

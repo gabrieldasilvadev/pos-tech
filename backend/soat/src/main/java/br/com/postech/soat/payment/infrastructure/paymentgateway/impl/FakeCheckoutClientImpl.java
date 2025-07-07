@@ -1,9 +1,9 @@
 package br.com.postech.soat.payment.infrastructure.paymentgateway.impl;
 
 import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;
-import br.com.postech.soat.payment.core.domain.model.Payment;
-import br.com.postech.soat.payment.core.domain.model.PaymentId;
-import br.com.postech.soat.payment.core.domain.model.PaymentStatus;
+import br.com.postech.soat.payment.domain.entity.Payment;
+import br.com.postech.soat.payment.domain.entity.PaymentId;
+import br.com.postech.soat.payment.domain.entity.PaymentStatus;
 import br.com.postech.soat.payment.infrastructure.paymentgateway.FakeCheckoutClient;
 import java.util.Map;
 import java.util.Random;
