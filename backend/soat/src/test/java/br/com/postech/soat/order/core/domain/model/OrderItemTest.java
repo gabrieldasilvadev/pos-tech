@@ -1,5 +1,7 @@
 package br.com.postech.soat.order.core.domain.model;
 
+import br.com.postech.soat.order.domain.vo.Discount;
+import br.com.postech.soat.order.domain.entity.OrderItem;
 import java.math.BigDecimal;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;

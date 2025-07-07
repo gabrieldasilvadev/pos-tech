@@ -2,7 +2,7 @@ package br.com.postech.soat.payment.core.application.services.command.model;
 
 import br.com.postech.soat.commons.application.command.Command;
 import br.com.postech.soat.customer.core.domain.model.CustomerId;
-import br.com.postech.soat.order.core.domain.model.OrderId;
+import br.com.postech.soat.order.domain.entity.OrderId;
 import br.com.postech.soat.payment.core.domain.model.PaymentMethod;
 import java.math.BigDecimal;
 

@@ -1,13 +1,14 @@
 package br.com.postech.soat.order.core.application.handlers;
 
 import br.com.postech.soat.customer.core.domain.model.CustomerId;
-import br.com.postech.soat.order.core.application.commands.CreateOrderCommand;
-import br.com.postech.soat.order.core.domain.model.Discount;
-import br.com.postech.soat.order.core.domain.model.Observation;
-import br.com.postech.soat.order.core.domain.model.Order;
-import br.com.postech.soat.order.core.domain.model.OrderItem;
-import br.com.postech.soat.order.core.domain.model.OrderStatus;
-import br.com.postech.soat.order.core.ports.out.OrderRepository;
+import br.com.postech.soat.order.application.command.CreateOrderCommand;
+import br.com.postech.soat.order.application.command.handlers.CreateOrderCommandHandler;
+import br.com.postech.soat.order.domain.vo.Discount;
+import br.com.postech.soat.order.domain.vo.Observation;
+import br.com.postech.soat.order.domain.entity.Order;
+import br.com.postech.soat.order.domain.entity.OrderItem;
+import br.com.postech.soat.order.domain.entity.OrderStatus;
+import br.com.postech.soat.order.application.repositories.OrderRepository;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;

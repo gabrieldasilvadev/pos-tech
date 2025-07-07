@@ -1,6 +1,11 @@
 package br.com.postech.soat.order.core.domain.model;
 
 import br.com.postech.soat.customer.core.domain.model.CustomerId;
+import br.com.postech.soat.order.domain.vo.Discount;
+import br.com.postech.soat.order.domain.vo.Observation;
+import br.com.postech.soat.order.domain.entity.Order;
+import br.com.postech.soat.order.domain.entity.OrderItem;
+import br.com.postech.soat.order.domain.entity.OrderStatus;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
