@@ -1,4 +1,4 @@
-package br.com.postech.soat.payment.core.application.services.command;
+package br.com.postech.soat.payment.application;
 
 import br.com.postech.soat.customer.core.domain.model.CustomerId;
 import br.com.postech.soat.order.core.domain.model.OrderId;
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Initiate Payment Command Handler Tests")
-class InitiatePaymentCommandHandlerTest {
+class InitiatePaymentUseCaseTest {
 
     @Mock
     private PaymentRepository paymentRepository;

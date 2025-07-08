@@ -1,4 +1,4 @@
-package br.com.postech.soat.payment.core.application.services.command;
+package br.com.postech.soat.payment.application;
 
 import br.com.postech.soat.payment.application.usecases.ProcessPaymentNotificationUseCase;
 import br.com.postech.soat.payment.domain.entity.Payment;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Process Payment Notification Service Tests")
-class ProcessPaymentNotificationCommandHandlerTest {
+class ProcessPaymentNotificationUseCaseTest {
 
     @Mock
     private PaymentRepository paymentRepository;

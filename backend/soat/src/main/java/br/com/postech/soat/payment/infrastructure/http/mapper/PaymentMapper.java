@@ -13,8 +13,8 @@ import org.mapstruct.factory.Mappers;
 @Mapper(
     imports = {PaymentStatusDto.class}
 )
-public interface PaymentQueryMapper {
-    PaymentQueryMapper INSTANCE = Mappers.getMapper(PaymentQueryMapper.class);
+public interface PaymentMapper {
+    PaymentMapper INSTANCE = Mappers.getMapper(PaymentMapper.class);
 
     @Mapping(target = "paymentId", source = "payment.id.value")
     @Mapping(target = "orderId", source = "payment.orderId.value")

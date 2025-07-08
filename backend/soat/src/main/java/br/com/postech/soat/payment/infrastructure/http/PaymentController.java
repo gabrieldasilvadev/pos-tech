@@ -9,7 +9,7 @@ import br.com.postech.soat.payment.application.usecases.InitiatePaymentUseCase;
 import br.com.postech.soat.payment.domain.entity.Payment;
 import br.com.postech.soat.payment.domain.entity.PaymentId;
 import br.com.postech.soat.payment.infrastructure.http.mapper.PaymentCommandMapper;
-import br.com.postech.soat.payment.infrastructure.http.mapper.PaymentQueryMapper;
+import br.com.postech.soat.payment.infrastructure.http.mapper.PaymentMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +33,6 @@ public class PaymentController implements PaymentApi {
     @Override
     public ResponseEntity<GetPaymentsPaymentId200ResponseDto> getPaymentsPaymentId(String paymentId) {
         final Payment payment = findPaymentByIdUseCase.execute(PaymentId.of(paymentId));
-        return ResponseEntity.ok(PaymentQueryMapper.INSTANCE.toResponse(payment));
+        return ResponseEntity.ok(PaymentMapper.INSTANCE.toResponse(payment));
     }
 }
