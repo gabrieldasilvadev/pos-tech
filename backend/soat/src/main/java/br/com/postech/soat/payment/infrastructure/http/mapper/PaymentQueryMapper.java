@@ -23,7 +23,7 @@ public interface PaymentQueryMapper {
     @Mapping(target = "processedAt", source = "payment.processedAt")
     GetPaymentsPaymentId200ResponseDto toResponse(Payment payment);
 
-    default java.time.OffsetDateTime map(Instant value) {
+    default OffsetDateTime map(Instant value) {
         return value == null ? null : OffsetDateTime.ofInstant(value, ZoneOffset.UTC);
     }
 }

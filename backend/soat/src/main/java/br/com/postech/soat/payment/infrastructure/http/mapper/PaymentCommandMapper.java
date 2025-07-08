@@ -1,7 +1,7 @@
 package br.com.postech.soat.payment.infrastructure.http.mapper;
 
 import br.com.postech.soat.openapi.model.PostPaymentsRequestDto;
-import br.com.postech.soat.payment.application.command.model.InitiatePaymentCommand;
+import br.com.postech.soat.payment.application.command.InitiatePaymentCommand;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

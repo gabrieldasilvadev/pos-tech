@@ -1,13 +1,12 @@
-package br.com.postech.soat.payment.application.command;
+package br.com.postech.soat.payment.application.usecases;
 
-import br.com.postech.soat.commons.application.command.CommandHandler;
 import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;
-import br.com.postech.soat.payment.application.command.model.InitiatePaymentCommand;
-import br.com.postech.soat.payment.domain.entity.Payment;
-import br.com.postech.soat.payment.domain.entity.PaymentId;
+import br.com.postech.soat.payment.application.command.InitiatePaymentCommand;
 import br.com.postech.soat.payment.application.gateway.GatewayOperationResult;
 import br.com.postech.soat.payment.application.gateway.PaymentGateway;
 import br.com.postech.soat.payment.application.repositories.PaymentRepository;
+import br.com.postech.soat.payment.domain.entity.Payment;
+import br.com.postech.soat.payment.domain.entity.PaymentId;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,19 +15,17 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Monitorable
-public class InitiatePaymentCommandHandler implements CommandHandler<InitiatePaymentCommand, PaymentId> {
+public class InitiatePaymentUseCase {
     private final PaymentRepository paymentRepository;
     private final PaymentGateway paymentGateway;
-    private final Logger logger = LoggerFactory.getLogger(InitiatePaymentCommandHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(InitiatePaymentUseCase.class);
 
-    @Override
-    public PaymentId handle(InitiatePaymentCommand command) {
+    public PaymentId process(InitiatePaymentCommand command) {
         final Payment payment = Payment.initiate(
             command.orderId(),
             command.customerId(),
             command.paymentMethod(),
-            command.amount()
-        );
+            command.amount());
 
         final GatewayOperationResult result = paymentGateway.processPayment(payment);
 

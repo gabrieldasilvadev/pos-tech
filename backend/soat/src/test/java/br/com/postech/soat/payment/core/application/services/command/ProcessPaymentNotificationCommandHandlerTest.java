@@ -1,6 +1,6 @@
 package br.com.postech.soat.payment.core.application.services.command;
 
-import br.com.postech.soat.payment.application.command.ProcessPaymentNotificationCommandHandler;
+import br.com.postech.soat.payment.application.usecases.ProcessPaymentNotificationUseCase;
 import br.com.postech.soat.payment.domain.entity.Payment;
 import br.com.postech.soat.payment.domain.entity.PaymentId;
 import br.com.postech.soat.payment.application.repositories.PaymentRepository;
@@ -32,7 +32,7 @@ class ProcessPaymentNotificationCommandHandlerTest {
     private FakeCheckoutClient fakeCheckoutClient;
 
     @InjectMocks
-    private ProcessPaymentNotificationCommandHandler service;
+    private ProcessPaymentNotificationUseCase service;
 
     @Test
     @DisplayName("Should process payment notification successfully")
@@ -43,7 +43,7 @@ class ProcessPaymentNotificationCommandHandlerTest {
         when(fakeCheckoutClient.getPaymentDetails(paymentId)).thenReturn("Payment details");
         when(paymentRepository.findById(paymentId)).thenReturn(payment);
 
-        service.handle(paymentId);
+        service.process(paymentId);
 
         verify(fakeCheckoutClient, times(1)).getPaymentDetails(paymentId);
         verify(paymentRepository, times(1)).findById(paymentId);
@@ -57,7 +57,7 @@ class ProcessPaymentNotificationCommandHandlerTest {
         PaymentId paymentId = PaymentId.of(UUID.randomUUID());
         when(fakeCheckoutClient.getPaymentDetails(paymentId)).thenReturn("");
 
-        assertThrows(RuntimeException.class, () -> service.handle(paymentId));
+        assertThrows(RuntimeException.class, () -> service.process(paymentId));
         verify(fakeCheckoutClient, times(1)).getPaymentDetails(paymentId);
         verify(paymentRepository, never()).findById(any());
         verify(paymentRepository, never()).save(any());
@@ -69,7 +69,7 @@ class ProcessPaymentNotificationCommandHandlerTest {
         PaymentId paymentId = PaymentId.of(UUID.randomUUID());
         when(fakeCheckoutClient.getPaymentDetails(paymentId)).thenReturn(null);
 
-        assertThrows(RuntimeException.class, () -> service.handle(paymentId));
+        assertThrows(RuntimeException.class, () -> service.process(paymentId));
         verify(fakeCheckoutClient, times(1)).getPaymentDetails(paymentId);
         verify(paymentRepository, never()).findById(any());
         verify(paymentRepository, never()).save(any());

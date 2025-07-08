@@ -2,8 +2,8 @@ package br.com.postech.soat.payment.core.application.services.command;
 
 import br.com.postech.soat.customer.core.domain.model.CustomerId;
 import br.com.postech.soat.order.core.domain.model.OrderId;
-import br.com.postech.soat.payment.application.command.InitiatePaymentCommandHandler;
-import br.com.postech.soat.payment.application.command.model.InitiatePaymentCommand;
+import br.com.postech.soat.payment.application.command.InitiatePaymentCommand;
+import br.com.postech.soat.payment.application.usecases.InitiatePaymentUseCase;
 import br.com.postech.soat.payment.domain.entity.Payment;
 import br.com.postech.soat.payment.domain.entity.PaymentId;
 import br.com.postech.soat.payment.domain.entity.PaymentMethod;
@@ -40,7 +40,7 @@ class InitiatePaymentCommandHandlerTest {
     private PaymentGateway paymentGateway;
 
     @InjectMocks
-    private InitiatePaymentCommandHandler handler;
+    private InitiatePaymentUseCase handler;
 
     @Captor
     private ArgumentCaptor<Payment> paymentCaptor;
@@ -61,7 +61,7 @@ class InitiatePaymentCommandHandlerTest {
 
         when(paymentGateway.processPayment(any(Payment.class))).thenReturn(GatewayOperationResult.SUCCESS);
 
-        PaymentId result = handler.handle(command);
+        PaymentId result = handler.process(command);
 
         assertNotNull(result);
         verify(paymentRepository, times(1)).save(paymentCaptor.capture());
@@ -90,7 +90,7 @@ class InitiatePaymentCommandHandlerTest {
 
         when(paymentGateway.processPayment(any(Payment.class))).thenReturn(GatewayOperationResult.FAILURE);
 
-        PaymentId result = handler.handle(command);
+        PaymentId result = handler.process(command);
 
         assertNotNull(result);
         verify(paymentRepository, times(1)).save(paymentCaptor.capture());
