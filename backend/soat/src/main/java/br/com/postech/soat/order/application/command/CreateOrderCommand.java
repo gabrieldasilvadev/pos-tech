@@ -1,6 +1,5 @@
 package br.com.postech.soat.order.application.command;
 
-import br.com.postech.soat.commons.application.command.Command;
 import br.com.postech.soat.customer.core.domain.model.CustomerId;
 import br.com.postech.soat.order.domain.vo.Discount;
 import br.com.postech.soat.order.domain.vo.Observation;
@@ -12,5 +11,5 @@ public record CreateOrderCommand(
     List<Discount> discounts,
     List<OrderItem> orderItems,
     List<Observation> observations
-) implements Command {
+)  {
 }

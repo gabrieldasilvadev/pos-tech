@@ -2,7 +2,7 @@ package br.com.postech.soat.order.core.application.handlers;
 
 import br.com.postech.soat.customer.core.domain.model.CustomerId;
 import br.com.postech.soat.order.application.command.CreateOrderCommand;
-import br.com.postech.soat.order.application.command.handlers.CreateOrderCommandHandler;
+import br.com.postech.soat.order.application.usecases.CreateOrderUseCase;
 import br.com.postech.soat.order.domain.vo.Discount;
 import br.com.postech.soat.order.domain.vo.Observation;
 import br.com.postech.soat.order.domain.entity.Order;
@@ -28,17 +28,17 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("CreateOrderCommandHandler Tests")
-class CreateOrderCommandHandlerTest {
+class CreateOrderUseCaseTest {
 
     @Mock
     private OrderRepository orderRepository;
 
     @InjectMocks
-    private CreateOrderCommandHandler createOrderCommandHandler;
+    private CreateOrderUseCase createOrderUseCase;
 
     @Test
     @DisplayName("Should handle create order command successfully")
-    void shouldHandleCreateOrderCommandSuccessfully() {
+    void shouldExecuteCreateOrderCommandSuccessfully() {
         CustomerId customerId = new CustomerId(UUID.randomUUID());
 
         OrderItem orderItem = new OrderItem(
@@ -66,7 +66,7 @@ class CreateOrderCommandHandlerTest {
 
         when(orderRepository.save(any(Order.class))).thenReturn(createdOrder);
 
-        Order result = createOrderCommandHandler.handle(command);
+        Order result = createOrderUseCase.execute(command);
 
         assertNotNull(result);
         assertEquals(OrderStatus.IN_PREPARATION, result.getStatus());
@@ -83,7 +83,7 @@ class CreateOrderCommandHandlerTest {
 
     @Test
     @DisplayName("Should handle create order command with exception")
-    void shouldHandleCreateOrderCommandWithException() {
+    void shouldExecuteCreateOrderCommandWithException() {
         CustomerId customerId = new CustomerId(UUID.randomUUID());
         List<OrderItem> orderItems = new ArrayList<>();
         List<Discount> discounts = new ArrayList<>();
@@ -99,7 +99,7 @@ class CreateOrderCommandHandlerTest {
         when(orderRepository.save(any(Order.class))).thenThrow(new RuntimeException("Test exception"));
 
         try {
-            createOrderCommandHandler.handle(command);
+            createOrderUseCase.execute(command);
         } catch (Exception e) {
             assertEquals("Test exception", e.getMessage());
         }

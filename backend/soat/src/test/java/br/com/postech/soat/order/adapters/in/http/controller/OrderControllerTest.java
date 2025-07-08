@@ -1,12 +1,12 @@
 package br.com.postech.soat.order.adapters.in.http.controller;
 
-import br.com.postech.soat.commons.application.mediator.Mediator;
 import br.com.postech.soat.customer.core.domain.model.CustomerId;
 import br.com.postech.soat.openapi.model.CategoryDto;
 import br.com.postech.soat.openapi.model.OrderItemDto;
 import br.com.postech.soat.openapi.model.PostOrders201ResponseDto;
 import br.com.postech.soat.openapi.model.PostOrdersRequestDto;
 import br.com.postech.soat.order.application.command.CreateOrderCommand;
+import br.com.postech.soat.order.application.usecases.CreateOrderUseCase;
 import br.com.postech.soat.order.domain.vo.Discount;
 import br.com.postech.soat.order.domain.entity.Order;
 import br.com.postech.soat.order.domain.entity.OrderItem;
@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
 class OrderControllerTest {
 
     @Mock
-    private Mediator mediator;
+    private CreateOrderUseCase createOrderUseCase;
 
     @InjectMocks
     private OrderController orderController;
@@ -61,7 +61,7 @@ class OrderControllerTest {
             orderItemDto.getProductId(),
             orderItemDto.getName(),
             orderItemDto.getQuantity(),
-            new BigDecimal(orderItemDto.getPrice()),
+            BigDecimal.valueOf(orderItemDto.getPrice()),
             orderItemDto.getCategory().getValue(),
             discount
         );
@@ -74,7 +74,7 @@ class OrderControllerTest {
         );
         createdOrder.prepare();
 
-        when(mediator.send(any(CreateOrderCommand.class))).thenReturn(createdOrder);
+        when(createOrderUseCase.execute(any(CreateOrderCommand.class))).thenReturn(createdOrder);
 
         ResponseEntity<PostOrders201ResponseDto> response = orderController.postOrders(request);
 
@@ -84,10 +84,10 @@ class OrderControllerTest {
         assertEquals(createdOrder.getId().getValue(), response.getBody().getOrderId());
         assertEquals(OrderStatus.IN_PREPARATION.name(), response.getBody().getStatus().name());
         assertEquals(1, response.getBody().getItems().size());
-        assertEquals(orderItemDto.getProductId(), response.getBody().getItems().get(0).getProductId());
-        assertEquals(orderItemDto.getName(), response.getBody().getItems().get(0).getName());
-        assertEquals(orderItemDto.getQuantity(), response.getBody().getItems().get(0).getQuantity());
-        assertEquals(orderItemDto.getPrice(), response.getBody().getItems().get(0).getPrice());
-        assertEquals(orderItemDto.getCategory(), response.getBody().getItems().get(0).getCategory());
+        assertEquals(orderItemDto.getProductId(), response.getBody().getItems().getFirst().getProductId());
+        assertEquals(orderItemDto.getName(), response.getBody().getItems().getFirst().getName());
+        assertEquals(orderItemDto.getQuantity(), response.getBody().getItems().getFirst().getQuantity());
+        assertEquals(orderItemDto.getPrice(), response.getBody().getItems().getFirst().getPrice());
+        assertEquals(orderItemDto.getCategory(), response.getBody().getItems().getFirst().getCategory());
     }
 }
