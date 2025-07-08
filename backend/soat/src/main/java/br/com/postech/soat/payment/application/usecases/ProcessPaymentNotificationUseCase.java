@@ -15,7 +15,7 @@ public class ProcessPaymentNotificationUseCase {
   private final PaymentRepository paymentRepository;
   private final FakeCheckoutClient fakeCheckoutClient;
 
-  public void process(PaymentId paymentId) {
+  public void execute(PaymentId paymentId) {
 
     final String paymentProcessed = fakeCheckoutClient.getPaymentDetails(paymentId);
     if (paymentProcessed == null || paymentProcessed.trim().isEmpty()) {

@@ -61,7 +61,7 @@ class InitiatePaymentCommandHandlerTest {
 
         when(paymentGateway.processPayment(any(Payment.class))).thenReturn(GatewayOperationResult.SUCCESS);
 
-        PaymentId result = handler.process(command);
+        PaymentId result = handler.execute(command);
 
         assertNotNull(result);
         verify(paymentRepository, times(1)).save(paymentCaptor.capture());
@@ -90,7 +90,7 @@ class InitiatePaymentCommandHandlerTest {
 
         when(paymentGateway.processPayment(any(Payment.class))).thenReturn(GatewayOperationResult.FAILURE);
 
-        PaymentId result = handler.process(command);
+        PaymentId result = handler.execute(command);
 
         assertNotNull(result);
         verify(paymentRepository, times(1)).save(paymentCaptor.capture());

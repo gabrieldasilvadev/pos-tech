@@ -20,7 +20,7 @@ public class InitiatePaymentUseCase {
     private final PaymentGateway paymentGateway;
     private final Logger logger = LoggerFactory.getLogger(InitiatePaymentUseCase.class);
 
-    public PaymentId process(InitiatePaymentCommand command) {
+    public PaymentId execute(InitiatePaymentCommand command) {
         final Payment payment = Payment.initiate(
             command.orderId(),
             command.customerId(),

@@ -16,7 +16,7 @@ public class FindPaymentByIdUseCase {
     private final PaymentRepository paymentRepository;
     private final Logger logger = LoggerFactory.getLogger(FindPaymentByIdUseCase.class);
 
-    public Payment handle(PaymentId paymentId) {
+    public Payment execute(PaymentId paymentId) {
         logger.info("Executing payment query for payment ID: {}", paymentId.getValue());
         return paymentRepository.findById(paymentId);
     }

@@ -43,7 +43,7 @@ class ProcessPaymentNotificationCommandHandlerTest {
         when(fakeCheckoutClient.getPaymentDetails(paymentId)).thenReturn("Payment details");
         when(paymentRepository.findById(paymentId)).thenReturn(payment);
 
-        service.process(paymentId);
+        service.execute(paymentId);
 
         verify(fakeCheckoutClient, times(1)).getPaymentDetails(paymentId);
         verify(paymentRepository, times(1)).findById(paymentId);
@@ -57,7 +57,7 @@ class ProcessPaymentNotificationCommandHandlerTest {
         PaymentId paymentId = PaymentId.of(UUID.randomUUID());
         when(fakeCheckoutClient.getPaymentDetails(paymentId)).thenReturn("");
 
-        assertThrows(RuntimeException.class, () -> service.process(paymentId));
+        assertThrows(RuntimeException.class, () -> service.execute(paymentId));
         verify(fakeCheckoutClient, times(1)).getPaymentDetails(paymentId);
         verify(paymentRepository, never()).findById(any());
         verify(paymentRepository, never()).save(any());
@@ -69,7 +69,7 @@ class ProcessPaymentNotificationCommandHandlerTest {
         PaymentId paymentId = PaymentId.of(UUID.randomUUID());
         when(fakeCheckoutClient.getPaymentDetails(paymentId)).thenReturn(null);
 
-        assertThrows(RuntimeException.class, () -> service.process(paymentId));
+        assertThrows(RuntimeException.class, () -> service.execute(paymentId));
         verify(fakeCheckoutClient, times(1)).getPaymentDetails(paymentId);
         verify(paymentRepository, never()).findById(any());
         verify(paymentRepository, never()).save(any());

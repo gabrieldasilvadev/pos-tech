@@ -37,7 +37,7 @@ class MercadoPagoWebhookControllerTest {
 
         ResponseEntity<Void> response = controller.receive(paymentId, topic);
 
-        verify(notificationService, times(1)).process(PaymentId.of(paymentId));
+        verify(notificationService, times(1)).execute(PaymentId.of(paymentId));
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
@@ -49,7 +49,7 @@ class MercadoPagoWebhookControllerTest {
 
         ResponseEntity<Void> response = controller.receive(paymentId, topic);
 
-        verify(notificationService, never()).process(any());
+        verify(notificationService, never()).execute(any());
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 }

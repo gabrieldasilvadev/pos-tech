@@ -1,6 +1,5 @@
 package br.com.postech.soat.payment.infrastructure.http;
 
-import br.com.postech.soat.commons.application.mediator.Mediator;
 import br.com.postech.soat.openapi.api.PaymentApi;
 import br.com.postech.soat.openapi.model.GetPaymentsPaymentId200ResponseDto;
 import br.com.postech.soat.openapi.model.PostPayments202ResponseDto;
@@ -19,13 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class PaymentController implements PaymentApi {
-    private final Mediator mediator;
     private final InitiatePaymentUseCase initiatePaymentUseCase;
     private final FindPaymentByIdUseCase findPaymentByIdUseCase;
 
     @Override
     public ResponseEntity<PostPayments202ResponseDto> postPayments(PostPaymentsRequestDto postPaymentsRequestDto) {
-        final PaymentId paymentId = initiatePaymentUseCase.process(PaymentCommandMapper.INSTANCE
+        final PaymentId paymentId = initiatePaymentUseCase.execute(PaymentCommandMapper.INSTANCE
             .toCommand(postPaymentsRequestDto));
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(PostPayments202ResponseDto.builder()
             .paymentId(paymentId.getValue())
@@ -34,7 +32,7 @@ public class PaymentController implements PaymentApi {
 
     @Override
     public ResponseEntity<GetPaymentsPaymentId200ResponseDto> getPaymentsPaymentId(String paymentId) {
-        final Payment payment = findPaymentByIdUseCase.handle(PaymentId.of(paymentId));
+        final Payment payment = findPaymentByIdUseCase.execute(PaymentId.of(paymentId));
         return ResponseEntity.ok(PaymentQueryMapper.INSTANCE.toResponse(payment));
     }
 }

@@ -19,7 +19,7 @@ public class MercadoPagoWebhookController {
     @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<Void> receive(@RequestParam String id, @RequestParam String topic) {
         if (topic.equals("payment")) {
-            notificationService.process(PaymentId.of(id));
+            notificationService.execute(PaymentId.of(id));
         }
         return ResponseEntity.ok().build();
     }
