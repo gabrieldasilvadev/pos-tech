@@ -1,6 +1,6 @@
 package br.com.postech.soat.customer.infrastructure.persistence;
 
-import br.com.postech.soat.customer.domain.util.MaskUtil;
+import br.com.postech.soat.commons.infrastructure.util.MaskUtil;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

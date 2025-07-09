@@ -1,9 +1,12 @@
-package br.com.postech.soat.customer.domain.util;
+package br.com.postech.soat.commons.infrastructure.util;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class MaskUtilTest {
+    
     @Test
     void givenCpf_whenMaskCpf_thenReturnMaskedCpf() {
         assertEquals("12*****90", MaskUtil.maskCpf("123456790"));

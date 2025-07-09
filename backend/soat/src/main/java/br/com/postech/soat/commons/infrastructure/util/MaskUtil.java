@@ -1,4 +1,4 @@
-package br.com.postech.soat.customer.domain.util;
+package br.com.postech.soat.commons.infrastructure.util;
 
 public class MaskUtil {
 
@@ -16,11 +16,14 @@ public class MaskUtil {
         if (email == null || !email.contains("@")) {
             return email;
         }
+
         String[] parts = email.split("@");
         String username = parts[0];
+
         if (username.length() <= 2) {
             return "*".repeat(username.length()) + "@" + parts[1];
         }
+
         return username.substring(0, 2) + "*".repeat(username.length() - 2) + "@" + parts[1];
     }
 

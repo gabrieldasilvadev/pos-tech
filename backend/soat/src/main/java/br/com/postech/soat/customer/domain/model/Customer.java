@@ -1,6 +1,5 @@
 package br.com.postech.soat.customer.domain.model;
 
-import br.com.postech.soat.customer.domain.util.MaskUtil;
 import br.com.postech.soat.customer.domain.valueobject.CPF;
 import br.com.postech.soat.customer.domain.valueobject.CustomerId;
 import br.com.postech.soat.customer.domain.valueobject.Email;
@@ -32,16 +31,5 @@ public class Customer {
 
     public static Customer reconstitute(CustomerId id, Name name, CPF cpf, Email email, Phone phone) {
         return new Customer(id, name, cpf, email, phone);
-    }
-
-    @Override
-    public String toString() {
-        return "Customer{" +
-            "id=" + id.value() +
-            ", cpf='" + MaskUtil.maskCpf(cpf.value()) + '\'' +
-            ", name='" + name.value() + '\'' +
-            ", email='" + MaskUtil.maskEmail(email.value()) + '\'' +
-            ", phone='" + MaskUtil.maskPhone(phone.value()) + '\'' +
-            '}';
     }
 }
