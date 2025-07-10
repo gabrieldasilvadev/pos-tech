@@ -5,19 +5,41 @@ import br.com.postech.soat.customer.domain.valueobject.CustomerId;
 import br.com.postech.soat.customer.domain.valueobject.Email;
 import br.com.postech.soat.customer.domain.valueobject.Name;
 import br.com.postech.soat.customer.domain.valueobject.Phone;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Customer {
-
     private final CustomerId id;
     private final Name name;
     private final CPF cpf;
     private final Email email;
     private final Phone phone;
+
+    public Customer(CustomerId id, Name name, CPF cpf, Email email, Phone phone) {
+        this.id = id;
+        this.name = name;
+        this.cpf = cpf;
+        this.email = email;
+        this.phone = phone;
+    }
+
+    public CustomerId getId() {
+        return id;
+    }
+
+    public Name getName() {
+        return name;
+    }
+
+    public CPF getCpf() {
+        return cpf;
+    }
+
+    public Email getEmail() {
+        return email;
+    }
+
+    public Phone getPhone() {
+        return phone;
+    }
 
     public static Customer create(Name name, Email email, CPF cpf, Phone phone) {
         return new Customer(
