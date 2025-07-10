@@ -3,8 +3,8 @@ package br.com.postech.soat.product.core.domain.valueobject;
 
 import br.com.postech.soat.product.core.domain.exception.InvalidSKUException;
 
-public record SKU (String value) {
-    public SKU {
+public record ProductSKU(String value) {
+    public ProductSKU {
         validate(value);
     }
 

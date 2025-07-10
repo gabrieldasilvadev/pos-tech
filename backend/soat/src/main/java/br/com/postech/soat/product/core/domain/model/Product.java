@@ -9,13 +9,13 @@ import br.com.postech.soat.product.core.domain.valueobject.ProductDescription;
 import br.com.postech.soat.product.core.domain.valueobject.ProductImage;
 import br.com.postech.soat.product.core.domain.valueobject.ProductName;
 import br.com.postech.soat.product.core.domain.valueobject.ProductPrice;
-import br.com.postech.soat.product.core.domain.valueobject.SKU;
+import br.com.postech.soat.product.core.domain.valueobject.ProductSKU;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class Product extends AggregateRoot<ProductId> {
-    private SKU sku;
+    private ProductSKU sku;
     private Boolean active;
     private ProductName name;
     private ProductPrice price;
@@ -31,7 +31,7 @@ public class Product extends AggregateRoot<ProductId> {
     protected Product(UUID productId, String sku, Boolean active, String name,
                       BigDecimal price, String description, String image, Category category) {
         super(new ProductId(productId));
-        this.sku = new SKU(sku);
+        this.sku = new ProductSKU(sku);
         this.active = active;
         this.name = new ProductName(name);
         this.price = new ProductPrice(price);
@@ -40,7 +40,7 @@ public class Product extends AggregateRoot<ProductId> {
         this.category = new ProductCategory(category.toString());
     }
 
-    public static Product create(SKU sku, ProductName name, ProductPrice price,
+    public static Product create(ProductSKU sku, ProductName name, ProductPrice price,
                                  ProductDescription description, ProductImage image, ProductCategory category) {
         Product product = new Product(ProductId.generate());
         product.sku = sku;

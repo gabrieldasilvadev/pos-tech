@@ -1,14 +1,13 @@
 package br.com.postech.soat.product.adapters.in;
 
+import br.com.postech.soat.openapi.model.ProductDto;
 import br.com.postech.soat.product.core.application.dto.CreateProductRequest;
 import br.com.postech.soat.openapi.api.ProductApi;
 import br.com.postech.soat.openapi.model.GetProduct200ResponseInnerDto;
 import br.com.postech.soat.openapi.model.PostProducts201ResponseDto;
 import br.com.postech.soat.openapi.model.PostProductsRequestDto;
-import br.com.postech.soat.openapi.model.ProductDto;
 import br.com.postech.soat.openapi.model.PutProductsRequestDto;
 import br.com.postech.soat.product.adapters.in.http.ProductWebMapper;
-import br.com.postech.soat.product.adapters.in.http.ProductQueryMapper;
 import br.com.postech.soat.product.core.application.dto.FindProductRequest;
 import br.com.postech.soat.product.core.application.dto.UpdateProductRequest;
 import br.com.postech.soat.product.core.domain.model.Product;
@@ -56,12 +55,12 @@ public class ProductController implements ProductApi {
     public ResponseEntity<ProductDto> putProducts(UUID uuid, PutProductsRequestDto putProductRequest) {
         UpdateProductRequest productRequest = productWebMapper.toUpdateRequest(putProductRequest);
         final Product product = updateProductUseCase.update(uuid, productRequest, productRepository, logger);
-        return ResponseEntity.status(HttpStatus.OK).body(ProductQueryMapper.INSTANCE.toResponse(product));
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(productWebMapper.toUpdateResponse(product));
     }
 
     @Override
     public ResponseEntity<Void> deleteProducts(UUID productId) {
-        productWebMapper.toDelete(productId);
         deleteProductUseCase.delete(productId, productRepository, logger);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
