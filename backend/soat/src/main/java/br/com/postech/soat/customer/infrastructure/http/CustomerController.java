@@ -29,9 +29,9 @@ public class CustomerController implements CustomerApi {
 
     @Override
     public ResponseEntity<FindCustomer200ResponseDto> createCustomer(@RequestBody CreateCustomerRequestDto createCustomerRequest) {
-        CreateCustomerDto command = customerWebMapper.toCreateCustomerDto(createCustomerRequest);
+        CreateCustomerDto dto = customerWebMapper.toCreateCustomerDto(createCustomerRequest);
 
-        final var customer = createCustomerUseCase.execute(command);
+        final var customer = createCustomerUseCase.execute(dto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(customerWebMapper.toResponse(customer));
