@@ -1,4 +1,4 @@
-package br.com.postech.soat.order.adapters.in.http.controller;
+package br.com.postech.soat.order.infrastructure.http;
 
 import br.com.postech.soat.customer.domain.valueobject.CustomerId;
 import br.com.postech.soat.openapi.model.CategoryDto;
@@ -11,7 +11,6 @@ import br.com.postech.soat.order.domain.valueobject.Discount;
 import br.com.postech.soat.order.domain.entity.Order;
 import br.com.postech.soat.order.domain.entity.OrderItem;
 import br.com.postech.soat.order.domain.entity.OrderStatus;
-import br.com.postech.soat.order.infrastructure.http.OrderController;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;

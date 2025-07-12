@@ -1,4 +1,4 @@
-package br.com.postech.soat.order.core.domain.valueobject;
+package br.com.postech.soat.order.domain.valueobject;
 
 import br.com.postech.soat.order.domain.valueobject.Observation;
 import org.junit.jupiter.api.DisplayName;

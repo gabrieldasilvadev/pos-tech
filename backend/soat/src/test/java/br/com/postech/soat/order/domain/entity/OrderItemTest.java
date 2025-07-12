@@ -1,4 +1,4 @@
-package br.com.postech.soat.order.core.domain.entity;
+package br.com.postech.soat.order.domain.entity;
 
 import br.com.postech.soat.order.domain.valueobject.Discount;
 import br.com.postech.soat.order.domain.entity.OrderItem;

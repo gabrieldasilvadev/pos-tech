@@ -1,4 +1,4 @@
-package br.com.postech.soat.order.core.application.handlers;
+package br.com.postech.soat.order.application.usevases;
 
 import br.com.postech.soat.customer.domain.valueobject.CustomerId;
 import br.com.postech.soat.order.application.command.CreateOrderCommand;

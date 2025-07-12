@@ -1,9 +1,8 @@
-package br.com.postech.soat.order.adapters;
+package br.com.postech.soat.order.infrastructure.persistence;
 
 import br.com.postech.soat.customer.domain.valueobject.CustomerId;
 import br.com.postech.soat.order.domain.entity.Order;
 import br.com.postech.soat.order.domain.entity.OrderItem;
-import br.com.postech.soat.order.infrastructure.persistence.OrderRepositoryImpl;
 import br.com.postech.soat.order.infrastructure.persistence.jpa.OrderItemJpaRepository;
 import br.com.postech.soat.order.infrastructure.persistence.jpa.OrderJpaRepository;
 import br.com.postech.soat.order.infrastructure.persistence.entity.OrderEntity;
