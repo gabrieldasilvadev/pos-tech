@@ -6,7 +6,7 @@ import br.com.postech.soat.openapi.model.OrderItemDto;
 import br.com.postech.soat.openapi.model.OrderStatusDto;
 import br.com.postech.soat.openapi.model.PostOrders201ResponseDiscountsInnerDto;
 import br.com.postech.soat.openapi.model.PostOrders201ResponseDto;
-import br.com.postech.soat.order.domain.vo.Discount;
+import br.com.postech.soat.order.domain.valueobject.Discount;
 import br.com.postech.soat.order.domain.entity.Order;
 import br.com.postech.soat.order.domain.entity.OrderItem;
 import org.mapstruct.Mapper;

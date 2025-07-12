@@ -1,6 +1,6 @@
-package br.com.postech.soat.order.core.domain.model;
+package br.com.postech.soat.order.core.domain.entity;
 
-import br.com.postech.soat.order.domain.vo.Discount;
+import br.com.postech.soat.order.domain.valueobject.Discount;
 import br.com.postech.soat.order.domain.entity.OrderItem;
 import java.math.BigDecimal;
 import java.util.UUID;

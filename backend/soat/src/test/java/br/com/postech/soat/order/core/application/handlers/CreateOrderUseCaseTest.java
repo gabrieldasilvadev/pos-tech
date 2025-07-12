@@ -3,8 +3,8 @@ package br.com.postech.soat.order.core.application.handlers;
 import br.com.postech.soat.customer.core.domain.model.CustomerId;
 import br.com.postech.soat.order.application.command.CreateOrderCommand;
 import br.com.postech.soat.order.application.usecases.CreateOrderUseCase;
-import br.com.postech.soat.order.domain.vo.Discount;
-import br.com.postech.soat.order.domain.vo.Observation;
+import br.com.postech.soat.order.domain.valueobject.Discount;
+import br.com.postech.soat.order.domain.valueobject.Observation;
 import br.com.postech.soat.order.domain.entity.Order;
 import br.com.postech.soat.order.domain.entity.OrderItem;
 import br.com.postech.soat.order.domain.entity.OrderStatus;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("CreateOrderCommandHandler Tests")
+@DisplayName("CreateOrderUseCase Tests")
 class CreateOrderUseCaseTest {
 
     @Mock
@@ -37,8 +37,8 @@ class CreateOrderUseCaseTest {
     private CreateOrderUseCase createOrderUseCase;
 
     @Test
-    @DisplayName("Should handle create order command successfully")
-    void shouldExecuteCreateOrderCommandSuccessfully() {
+    @DisplayName("Should create an order successfully")
+    void shouldCreateOrderSuccessfully() {
         CustomerId customerId = new CustomerId(UUID.randomUUID());
 
         OrderItem orderItem = new OrderItem(
@@ -82,8 +82,8 @@ class CreateOrderUseCaseTest {
     }
 
     @Test
-    @DisplayName("Should handle create order command with exception")
-    void shouldExecuteCreateOrderCommandWithException() {
+    @DisplayName("Should throw exception when creating order")
+    void shouldThrowExceptionWhenCreatingOrder() {
         CustomerId customerId = new CustomerId(UUID.randomUUID());
         List<OrderItem> orderItems = new ArrayList<>();
         List<Discount> discounts = new ArrayList<>();

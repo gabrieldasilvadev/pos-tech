@@ -1,6 +1,6 @@
-package br.com.postech.soat.order.core.domain.model;
+package br.com.postech.soat.order.core.domain.valueobject;
 
-import br.com.postech.soat.order.domain.vo.Discount;
+import br.com.postech.soat.order.domain.valueobject.Discount;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

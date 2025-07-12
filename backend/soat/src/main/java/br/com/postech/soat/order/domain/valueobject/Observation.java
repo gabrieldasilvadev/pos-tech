@@ -1,4 +1,4 @@
-package br.com.postech.soat.order.domain.vo;
+package br.com.postech.soat.order.domain.valueobject;
 
 import br.com.postech.soat.commons.domain.ValueObject;
 import lombok.AllArgsConstructor;

@@ -1,8 +1,8 @@
-package br.com.postech.soat.order.core.domain.model;
+package br.com.postech.soat.order.core.domain.entity;
 
 import br.com.postech.soat.customer.core.domain.model.CustomerId;
-import br.com.postech.soat.order.domain.vo.Discount;
-import br.com.postech.soat.order.domain.vo.Observation;
+import br.com.postech.soat.order.domain.valueobject.Discount;
+import br.com.postech.soat.order.domain.valueobject.Observation;
 import br.com.postech.soat.order.domain.entity.Order;
 import br.com.postech.soat.order.domain.entity.OrderItem;
 import br.com.postech.soat.order.domain.entity.OrderStatus;

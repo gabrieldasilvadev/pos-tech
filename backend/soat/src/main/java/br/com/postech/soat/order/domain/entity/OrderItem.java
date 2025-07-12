@@ -1,7 +1,8 @@
 package br.com.postech.soat.order.domain.entity;
 
 import br.com.postech.soat.commons.domain.AggregateRoot;
-import br.com.postech.soat.order.domain.vo.Discount;
+import br.com.postech.soat.order.domain.valueobject.Discount;
+import br.com.postech.soat.order.domain.valueobject.OrderItemId;
 import java.math.BigDecimal;
 import java.util.UUID;
 import lombok.Getter;

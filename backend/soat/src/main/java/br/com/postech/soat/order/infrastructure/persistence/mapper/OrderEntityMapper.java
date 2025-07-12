@@ -1,6 +1,6 @@
 package br.com.postech.soat.order.infrastructure.persistence.mapper;
 
-import br.com.postech.soat.order.domain.vo.Observation;
+import br.com.postech.soat.order.domain.valueobject.Observation;
 import br.com.postech.soat.order.domain.entity.Order;
 import br.com.postech.soat.order.infrastructure.persistence.entity.OrderEntity;
 import java.util.stream.Collectors;

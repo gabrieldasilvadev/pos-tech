@@ -2,7 +2,7 @@ package br.com.postech.soat.order.infrastructure.http.mapper;
 
 import br.com.postech.soat.openapi.model.DiscountDto;
 import br.com.postech.soat.openapi.model.OrderItemDto;
-import br.com.postech.soat.order.domain.vo.Discount;
+import br.com.postech.soat.order.domain.valueobject.Discount;
 import br.com.postech.soat.order.domain.entity.OrderItem;
 import java.math.BigDecimal;
 import org.mapstruct.Mapper;

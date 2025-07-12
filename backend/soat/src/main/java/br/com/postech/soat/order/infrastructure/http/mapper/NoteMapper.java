@@ -1,6 +1,6 @@
 package br.com.postech.soat.order.infrastructure.http.mapper;
 
-import br.com.postech.soat.order.domain.vo.Observation;
+import br.com.postech.soat.order.domain.valueobject.Observation;
 import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
