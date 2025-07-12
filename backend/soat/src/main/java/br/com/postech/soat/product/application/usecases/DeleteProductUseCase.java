@@ -1,22 +1,23 @@
-package br.com.postech.soat.product.core.application.services;
+package br.com.postech.soat.product.application.usecases;
 
 import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;
 import br.com.postech.soat.commons.infrastructure.exception.NotFoundException;
 import br.com.postech.soat.product.core.domain.model.Product;
-import br.com.postech.soat.product.core.ports.in.DeleteProductUseCase;
 import br.com.postech.soat.product.core.ports.out.ProductRepository;
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 @Monitorable
-public class DeleteProductService implements DeleteProductUseCase {
+public class DeleteProductUseCase {
+    private final ProductRepository productRepository;
 
-    @Override
-    public void delete(UUID uuid, ProductRepository productRepository, Logger logger) {
+    public DeleteProductUseCase(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
+    public void delete(UUID uuid, Logger logger) {
         logger.info("Deleting product with ID: {}", uuid);
 
         Product existingProduct = productRepository.findById(uuid)

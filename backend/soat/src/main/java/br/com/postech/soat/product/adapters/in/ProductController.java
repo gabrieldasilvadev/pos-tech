@@ -1,6 +1,10 @@
 package br.com.postech.soat.product.adapters.in;
 
 import br.com.postech.soat.openapi.model.ProductDto;
+import br.com.postech.soat.product.application.usecases.CreateProductUseCase;
+import br.com.postech.soat.product.application.usecases.DeleteProductUseCase;
+import br.com.postech.soat.product.application.usecases.FindProductUseCase;
+import br.com.postech.soat.product.application.usecases.UpdateProductUseCase;
 import br.com.postech.soat.product.core.application.dto.CreateProductRequest;
 import br.com.postech.soat.openapi.api.ProductApi;
 import br.com.postech.soat.openapi.model.GetProduct200ResponseInnerDto;
@@ -13,10 +17,6 @@ import br.com.postech.soat.product.core.application.dto.UpdateProductRequest;
 import br.com.postech.soat.product.core.domain.model.Product;
 import java.util.List;
 import java.util.UUID;
-import br.com.postech.soat.product.core.ports.in.CreateProductUseCase;
-import br.com.postech.soat.product.core.ports.in.DeleteProductUseCase;
-import br.com.postech.soat.product.core.ports.in.FindProductUseCase;
-import br.com.postech.soat.product.core.ports.in.UpdateProductUseCase;
 import br.com.postech.soat.product.core.ports.out.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -28,25 +28,34 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class ProductController implements ProductApi {
-    private final ProductWebMapper productWebMapper;
-    private final ProductRepository productRepository;
     private final CreateProductUseCase createProductUseCase;
     private final FindProductUseCase findProductUseCase;
     private final UpdateProductUseCase updateProductUseCase;
     private final DeleteProductUseCase deleteProductUseCase;
+    private final ProductWebMapper productWebMapper;
+
     private final Logger logger = LoggerFactory.getLogger(ProductController.class);
+
+    public ProductController(ProductRepository productRepository, ProductWebMapper productWebMapper) {
+        this.createProductUseCase = new CreateProductUseCase(productRepository);
+        this.findProductUseCase = new FindProductUseCase(productRepository);
+        this.updateProductUseCase = new UpdateProductUseCase(productRepository);
+        this.deleteProductUseCase = new DeleteProductUseCase(productRepository);
+
+        this.productWebMapper = productWebMapper;
+    }
 
     @Override
     public ResponseEntity<List<GetProduct200ResponseInnerDto>> getProduct(String sku, String category) {
         FindProductRequest request = FindProductRequest.from(sku, category);
-        final List<Product> result = findProductUseCase.findProduct(request, productRepository);
+        final List<Product> result = findProductUseCase.findProduct(request);
         return ResponseEntity.ok(productWebMapper.toListResponse(result));
     }
 
     @Override
     public ResponseEntity<PostProducts201ResponseDto> postProducts(PostProductsRequestDto productDto){
         CreateProductRequest productRequest = productWebMapper.toCreateRequest(productDto);
-        final Product product = createProductUseCase.create(productRequest, productRepository, logger);
+        final Product product = createProductUseCase.create(productRequest, logger);
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(productWebMapper.toCreateResponse(product));
     }
@@ -54,14 +63,14 @@ public class ProductController implements ProductApi {
     @Override
     public ResponseEntity<ProductDto> putProducts(UUID uuid, PutProductsRequestDto putProductRequest) {
         UpdateProductRequest productRequest = productWebMapper.toUpdateRequest(putProductRequest);
-        final Product product = updateProductUseCase.update(uuid, productRequest, productRepository, logger);
+        final Product product = updateProductUseCase.update(uuid, productRequest, logger);
         return ResponseEntity.status(HttpStatus.OK)
             .body(productWebMapper.toUpdateResponse(product));
     }
 
     @Override
     public ResponseEntity<Void> deleteProducts(UUID productId) {
-        deleteProductUseCase.delete(productId, productRepository, logger);
+        deleteProductUseCase.delete(productId, logger);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

@@ -13,8 +13,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -25,12 +29,28 @@ import org.springframework.test.context.ActiveProfiles;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest
+@SpringBootTest(classes = {
+    MercadoPagoWebhookIntegrationTest.ExcludeProductControllerConfig.class
+})
 @AutoConfigureMockMvc
 @Transactional
 @ActiveProfiles("test")
 @DisplayName("MercadoPago Webhook Integration Tests")
 class MercadoPagoWebhookIntegrationTest extends PostgresTestContainerConfig {
+    @TestConfiguration
+    static class ExcludeProductControllerConfig {
+
+        @Bean
+        public static BeanFactoryPostProcessor excludeProductController() {
+            return beanFactory -> {
+                if (beanFactory instanceof BeanDefinitionRegistry registry) {
+                    if (registry.containsBeanDefinition("productController")) {
+                        registry.removeBeanDefinition("productController");
+                    }
+                }
+            };
+        }
+    }
 
     @Autowired
     private MockMvc mockMvc;

@@ -1,24 +1,24 @@
-package br.com.postech.soat.product.core.application.services;
+package br.com.postech.soat.product.application.usecases;
 
 import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;
 import br.com.postech.soat.commons.infrastructure.exception.NotFoundException;
 import br.com.postech.soat.product.core.application.dto.UpdateProductRequest;
 import br.com.postech.soat.product.core.domain.model.Product;
-import br.com.postech.soat.product.core.domain.valueobject.ProductCategory;
-import br.com.postech.soat.product.core.ports.in.UpdateProductUseCase;
 import br.com.postech.soat.product.core.ports.out.ProductRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.UUID;
 import org.slf4j.Logger;
 
 @Service
-@RequiredArgsConstructor
 @Monitorable
-public class UpdateProductService implements UpdateProductUseCase {
+public class UpdateProductUseCase {
+    private final ProductRepository productRepository;
 
-    @Override
-    public Product update(UUID uuid, UpdateProductRequest request, ProductRepository productRepository, Logger logger) {
+    public UpdateProductUseCase(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
+    public Product update(UUID uuid, UpdateProductRequest request, Logger logger) {
 
         logger.info("Updating product with ID: {}", uuid);
 

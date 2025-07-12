@@ -1,4 +1,4 @@
-package br.com.postech.soat.product.core.application.services;
+package br.com.postech.soat.product.application.usecases;
 
 import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;
 import br.com.postech.soat.commons.infrastructure.exception.ResourceConflictException;
@@ -10,19 +10,20 @@ import br.com.postech.soat.product.core.domain.valueobject.ProductImage;
 import br.com.postech.soat.product.core.domain.valueobject.ProductName;
 import br.com.postech.soat.product.core.domain.valueobject.ProductPrice;
 import br.com.postech.soat.product.core.domain.valueobject.ProductSKU;
-import br.com.postech.soat.product.core.ports.in.CreateProductUseCase;
 import br.com.postech.soat.product.core.ports.out.ProductRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 
 @Service
-@RequiredArgsConstructor
 @Monitorable
-public class CreateProductService implements CreateProductUseCase {
+public class CreateProductUseCase {
+    private final ProductRepository productRepository;
 
-    @Override
-    public Product create(CreateProductRequest request, ProductRepository productRepository, Logger logger){
+    public CreateProductUseCase(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
+    public Product create(CreateProductRequest request, Logger logger){
         ProductSKU sku = new ProductSKU(request.sku());
         ProductName name = new ProductName(request.name());
         ProductPrice price = new ProductPrice(request.price());

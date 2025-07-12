@@ -3,14 +3,13 @@ package br.com.postech.soat.product.adapters.in;
 import br.com.postech.soat.openapi.model.GetProduct200ResponseInnerDto;
 import br.com.postech.soat.openapi.model.ProductCategoryDto;
 import br.com.postech.soat.product.adapters.in.http.ProductWebMapper;
+import br.com.postech.soat.product.application.usecases.CreateProductUseCase;
+import br.com.postech.soat.product.application.usecases.DeleteProductUseCase;
+import br.com.postech.soat.product.application.usecases.FindProductUseCase;
+import br.com.postech.soat.product.application.usecases.UpdateProductUseCase;
 import br.com.postech.soat.product.core.application.dto.FindProductRequest;
 import br.com.postech.soat.product.core.domain.Category;
 import br.com.postech.soat.product.core.domain.model.Product;
-import br.com.postech.soat.product.core.ports.in.CreateProductUseCase;
-import br.com.postech.soat.product.core.ports.in.DeleteProductUseCase;
-import br.com.postech.soat.product.core.ports.in.FindProductUseCase;
-import br.com.postech.soat.product.core.ports.in.UpdateProductUseCase;
-import br.com.postech.soat.product.core.ports.out.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -27,7 +26,6 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
@@ -35,8 +33,6 @@ class ProductControllerTest {
 
     @Mock
     private ProductWebMapper productWebMapper;
-    @Mock
-    private ProductRepository productRepository;
     @Mock
     private CreateProductUseCase createProductUseCase;
     @Mock
@@ -49,7 +45,6 @@ class ProductControllerTest {
     @InjectMocks
     private ProductController productController;
 
-//    private ProductController productController;
     private Product product;
 
     @BeforeEach
@@ -80,7 +75,7 @@ class ProductControllerTest {
             .category(ProductCategoryDto.fromValue(product.getCategory().value()));
 
         lenient().when(productWebMapper.toListResponse(List.of(product))).thenReturn(List.of(responseDto));
-        lenient().when(findProductUseCase.findProduct(any(FindProductRequest.class), eq(productRepository)))
+        lenient().when(findProductUseCase.findProduct(any(FindProductRequest.class)))
             .thenReturn(List.of(product));
     }
 
@@ -175,7 +170,7 @@ class ProductControllerTest {
         String sku = "NonExistentSKU";
         String category = "DRINK";
 
-        when(findProductUseCase.findProduct(any(FindProductRequest.class), eq(productRepository)))
+        when(findProductUseCase.findProduct(any(FindProductRequest.class)))
             .thenReturn(Collections.emptyList());
         when(productWebMapper.toListResponse(Collections.emptyList()))
             .thenReturn(Collections.emptyList());
