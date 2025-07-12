@@ -2,10 +2,9 @@ package br.com.postech.soat.customer.application.usecases;
 
 import br.com.postech.soat.commons.infrastructure.exception.NotFoundException;
 import br.com.postech.soat.customer.application.dto.FindCustomerQuery;
-import br.com.postech.soat.customer.domain.model.Customer;
+import br.com.postech.soat.customer.domain.entity.Customer;
 import br.com.postech.soat.customer.application.repositories.CustomerRepository;
 import java.util.Optional;
-import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

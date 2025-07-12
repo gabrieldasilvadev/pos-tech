@@ -7,7 +7,7 @@ import br.com.postech.soat.customer.domain.exception.InvalidCpfException;
 import br.com.postech.soat.customer.domain.exception.InvalidEmailException;
 import br.com.postech.soat.customer.domain.exception.InvalidNameException;
 import br.com.postech.soat.customer.domain.exception.InvalidPhoneException;
-import br.com.postech.soat.customer.domain.model.Customer;
+import br.com.postech.soat.customer.domain.entity.Customer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

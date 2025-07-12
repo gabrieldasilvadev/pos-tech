@@ -1,4 +1,4 @@
-package br.com.postech.soat.customer.domain.model;
+package br.com.postech.soat.customer.domain.entity;
 
 import br.com.postech.soat.customer.domain.valueobject.CPF;
 import br.com.postech.soat.customer.domain.valueobject.Email;

@@ -5,7 +5,7 @@ import br.com.postech.soat.customer.application.dto.FindCustomerQuery;
 import br.com.postech.soat.customer.application.repositories.CustomerRepository;
 import br.com.postech.soat.customer.application.usecases.CreateCustomerUseCase;
 import br.com.postech.soat.customer.application.usecases.FindCustomerUseCase;
-import br.com.postech.soat.customer.domain.model.Customer;
+import br.com.postech.soat.customer.domain.entity.Customer;
 import br.com.postech.soat.openapi.api.CustomerApi;
 import br.com.postech.soat.openapi.model.CreateCustomerRequestDto;
 import br.com.postech.soat.openapi.model.FindCustomer200ResponseDto;

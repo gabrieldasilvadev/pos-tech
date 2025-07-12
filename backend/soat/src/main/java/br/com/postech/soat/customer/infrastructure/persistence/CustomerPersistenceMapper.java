@@ -1,6 +1,6 @@
 package br.com.postech.soat.customer.infrastructure.persistence;
 
-import br.com.postech.soat.customer.domain.model.Customer;
+import br.com.postech.soat.customer.domain.entity.Customer;
 import br.com.postech.soat.customer.domain.valueobject.CPF;
 import br.com.postech.soat.customer.domain.valueobject.CustomerId;
 import br.com.postech.soat.customer.domain.valueobject.Email;

@@ -1,6 +1,6 @@
 package br.com.postech.soat.customer.application.repositories;
 
-import br.com.postech.soat.customer.domain.model.Customer;
+import br.com.postech.soat.customer.domain.entity.Customer;
 import java.util.Optional;
 
 public interface CustomerRepository {
