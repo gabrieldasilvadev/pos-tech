@@ -18,11 +18,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 @RequiredArgsConstructor
 @Monitorable
-public class OrderRepositoryAdapter implements OrderRepository {
+public class OrderRepositoryImpl implements OrderRepository {
     private final OrderJpaRepository orderJpaRepository;
     private final OrderItemJpaRepository orderItemJpaRepository;
 
-    private final Logger logger = LoggerFactory.getLogger(OrderRepositoryAdapter.class);
+    private final Logger logger = LoggerFactory.getLogger(OrderRepositoryImpl.class);
 
     @Override
     public Order save(Order order) {

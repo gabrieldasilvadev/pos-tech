@@ -3,7 +3,7 @@ package br.com.postech.soat.order.adapters;
 import br.com.postech.soat.customer.domain.valueobject.CustomerId;
 import br.com.postech.soat.order.domain.entity.Order;
 import br.com.postech.soat.order.domain.entity.OrderItem;
-import br.com.postech.soat.order.infrastructure.persistence.OrderRepositoryAdapter;
+import br.com.postech.soat.order.infrastructure.persistence.OrderRepositoryImpl;
 import br.com.postech.soat.order.infrastructure.persistence.jpa.OrderItemJpaRepository;
 import br.com.postech.soat.order.infrastructure.persistence.jpa.OrderJpaRepository;
 import br.com.postech.soat.order.infrastructure.persistence.entity.OrderEntity;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("OrderRepositoryAdapter Tests")
-class OrderRepositoryAdapterTest {
+class OrderRepositoryImplTest {
 
     @Mock
     private OrderJpaRepository orderJpaRepository;
@@ -38,7 +38,7 @@ class OrderRepositoryAdapterTest {
     private OrderItemJpaRepository orderItemJpaRepository;
 
     @InjectMocks
-    private OrderRepositoryAdapter orderRepositoryAdapter;
+    private OrderRepositoryImpl orderRepositoryImpl;
 
     @Test
     @DisplayName("Should save order and order items")
@@ -66,7 +66,7 @@ class OrderRepositoryAdapterTest {
         when(orderJpaRepository.save(any(OrderEntity.class))).thenReturn(savedOrderEntity);
         when(orderItemJpaRepository.saveAll(anyList())).thenReturn(List.of(savedOrderItemEntity));
 
-        Order savedOrder = orderRepositoryAdapter.save(order);
+        Order savedOrder = orderRepositoryImpl.save(order);
 
         assertNotNull(savedOrder);
         assertEquals(order.getId(), savedOrder.getId());
