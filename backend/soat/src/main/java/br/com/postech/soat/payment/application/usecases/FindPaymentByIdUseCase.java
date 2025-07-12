@@ -3,7 +3,7 @@ package br.com.postech.soat.payment.application.usecases;
 import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;
 import br.com.postech.soat.payment.application.repositories.PaymentRepository;
 import br.com.postech.soat.payment.domain.entity.Payment;
-import br.com.postech.soat.payment.domain.entity.PaymentId;
+import br.com.postech.soat.payment.domain.valueobject.PaymentId;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

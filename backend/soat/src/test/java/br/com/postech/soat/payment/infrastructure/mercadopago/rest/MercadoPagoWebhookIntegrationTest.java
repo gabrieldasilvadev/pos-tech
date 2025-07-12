@@ -3,7 +3,7 @@ package br.com.postech.soat.payment.infrastructure.mercadopago.rest;
 import br.com.postech.soat.customer.core.domain.model.CustomerId;
 import br.com.postech.soat.order.core.domain.model.OrderId;
 import br.com.postech.soat.payment.domain.entity.Payment;
-import br.com.postech.soat.payment.domain.entity.PaymentId;
+import br.com.postech.soat.payment.domain.valueobject.PaymentId;
 import br.com.postech.soat.payment.domain.entity.PaymentMethod;
 import br.com.postech.soat.payment.domain.entity.PaymentStatus;
 import br.com.postech.soat.payment.application.repositories.PaymentRepository;

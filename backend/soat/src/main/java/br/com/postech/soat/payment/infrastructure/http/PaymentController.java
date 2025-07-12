@@ -7,7 +7,7 @@ import br.com.postech.soat.openapi.model.PostPaymentsRequestDto;
 import br.com.postech.soat.payment.application.usecases.FindPaymentByIdUseCase;
 import br.com.postech.soat.payment.application.usecases.InitiatePaymentUseCase;
 import br.com.postech.soat.payment.domain.entity.Payment;
-import br.com.postech.soat.payment.domain.entity.PaymentId;
+import br.com.postech.soat.payment.domain.valueobject.PaymentId;
 import br.com.postech.soat.payment.infrastructure.http.mapper.PaymentCommandMapper;
 import br.com.postech.soat.payment.infrastructure.http.mapper.PaymentMapper;
 import lombok.RequiredArgsConstructor;

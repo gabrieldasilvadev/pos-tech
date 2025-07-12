@@ -5,7 +5,7 @@ import br.com.postech.soat.order.core.domain.model.OrderId;
 import br.com.postech.soat.payment.application.command.InitiatePaymentCommand;
 import br.com.postech.soat.payment.application.usecases.InitiatePaymentUseCase;
 import br.com.postech.soat.payment.domain.entity.Payment;
-import br.com.postech.soat.payment.domain.entity.PaymentId;
+import br.com.postech.soat.payment.domain.valueobject.PaymentId;
 import br.com.postech.soat.payment.domain.entity.PaymentMethod;
 import br.com.postech.soat.payment.domain.entity.PaymentStatus;
 import br.com.postech.soat.payment.application.gateway.GatewayOperationResult;

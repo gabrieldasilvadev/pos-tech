@@ -3,7 +3,7 @@ package br.com.postech.soat.payment.infrastructure.persistence;
 import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;
 import br.com.postech.soat.commons.infrastructure.exception.NotFoundException;
 import br.com.postech.soat.payment.domain.entity.Payment;
-import br.com.postech.soat.payment.domain.entity.PaymentId;
+import br.com.postech.soat.payment.domain.valueobject.PaymentId;
 import br.com.postech.soat.payment.domain.entity.PaymentStatus;
 import br.com.postech.soat.payment.application.repositories.PaymentRepository;
 import br.com.postech.soat.payment.infrastructure.persistence.entity.PaymentEntity;
@@ -18,9 +18,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 @RequiredArgsConstructor
 @Monitorable
-public class PaymentRepositoryAdapter implements PaymentRepository {
+public class PaymentRepositoryImpl implements PaymentRepository {
     private final PaymentJpaRepository paymentJpaRepository;
-    private final Logger logger = LoggerFactory.getLogger(PaymentRepositoryAdapter.class);
+    private final Logger logger = LoggerFactory.getLogger(PaymentRepositoryImpl.class);
 
     @Override
     public void save(Payment payment) {
