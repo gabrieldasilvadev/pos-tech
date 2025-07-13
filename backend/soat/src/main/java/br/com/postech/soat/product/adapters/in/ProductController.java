@@ -36,9 +36,8 @@ public class ProductController implements ProductApi {
     private final DeleteProductUseCase deleteProductUseCase;
     private final ProductWebMapper productWebMapper;
 
-    private final LoggerPort logger = new LoggerAdapter(ProductController.class);
-
     public ProductController(ProductRepository productRepository, ProductWebMapper productWebMapper) {
+        LoggerPort logger = new LoggerAdapter(ProductController.class);
         this.createProductUseCase = new CreateProductUseCase(productRepository, logger);
         this.findProductUseCase = new FindProductUseCase(productRepository, logger);
         this.updateProductUseCase = new UpdateProductUseCase(productRepository, logger);
