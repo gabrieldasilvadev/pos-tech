@@ -2,13 +2,12 @@ package br.com.postech.soat.product.application.usecases;
 
 import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;
 import br.com.postech.soat.commons.infrastructure.exception.NotFoundException;
-import br.com.postech.soat.product.core.application.dto.UpdateProductRequest;
-import br.com.postech.soat.product.core.domain.model.Product;
-import br.com.postech.soat.product.core.ports.out.LoggerPort;
-import br.com.postech.soat.product.core.ports.out.ProductRepository;
+import br.com.postech.soat.product.application.dto.UpdateProductDto;
+import br.com.postech.soat.product.domain.entity.Product;
+import br.com.postech.soat.product.application.adapters.LoggerPort;
+import br.com.postech.soat.product.application.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 import java.util.UUID;
-import org.slf4j.Logger;
 
 @Service
 @Monitorable
@@ -21,7 +20,7 @@ public class UpdateProductUseCase {
         this.logger = logger;
     }
 
-    public Product execute(UUID uuid, UpdateProductRequest request) {
+    public Product execute(UUID uuid, UpdateProductDto request) {
 
         logger.info("Updating product with ID: " + uuid);
 

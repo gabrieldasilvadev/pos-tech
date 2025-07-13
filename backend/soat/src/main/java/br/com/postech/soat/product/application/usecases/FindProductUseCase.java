@@ -1,10 +1,10 @@
 package br.com.postech.soat.product.application.usecases;
 
 import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;
-import br.com.postech.soat.product.core.application.dto.FindProductRequest;
-import br.com.postech.soat.product.core.domain.model.Product;
-import br.com.postech.soat.product.core.ports.out.LoggerPort;
-import br.com.postech.soat.product.core.ports.out.ProductRepository;
+import br.com.postech.soat.product.application.dto.FindProductQuery;
+import br.com.postech.soat.product.domain.entity.Product;
+import br.com.postech.soat.product.application.adapters.LoggerPort;
+import br.com.postech.soat.product.application.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class FindProductUseCase{
         this.logger = logger;
     }
 
-    public List<Product> execute(FindProductRequest request) {
+    public List<Product> execute(FindProductQuery request) {
         logger.info("Starting to find products");
         return productRepository.findAll(request);
     }

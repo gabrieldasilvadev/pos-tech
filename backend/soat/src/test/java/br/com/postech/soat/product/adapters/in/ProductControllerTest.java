@@ -2,17 +2,16 @@ package br.com.postech.soat.product.adapters.in;
 
 import br.com.postech.soat.openapi.model.GetProduct200ResponseInnerDto;
 import br.com.postech.soat.openapi.model.ProductCategoryDto;
-import br.com.postech.soat.product.adapters.in.http.ProductWebMapper;
-import br.com.postech.soat.product.application.usecases.CreateProductUseCase;
-import br.com.postech.soat.product.application.usecases.DeleteProductUseCase;
+import br.com.postech.soat.product.infrastructure.http.ProductController;
+import br.com.postech.soat.product.infrastructure.http.ProductWebMapper;
+import br.com.postech.soat.product.infrastructure.LoggerAdapter;
+import br.com.postech.soat.product.application.repositories.ProductRepository;
 import br.com.postech.soat.product.application.usecases.FindProductUseCase;
-import br.com.postech.soat.product.application.usecases.UpdateProductUseCase;
-import br.com.postech.soat.product.core.application.dto.FindProductRequest;
-import br.com.postech.soat.product.core.domain.Category;
-import br.com.postech.soat.product.core.domain.model.Product;
+import br.com.postech.soat.product.application.dto.FindProductQuery;
+import br.com.postech.soat.product.domain.enumtypes.Category;
+import br.com.postech.soat.product.domain.entity.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
@@ -34,15 +33,12 @@ class ProductControllerTest {
     @Mock
     private ProductWebMapper productWebMapper;
     @Mock
-    private CreateProductUseCase createProductUseCase;
-    @Mock
     private FindProductUseCase findProductUseCase;
     @Mock
-    private UpdateProductUseCase updateProductUseCase;
+    private ProductRepository productRepository;
     @Mock
-    private DeleteProductUseCase deleteProductUseCase;
+    private LoggerAdapter loggerAdapter;
 
-    @InjectMocks
     private ProductController productController;
 
     private Product product;
@@ -50,6 +46,10 @@ class ProductControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        productController = new ProductController(productRepository, productWebMapper);
+
+        this.findProductUseCase = new FindProductUseCase(productRepository, loggerAdapter);
 
         UUID productIdValue = UUID.randomUUID();
 
@@ -74,8 +74,9 @@ class ProductControllerTest {
             .image(product.getImage().value())
             .category(ProductCategoryDto.fromValue(product.getCategory().value()));
 
+        lenient().when(productRepository.findAll(any(FindProductQuery.class))).thenReturn(List.of(product));
         lenient().when(productWebMapper.toListResponse(List.of(product))).thenReturn(List.of(responseDto));
-        lenient().when(findProductUseCase.execute(any(FindProductRequest.class)))
+        lenient().when(findProductUseCase.execute(any(FindProductQuery.class)))
             .thenReturn(List.of(product));
     }
 
@@ -170,7 +171,8 @@ class ProductControllerTest {
         String sku = "NonExistentSKU";
         String category = "DRINK";
 
-        when(findProductUseCase.execute(any(FindProductRequest.class)))
+        when(productRepository.findAll(any(FindProductQuery.class))).thenReturn(Collections.emptyList());
+        when(findProductUseCase.execute(any(FindProductQuery.class)))
             .thenReturn(Collections.emptyList());
         when(productWebMapper.toListResponse(Collections.emptyList()))
             .thenReturn(Collections.emptyList());

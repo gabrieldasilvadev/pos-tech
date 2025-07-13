@@ -2,18 +2,17 @@ package br.com.postech.soat.product.application.usecases;
 
 import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;
 import br.com.postech.soat.commons.infrastructure.exception.ResourceConflictException;
-import br.com.postech.soat.product.core.application.dto.CreateProductRequest;
-import br.com.postech.soat.product.core.domain.model.Product;
-import br.com.postech.soat.product.core.domain.valueobject.ProductCategory;
-import br.com.postech.soat.product.core.domain.valueobject.ProductDescription;
-import br.com.postech.soat.product.core.domain.valueobject.ProductImage;
-import br.com.postech.soat.product.core.domain.valueobject.ProductName;
-import br.com.postech.soat.product.core.domain.valueobject.ProductPrice;
-import br.com.postech.soat.product.core.domain.valueobject.ProductSKU;
-import br.com.postech.soat.product.core.ports.out.LoggerPort;
-import br.com.postech.soat.product.core.ports.out.ProductRepository;
+import br.com.postech.soat.product.application.dto.CreateProductDto;
+import br.com.postech.soat.product.domain.entity.Product;
+import br.com.postech.soat.product.domain.valueobject.ProductCategory;
+import br.com.postech.soat.product.domain.valueobject.ProductDescription;
+import br.com.postech.soat.product.domain.valueobject.ProductImage;
+import br.com.postech.soat.product.domain.valueobject.ProductName;
+import br.com.postech.soat.product.domain.valueobject.ProductPrice;
+import br.com.postech.soat.product.domain.valueobject.ProductSKU;
+import br.com.postech.soat.product.application.adapters.LoggerPort;
+import br.com.postech.soat.product.application.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
 
 @Service
 @Monitorable
@@ -26,7 +25,7 @@ public class CreateProductUseCase {
         this.logger = logger;
     }
 
-    public Product execute(CreateProductRequest request){
+    public Product execute(CreateProductDto request){
         ProductSKU sku = new ProductSKU(request.sku());
         ProductName name = new ProductName(request.name());
         ProductPrice price = new ProductPrice(request.price());
