@@ -161,6 +161,25 @@ paths:
         - url: 'http://localhost:8080'
           description: Localhost
   /orders:
+    get:
+      tags:
+        - Order
+      summary: Listar pedidos ativos
+      description: |-
+        Retorna a lista de pedidos ativos ordenados por prioridade: Pronto > Em Preparação > Recebido.
+        Dentro de cada status, os pedidos são ordenados por data de criação (mais antigos primeiro).
+        Não inclui pedidos com status Finalizado na listagem.
+      operationId: get-orders
+      responses:
+        '200':
+          $ref: '#/components/responses/OrderListResponse'
+        '204':
+          description: Nenhum pedido ativo encontrado
+        '500':
+          $ref: '#/components/responses/ErrorResponse'
+      servers:
+        - url: 'http://localhost:8080'
+          description: Localhost
     post:
       tags:
         - Order
@@ -503,6 +522,51 @@ components:
                 description: string
                 image: string
                 category: SNACK
+    OrderListResponse:
+      description: Lista de pedidos ativos ordenados por prioridade e data
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                OrderId:
+                  $ref: '#/components/schemas/UUID'
+                customerId:
+                  $ref: '#/components/schemas/UUID'
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/OrderItem'
+                discountAmountTotal:
+                  $ref: '#/components/schemas/Money'
+                total:
+                  $ref: '#/components/schemas/Money'
+                status:
+                  $ref: '#/components/schemas/OrderStatus'
+              required:
+                - OrderId
+                - customerId
+                - items
+                - discountAmountTotal
+                - total
+                - status
+          examples:
+            Example 1:
+              value:
+                - OrderId: 241fae7b-0210-4d29-a928-90653c9a9a89
+                  customerId: 321fae7b-0210-4d29-a928-90653c9a9a89
+                  items:
+                    - productId: 441fae7b-0210-4d29-a928-90653c9a9a89
+                      name: Big Mac
+                      quantity: 2
+                      price: 25.90
+                      category: SNACK
+                  discountAmountTotal: 0.0
+                  subtotal: 51.80
+                  total: 51.80
+                  status: DONE
     OrderCreatedResponse:
       description: Example response
       content:

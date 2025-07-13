@@ -1,5 +1,7 @@
 package br.com.postech.soat.order.domain.entity;
 
+import java.util.List;
+
 public enum OrderStatus {
     RECEIVED,
     AWAITING_PAYMENT,
@@ -10,5 +12,13 @@ public enum OrderStatus {
 
     public static OrderStatus entryOf(String status) {
         return OrderStatus.valueOf(status.toUpperCase());
+    }
+
+    public static List<OrderStatus> activeOrderStatusList() {
+        return List.of(
+            OrderStatus.DONE,
+            OrderStatus.IN_PREPARATION,
+            OrderStatus.RECEIVED
+        );
     }
 }

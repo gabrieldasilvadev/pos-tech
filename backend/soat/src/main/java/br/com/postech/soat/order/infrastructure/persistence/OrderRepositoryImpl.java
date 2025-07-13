@@ -1,13 +1,14 @@
 package br.com.postech.soat.order.infrastructure.persistence;
 
 import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;
-import br.com.postech.soat.order.infrastructure.http.mapper.OrderItemMapper;
-import br.com.postech.soat.order.domain.entity.Order;
 import br.com.postech.soat.order.application.repositories.OrderRepository;
-import br.com.postech.soat.order.infrastructure.persistence.jpa.OrderItemJpaRepository;
-import br.com.postech.soat.order.infrastructure.persistence.jpa.OrderJpaRepository;
+import br.com.postech.soat.order.domain.entity.Order;
+import br.com.postech.soat.order.domain.entity.OrderStatus;
+import br.com.postech.soat.order.infrastructure.http.mapper.OrderItemMapper;
 import br.com.postech.soat.order.infrastructure.persistence.entity.OrderEntity;
 import br.com.postech.soat.order.infrastructure.persistence.entity.OrderItemEntity;
+import br.com.postech.soat.order.infrastructure.persistence.jpa.OrderItemJpaRepository;
+import br.com.postech.soat.order.infrastructure.persistence.jpa.OrderJpaRepository;
 import br.com.postech.soat.order.infrastructure.persistence.mapper.OrderEntityMapper;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -18,11 +19,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 @RequiredArgsConstructor
 @Monitorable
-public class OrderRepositoryAdapter implements OrderRepository {
+public class OrderRepositoryImpl implements OrderRepository {
+
     private final OrderJpaRepository orderJpaRepository;
     private final OrderItemJpaRepository orderItemJpaRepository;
 
-    private final Logger logger = LoggerFactory.getLogger(OrderRepositoryAdapter.class);
+    private final Logger logger = LoggerFactory.getLogger(OrderRepositoryImpl.class);
 
     @Override
     public Order save(Order order) {
@@ -38,5 +40,15 @@ public class OrderRepositoryAdapter implements OrderRepository {
         List<OrderItemEntity> orderItemEntitiesSaved = orderItemJpaRepository.saveAll(orderItemEntities);
         logger.info("Quantity order items saved : {}", orderItemEntitiesSaved.size());
         return order;
+    }
+
+    @Override
+    public List<Order> findActiveOrdersSorted(List<OrderStatus> activeOrderStatusList) {
+        List<OrderEntity> orderEntities = orderJpaRepository.findActiveOrdersSorted(activeOrderStatusList);
+        logger.info("Found {} active orders", orderEntities.size());
+        
+        return orderEntities.stream()
+            .map(OrderEntityMapper.INSTANCE::toDomain)
+            .toList();
     }
 }

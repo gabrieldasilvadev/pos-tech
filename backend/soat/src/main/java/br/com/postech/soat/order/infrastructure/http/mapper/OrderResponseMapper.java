@@ -1,14 +1,9 @@
 package br.com.postech.soat.order.infrastructure.http.mapper;
 
-import br.com.postech.soat.openapi.model.CategoryDto;
-import br.com.postech.soat.openapi.model.DiscountDto;
-import br.com.postech.soat.openapi.model.OrderItemDto;
-import br.com.postech.soat.openapi.model.OrderStatusDto;
-import br.com.postech.soat.openapi.model.PostOrders201ResponseDiscountsInnerDto;
-import br.com.postech.soat.openapi.model.PostOrders201ResponseDto;
-import br.com.postech.soat.order.domain.vo.Discount;
+import br.com.postech.soat.openapi.model.*;
 import br.com.postech.soat.order.domain.entity.Order;
 import br.com.postech.soat.order.domain.entity.OrderItem;
+import br.com.postech.soat.order.domain.vo.Discount;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -45,4 +40,12 @@ public interface OrderResponseMapper {
             .amount(discount.getValue().doubleValue())
             .build();
     }
+
+    @Mapping(target = "orderId", source = "id.value")
+    @Mapping(target = "customerId", source = "customerId.value")
+    @Mapping(target = "items", source = "orderItems")
+    @Mapping(target = "discountAmountTotal", expression = "java(order.getDiscountAmount().doubleValue())")
+    @Mapping(target = "total", expression = "java(order.getTotalPrice().doubleValue())")
+    @Mapping(target = "status", expression = "java(OrderStatusDto.fromValue(order.getStatus().name()))")
+    GetOrders200ResponseInnerDto toListResponse(Order order);
 }
