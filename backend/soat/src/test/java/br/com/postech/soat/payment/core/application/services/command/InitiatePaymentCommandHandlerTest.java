@@ -1,7 +1,7 @@
 package br.com.postech.soat.payment.core.application.services.command;
 
-import br.com.postech.soat.customer.core.domain.valueobject.CustomerId;
-import br.com.postech.soat.order.core.domain.model.OrderId;
+import br.com.postech.soat.customer.domain.valueobject.CustomerId;
+import br.com.postech.soat.order.domain.valueobject.OrderId;
 import br.com.postech.soat.payment.core.application.services.command.model.InitiatePaymentCommand;
 import br.com.postech.soat.payment.core.domain.model.Payment;
 import br.com.postech.soat.payment.core.domain.model.PaymentId;

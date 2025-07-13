@@ -1,0 +1,8 @@
+package br.com.postech.soat.order.infrastructure.persistence.jpa;
+
+import br.com.postech.soat.order.infrastructure.persistence.entity.OrderItemEntity;
+import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface OrderItemJpaRepository extends JpaRepository<OrderItemEntity, UUID> {
+}

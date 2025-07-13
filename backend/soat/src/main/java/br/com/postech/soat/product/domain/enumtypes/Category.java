@@ -1,5 +1,6 @@
 package br.com.postech.soat.product.domain.enumtypes;
 
+import br.com.postech.soat.product.core.domain.exception.InvalidCategoryException;
 import java.util.Arrays;
 
 public enum Category {
