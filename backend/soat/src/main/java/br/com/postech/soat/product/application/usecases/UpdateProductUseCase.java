@@ -4,6 +4,7 @@ import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;
 import br.com.postech.soat.commons.infrastructure.exception.NotFoundException;
 import br.com.postech.soat.product.core.application.dto.UpdateProductRequest;
 import br.com.postech.soat.product.core.domain.model.Product;
+import br.com.postech.soat.product.core.ports.out.LoggerPort;
 import br.com.postech.soat.product.core.ports.out.ProductRepository;
 import org.springframework.stereotype.Service;
 import java.util.UUID;
@@ -13,14 +14,16 @@ import org.slf4j.Logger;
 @Monitorable
 public class UpdateProductUseCase {
     private final ProductRepository productRepository;
+    private final LoggerPort logger;
 
-    public UpdateProductUseCase(ProductRepository productRepository) {
+    public UpdateProductUseCase(ProductRepository productRepository, LoggerPort logger) {
         this.productRepository = productRepository;
+        this.logger = logger;
     }
 
-    public Product execute(UUID uuid, UpdateProductRequest request, Logger logger) {
+    public Product execute(UUID uuid, UpdateProductRequest request) {
 
-        logger.info("Updating product with ID: {}", uuid);
+        logger.info("Updating product with ID: " + uuid);
 
         Product existingProduct = productRepository.findById(uuid)
             .orElseThrow(() -> new NotFoundException("Product not found with ID: " + uuid));
@@ -34,7 +37,7 @@ public class UpdateProductUseCase {
         );
 
         final Product updatedProduct = productRepository.save(existingProduct);
-        logger.info("Product updated with ID: {}", updatedProduct.getId());
+        logger.info("Product updated with ID: " + updatedProduct.getId());
 
         return updatedProduct;
     }

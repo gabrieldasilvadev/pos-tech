@@ -9,6 +9,8 @@ import br.com.postech.soat.payment.core.domain.model.PaymentStatus;
 import br.com.postech.soat.payment.core.ports.out.PaymentRepository;
 import java.math.BigDecimal;
 import java.util.UUID;
+import br.com.postech.soat.product.adapters.out.LoggerAdapter;
+import br.com.postech.soat.product.core.ports.out.LoggerPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -49,6 +51,11 @@ class MercadoPagoWebhookIntegrationTest extends PostgresTestContainerConfig {
                     }
                 }
             };
+        }
+
+        @Bean
+        public LoggerPort loggerPort() {
+            return new LoggerAdapter(MercadoPagoWebhookIntegrationTest.class);
         }
     }
 

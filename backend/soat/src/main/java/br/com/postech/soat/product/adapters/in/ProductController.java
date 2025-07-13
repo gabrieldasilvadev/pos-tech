@@ -1,6 +1,7 @@
 package br.com.postech.soat.product.adapters.in;
 
 import br.com.postech.soat.openapi.model.ProductDto;
+import br.com.postech.soat.product.adapters.out.LoggerAdapter;
 import br.com.postech.soat.product.application.usecases.CreateProductUseCase;
 import br.com.postech.soat.product.application.usecases.DeleteProductUseCase;
 import br.com.postech.soat.product.application.usecases.FindProductUseCase;
@@ -17,6 +18,7 @@ import br.com.postech.soat.product.core.application.dto.UpdateProductRequest;
 import br.com.postech.soat.product.core.domain.model.Product;
 import java.util.List;
 import java.util.UUID;
+import br.com.postech.soat.product.core.ports.out.LoggerPort;
 import br.com.postech.soat.product.core.ports.out.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -34,13 +36,13 @@ public class ProductController implements ProductApi {
     private final DeleteProductUseCase deleteProductUseCase;
     private final ProductWebMapper productWebMapper;
 
-    private final Logger logger = LoggerFactory.getLogger(ProductController.class);
+    private final LoggerPort logger = new LoggerAdapter(ProductController.class);
 
     public ProductController(ProductRepository productRepository, ProductWebMapper productWebMapper) {
-        this.createProductUseCase = new CreateProductUseCase(productRepository);
-        this.findProductUseCase = new FindProductUseCase(productRepository);
-        this.updateProductUseCase = new UpdateProductUseCase(productRepository);
-        this.deleteProductUseCase = new DeleteProductUseCase(productRepository);
+        this.createProductUseCase = new CreateProductUseCase(productRepository, logger);
+        this.findProductUseCase = new FindProductUseCase(productRepository, logger);
+        this.updateProductUseCase = new UpdateProductUseCase(productRepository, logger);
+        this.deleteProductUseCase = new DeleteProductUseCase(productRepository, logger);
 
         this.productWebMapper = productWebMapper;
     }
@@ -55,7 +57,7 @@ public class ProductController implements ProductApi {
     @Override
     public ResponseEntity<PostProducts201ResponseDto> postProducts(PostProductsRequestDto productDto){
         CreateProductRequest productRequest = productWebMapper.toCreateRequest(productDto);
-        final Product product = createProductUseCase.execute(productRequest, logger);
+        final Product product = createProductUseCase.execute(productRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(productWebMapper.toCreateResponse(product));
     }
@@ -63,14 +65,14 @@ public class ProductController implements ProductApi {
     @Override
     public ResponseEntity<ProductDto> putProducts(UUID uuid, PutProductsRequestDto putProductRequest) {
         UpdateProductRequest productRequest = productWebMapper.toUpdateRequest(putProductRequest);
-        final Product product = updateProductUseCase.execute(uuid, productRequest, logger);
+        final Product product = updateProductUseCase.execute(uuid, productRequest);
         return ResponseEntity.status(HttpStatus.OK)
             .body(productWebMapper.toUpdateResponse(product));
     }
 
     @Override
     public ResponseEntity<Void> deleteProducts(UUID productId) {
-        deleteProductUseCase.execute(productId, logger);
+        deleteProductUseCase.execute(productId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
