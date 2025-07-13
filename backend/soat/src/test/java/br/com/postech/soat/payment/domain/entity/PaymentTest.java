@@ -1,7 +1,7 @@
 package br.com.postech.soat.payment.domain.entity;
 
 import br.com.postech.soat.customer.domain.valueobject.CustomerId;
-import br.com.postech.soat.order.core.domain.model.OrderId;
+import br.com.postech.soat.order.domain.valueobject.OrderId;
 import java.math.BigDecimal;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
