@@ -17,7 +17,7 @@ public class DeleteProductUseCase {
         this.productRepository = productRepository;
     }
 
-    public void delete(UUID uuid, Logger logger) {
+    public void execute(UUID uuid, Logger logger) {
         logger.info("Deleting product with ID: {}", uuid);
 
         Product existingProduct = productRepository.findById(uuid)

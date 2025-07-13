@@ -48,14 +48,14 @@ public class ProductController implements ProductApi {
     @Override
     public ResponseEntity<List<GetProduct200ResponseInnerDto>> getProduct(String sku, String category) {
         FindProductRequest request = FindProductRequest.from(sku, category);
-        final List<Product> result = findProductUseCase.findProduct(request);
+        final List<Product> result = findProductUseCase.execute(request);
         return ResponseEntity.ok(productWebMapper.toListResponse(result));
     }
 
     @Override
     public ResponseEntity<PostProducts201ResponseDto> postProducts(PostProductsRequestDto productDto){
         CreateProductRequest productRequest = productWebMapper.toCreateRequest(productDto);
-        final Product product = createProductUseCase.create(productRequest, logger);
+        final Product product = createProductUseCase.execute(productRequest, logger);
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(productWebMapper.toCreateResponse(product));
     }
@@ -63,14 +63,14 @@ public class ProductController implements ProductApi {
     @Override
     public ResponseEntity<ProductDto> putProducts(UUID uuid, PutProductsRequestDto putProductRequest) {
         UpdateProductRequest productRequest = productWebMapper.toUpdateRequest(putProductRequest);
-        final Product product = updateProductUseCase.update(uuid, productRequest, logger);
+        final Product product = updateProductUseCase.execute(uuid, productRequest, logger);
         return ResponseEntity.status(HttpStatus.OK)
             .body(productWebMapper.toUpdateResponse(product));
     }
 
     @Override
     public ResponseEntity<Void> deleteProducts(UUID productId) {
-        deleteProductUseCase.delete(productId, logger);
+        deleteProductUseCase.execute(productId, logger);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

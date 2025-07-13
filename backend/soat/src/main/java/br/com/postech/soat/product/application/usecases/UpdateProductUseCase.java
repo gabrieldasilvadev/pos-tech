@@ -18,7 +18,7 @@ public class UpdateProductUseCase {
         this.productRepository = productRepository;
     }
 
-    public Product update(UUID uuid, UpdateProductRequest request, Logger logger) {
+    public Product execute(UUID uuid, UpdateProductRequest request, Logger logger) {
 
         logger.info("Updating product with ID: {}", uuid);
 

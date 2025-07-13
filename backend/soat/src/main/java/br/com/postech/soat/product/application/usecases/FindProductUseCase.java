@@ -17,7 +17,7 @@ public class FindProductUseCase{
         this.productRepository = productRepository;
     }
 
-    public List<Product> findProduct(FindProductRequest request) {
+    public List<Product> execute(FindProductRequest request) {
         return productRepository.findAll(request);
     }
 }

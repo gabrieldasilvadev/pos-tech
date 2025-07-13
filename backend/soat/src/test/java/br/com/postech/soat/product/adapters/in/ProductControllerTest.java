@@ -75,7 +75,7 @@ class ProductControllerTest {
             .category(ProductCategoryDto.fromValue(product.getCategory().value()));
 
         lenient().when(productWebMapper.toListResponse(List.of(product))).thenReturn(List.of(responseDto));
-        lenient().when(findProductUseCase.findProduct(any(FindProductRequest.class)))
+        lenient().when(findProductUseCase.execute(any(FindProductRequest.class)))
             .thenReturn(List.of(product));
     }
 
@@ -170,7 +170,7 @@ class ProductControllerTest {
         String sku = "NonExistentSKU";
         String category = "DRINK";
 
-        when(findProductUseCase.findProduct(any(FindProductRequest.class)))
+        when(findProductUseCase.execute(any(FindProductRequest.class)))
             .thenReturn(Collections.emptyList());
         when(productWebMapper.toListResponse(Collections.emptyList()))
             .thenReturn(Collections.emptyList());

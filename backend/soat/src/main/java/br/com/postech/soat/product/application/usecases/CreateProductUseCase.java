@@ -23,7 +23,7 @@ public class CreateProductUseCase {
         this.productRepository = productRepository;
     }
 
-    public Product create(CreateProductRequest request, Logger logger){
+    public Product execute(CreateProductRequest request, Logger logger){
         ProductSKU sku = new ProductSKU(request.sku());
         ProductName name = new ProductName(request.name());
         ProductPrice price = new ProductPrice(request.price());
