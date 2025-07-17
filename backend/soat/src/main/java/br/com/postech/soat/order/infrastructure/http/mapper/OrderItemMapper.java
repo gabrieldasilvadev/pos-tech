@@ -23,7 +23,7 @@ public interface OrderItemMapper {
     @Mapping(target = "discount", source = "discount")
     @Mapping(target = "category", expression = "java(orderItemDto.getCategory() != null ? orderItemDto.getCategory().getValue() : null)")
     @Mapping(target = "productId", source = "productId")
-    OrderItem mapFrom(OrderItemDto orderItemDto);
+    OrderItem toDomain(OrderItemDto orderItemDto);
 
     @Mapping(target = "id", source = "orderItem.id.value")
     @Mapping(target = "productId", source = "orderItem.productId")
@@ -31,15 +31,14 @@ public interface OrderItemMapper {
     @Mapping(target = "productName", source = "orderItem.name")
     @Mapping(target = "productQuantity", source = "orderItem.quantity")
     @Mapping(target = "unitPrice", source = "orderItem.price")
-    OrderItemEntity mapFrom(OrderItem orderItem, UUID orderId);
+    OrderItemEntity toEntity(OrderItem orderItem, UUID orderId);
 
-
-    default List<OrderItem> mapFrom(List<OrderItemDto> orderItemDtos) {
+    default List<OrderItem> toDomain(List<OrderItemDto> orderItemDtos) {
         if (orderItemDtos == null) {
             return null;
         }
         return orderItemDtos.stream()
-            .map(this::mapFrom)
+            .map(this::toDomain)
             .toList();
     }
 }

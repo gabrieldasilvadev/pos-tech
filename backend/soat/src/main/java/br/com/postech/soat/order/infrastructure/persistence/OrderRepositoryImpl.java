@@ -10,6 +10,8 @@ import br.com.postech.soat.order.infrastructure.persistence.entity.OrderItemEnti
 import br.com.postech.soat.order.infrastructure.persistence.jpa.OrderItemJpaRepository;
 import br.com.postech.soat.order.infrastructure.persistence.jpa.OrderJpaRepository;
 import br.com.postech.soat.order.infrastructure.persistence.mapper.OrderEntityMapper;
+import br.com.postech.soat.order.infrastructure.persistence.mapper.OrderItemEntityMapper;
+import br.com.postech.soat.order.domain.entity.OrderItem;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -34,7 +36,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
         List<OrderItemEntity> orderItemEntities = order.getOrderItems()
             .stream()
-            .map(orderItem -> OrderItemMapper.INSTANCE.mapFrom(orderItem, order.getId().getValue()))
+            .map(orderItem -> OrderItemMapper.INSTANCE.toEntity(orderItem, order.getId().getValue()))
             .toList();
 
         List<OrderItemEntity> orderItemEntitiesSaved = orderItemJpaRepository.saveAll(orderItemEntities);
@@ -48,7 +50,12 @@ public class OrderRepositoryImpl implements OrderRepository {
         logger.info("Found {} active orders", orderEntities.size());
         
         return orderEntities.stream()
-            .map(OrderEntityMapper.INSTANCE::toDomain)
+            .map(orderEntity -> {
+                List<OrderItemEntity> orderItemEntities = orderItemJpaRepository.findByOrderId(orderEntity.getId());
+                List<OrderItem> orderItems = OrderItemEntityMapper.INSTANCE.toDomainList(orderItemEntities);
+                
+                return OrderEntityMapper.INSTANCE.toDomain(orderEntity, orderItems);
+            })
             .toList();
     }
 }

@@ -11,13 +11,12 @@ import br.com.postech.soat.order.application.usecases.ListActiveOrdersUseCase;
 import br.com.postech.soat.order.domain.entity.Order;
 import br.com.postech.soat.order.infrastructure.http.mapper.CreateOrderCommandMapper;
 import br.com.postech.soat.order.infrastructure.http.mapper.OrderResponseMapper;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 public class OrderController implements OrderApi {

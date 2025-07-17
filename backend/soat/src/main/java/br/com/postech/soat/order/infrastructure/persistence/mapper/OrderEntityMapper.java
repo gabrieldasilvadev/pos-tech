@@ -3,6 +3,7 @@ package br.com.postech.soat.order.infrastructure.persistence.mapper;
 import br.com.postech.soat.customer.core.domain.model.CustomerId;
 import br.com.postech.soat.order.domain.entity.Order;
 import br.com.postech.soat.order.domain.entity.OrderId;
+import br.com.postech.soat.order.domain.entity.OrderItem;
 import br.com.postech.soat.order.domain.vo.Observation;
 import br.com.postech.soat.order.infrastructure.persistence.entity.OrderEntity;
 import org.mapstruct.AfterMapping;
@@ -36,7 +37,7 @@ public interface OrderEntityMapper {
             .collect(Collectors.joining(",")));
     }
 
-    default Order toDomain(OrderEntity orderEntity) {
+    default Order toDomain(OrderEntity orderEntity, List<OrderItem> orderItems) {
         OrderId orderId = new OrderId(orderEntity.getId());
         CustomerId customerId = new CustomerId(orderEntity.getCustomerId());
         List<Observation> observations = orderEntity.getObservation() != null 
@@ -46,6 +47,6 @@ public interface OrderEntityMapper {
             : List.of();
         
         return new Order(orderId, customerId, orderEntity.getStatus(), 
-                        orderEntity.getTotalPrice(), orderEntity.getDiscountAmount(), observations);
+                        orderEntity.getTotalPrice(), orderEntity.getDiscountAmount(), observations, orderItems);
     }
 }
