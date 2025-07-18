@@ -1,7 +1,8 @@
 package br.com.postech.soat.payment.infrastructure.mercadopago.rest;
 
-import br.com.postech.soat.payment.core.domain.model.PaymentId;
-import br.com.postech.soat.payment.core.ports.in.ProcessPaymentNotificationUseCase;
+import br.com.postech.soat.payment.application.usecases.ProcessPaymentNotificationUseCase;
+import br.com.postech.soat.payment.domain.valueobject.PaymentId;
+import br.com.postech.soat.payment.infrastructure.http.MercadoPagoWebhookController;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ class MercadoPagoWebhookControllerTest {
 
         ResponseEntity<Void> response = controller.receive(paymentId, topic);
 
-        verify(notificationService, times(1)).processPaymentNotification(PaymentId.of(paymentId));
+        verify(notificationService, times(1)).execute(PaymentId.of(paymentId));
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
@@ -48,7 +49,7 @@ class MercadoPagoWebhookControllerTest {
 
         ResponseEntity<Void> response = controller.receive(paymentId, topic);
 
-        verify(notificationService, never()).processPaymentNotification(any());
+        verify(notificationService, never()).execute(any());
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 }
