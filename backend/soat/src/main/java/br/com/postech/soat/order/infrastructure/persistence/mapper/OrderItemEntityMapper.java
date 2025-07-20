@@ -1,14 +1,11 @@
 package br.com.postech.soat.order.infrastructure.persistence.mapper;
 
 import br.com.postech.soat.order.domain.entity.OrderItem;
-import br.com.postech.soat.order.domain.entity.OrderItemId;
 import br.com.postech.soat.order.domain.vo.Discount;
 import br.com.postech.soat.order.infrastructure.persistence.entity.OrderItemEntity;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
-
 import java.util.List;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface OrderItemEntityMapper {
@@ -26,7 +23,7 @@ public interface OrderItemEntityMapper {
             orderItemEntity.getProductName(),
             orderItemEntity.getProductQuantity(),
             orderItemEntity.getUnitPrice(),
-            null, //productCategory
+            orderItemEntity.getProductCategory(),
             discount
         );
     }

@@ -30,6 +30,7 @@ public interface OrderItemMapper {
     @Mapping(target = "discountAmount", source = "orderItem.discount.value")
     @Mapping(target = "productName", source = "orderItem.name")
     @Mapping(target = "productQuantity", source = "orderItem.quantity")
+    @Mapping(target = "productCategory", source = "orderItem.category")
     @Mapping(target = "unitPrice", source = "orderItem.price")
     OrderItemEntity toEntity(OrderItem orderItem, UUID orderId);
 
