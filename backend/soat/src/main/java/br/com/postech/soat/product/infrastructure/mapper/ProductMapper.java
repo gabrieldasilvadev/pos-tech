@@ -2,15 +2,10 @@ package br.com.postech.soat.product.infrastructure.mapper;
 
 import br.com.postech.soat.product.infrastructure.persistence.entities.ProductEntity;
 import br.com.postech.soat.product.domain.entity.Product;
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
-@Mapper
 public interface ProductMapper {
 
-    ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
-
-    default Product toDomain(ProductEntity entity) {
+    static Product toDomain(ProductEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -26,7 +21,7 @@ public interface ProductMapper {
             .build();
     }
 
-    default ProductEntity toEntity(Product domain) {
+    static ProductEntity toEntity(Product domain) {
         if (domain == null) {
             return null;
         }

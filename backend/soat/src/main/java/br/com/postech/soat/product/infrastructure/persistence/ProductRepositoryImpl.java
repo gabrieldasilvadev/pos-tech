@@ -28,20 +28,20 @@ public class ProductRepositoryImpl implements ProductRepository {
         Specification<ProductEntity> spec = ProductSpecification.fromDomain(request);
         List<ProductEntity> result = jpaRepository.findAll(spec);
 
-        return result.stream().map(ProductMapper.INSTANCE::toDomain).toList();
+        return result.stream().map(ProductMapper::toDomain).toList();
     }
 
     @Override
     public Product save(Product product) {
-        ProductEntity entity = ProductMapper.INSTANCE.toEntity(product);
+        ProductEntity entity = ProductMapper.toEntity(product);
         final ProductEntity saved = jpaRepository.save(entity);
-        return ProductMapper.INSTANCE.toDomain(saved);
+        return ProductMapper.toDomain(saved);
     }
 
     @Override
     public Optional<Product> findById(UUID id) {
         return jpaRepository.findById(id)
-            .map(ProductMapper.INSTANCE::toDomain);
+            .map(ProductMapper::toDomain);
     }
 
     @Override
