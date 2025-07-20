@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: soat-postgres
+  namespace: soat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: soat-postgres
+  template:
+    metadata:
+      labels:
+        app: soat-postgres
+    spec:
+      containers:
+        - name: soat-postgres
+          image: postgres:17
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: soat-postgres-config
+            - secretRef:
+                name: soat-postgres-secret
+          volumeMounts:
+            - name: soat-postgres-storage
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: soat-postgres-storage
+          persistentVolumeClaim:
+            claimName: soat-postgres-pvc

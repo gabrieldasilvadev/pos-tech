@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: soat-backend-config
+  namespace: soat
+data:
+  DB_URL: jdbc:postgresql://soat-postgres:5432/soat

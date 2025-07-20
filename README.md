@@ -32,8 +32,7 @@ O projeto adota tecnologias, práticas e ferramentas alinhadas com o Pós Tech e
 - **Segurança**: OWASP, práticas de desenvolvimento seguro, LGPD
 - **DevOps** e práticas de engenharia de software moderna
 
-Referência: [Pós Tech em Software Architecture - FIAP+Alura](https://postech.fiap.com.br/curso/software-architecture/)
----
+## Referência: [Pós Tech em Software Architecture - FIAP+Alura](https://postech.fiap.com.br/curso/software-architecture/)
 
 ## Participantes
 
@@ -124,3 +123,59 @@ http://0.0.0.0:8080/health
 ```
 http://0.0.0.0:8080/swagger-ui/index.html
 ```
+
+### Executando o app com o minikube localmente
+
+Primeiro precisamos instalar o minikube conforme o sistema operacional, para isso siga as [instruções de instalação na documentação](https://minikube.sigs.k8s.io/docs/start/?arch=%2Fmacos%2Farm64%2Fstable%2Fbinary+download)
+
+##### Feito isso, inicie o minikube
+
+```sh
+minikube start
+```
+
+##### Também podemos habilitar as métricas do minikube, mas esse passo é opcional
+
+```sh
+minikube addons enable metrics-server
+```
+
+##### Agora precisamos fazer o build atualizado da última versão da aplicação
+
+```sh
+docker build -t soat ./backend/soat
+```
+
+##### O minikube, por padrão, não consegue acessar as imagens no nosso host, então precisamos carrega-las dentro do minikube
+
+```sh
+minikube image load soat:latest
+```
+
+##### Feito isso, podemos carregar todos os arquivos de configuração de uma só vez com o comando abaixo
+
+```sh
+kubectl apply -R -f ./infra/
+```
+
+##### Para expor uma porta do minikube para o nosso host e possibilitar o acesso, executamos o comando abaixo
+
+```sh
+minikube service soat-backend -n soat
+```
+
+> No exemplo abaixo o acesso a aplicação está liberada no endereço **http://127.0.0.1:50189**
+
+<div align="center">
+    <img src="./docs/images/minikube_service.png"width="60%">
+</div>
+
+##### Opcionalmente também podemos fazer um redirecionamento de porta.
+
+```sh
+kubectl port-forward service/soat-backend 8080:8080 -n soat
+```
+
+##### Para forçar a aplicação escalar o número de pods, podemos usar o comando abaixo
+
+while true; do curl -X 'GET' 'http://127.0.0.1:8080/products' -H 'accept: application/json'; sleep 0.2; done
