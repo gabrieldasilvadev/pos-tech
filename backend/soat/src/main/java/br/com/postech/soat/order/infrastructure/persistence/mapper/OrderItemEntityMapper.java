@@ -1,7 +1,7 @@
 package br.com.postech.soat.order.infrastructure.persistence.mapper;
 
 import br.com.postech.soat.order.domain.entity.OrderItem;
-import br.com.postech.soat.order.domain.vo.Discount;
+import br.com.postech.soat.order.domain.valueobject.Discount;
 import br.com.postech.soat.order.infrastructure.persistence.entity.OrderItemEntity;
 import java.util.List;
 import org.mapstruct.Mapper;
