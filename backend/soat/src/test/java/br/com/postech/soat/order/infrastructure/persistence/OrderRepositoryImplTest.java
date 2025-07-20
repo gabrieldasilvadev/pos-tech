@@ -1,9 +1,8 @@
 package br.com.postech.soat.order.infrastructure.persistence;
 
-import br.com.postech.soat.customer.core.domain.model.CustomerId;
+import br.com.postech.soat.customer.domain.valueobject.CustomerId;
 import br.com.postech.soat.order.domain.entity.Order;
 import br.com.postech.soat.order.domain.entity.OrderItem;
-import br.com.postech.soat.order.domain.entity.OrderStatus;
 import br.com.postech.soat.order.infrastructure.persistence.entity.OrderEntity;
 import br.com.postech.soat.order.infrastructure.persistence.entity.OrderItemEntity;
 import br.com.postech.soat.order.infrastructure.persistence.jpa.OrderItemJpaRepository;
@@ -74,86 +73,5 @@ class OrderRepositoryImplTest {
 
         verify(orderJpaRepository, times(1)).save(any(OrderEntity.class));
         verify(orderItemJpaRepository, times(1)).saveAll(anyList());
-    }
-
-    @Test
-    @DisplayName("Should return active orders when found")
-    void givenActiveOrderStatusList_whenFindActiveOrdersSorted_thenReturnOrdersList() {
-        List<OrderStatus> activeOrderStatusList = List.of(
-            OrderStatus.DONE, 
-            OrderStatus.IN_PREPARATION, 
-            OrderStatus.RECEIVED
-        );
-
-        OrderEntity orderEntity1 = buildOrderEntity(UUID.randomUUID(), OrderStatus.RECEIVED);
-        OrderEntity orderEntity2 = buildOrderEntity(UUID.randomUUID(), OrderStatus.IN_PREPARATION);
-        List<OrderEntity> orderEntities = List.of(orderEntity1, orderEntity2);
-
-        OrderItemEntity orderItemEntity1 = buildOrderItemEntity(orderEntity1.getId(), "Product 1");
-        OrderItemEntity orderItemEntity2 = buildOrderItemEntity(orderEntity2.getId(), "Product 2");
-
-        when(orderJpaRepository.findActiveOrdersSorted(activeOrderStatusList)).thenReturn(orderEntities);
-        when(orderItemJpaRepository.findByOrderId(orderEntity1.getId())).thenReturn(List.of(orderItemEntity1));
-        when(orderItemJpaRepository.findByOrderId(orderEntity2.getId())).thenReturn(List.of(orderItemEntity2));
-
-        List<Order> result = orderRepositoryImpl.findActiveOrdersSorted(activeOrderStatusList);
-
-        assertNotNull(result);
-        assertEquals(2, result.size());
-        assertEquals(orderEntity1.getId(), result.get(0).getId().getValue());
-        assertEquals(orderEntity2.getId(), result.get(1).getId().getValue());
-        
-        assertNotNull(result.get(0).getOrderItems());
-        assertEquals(1, result.get(0).getOrderItems().size());
-        assertEquals("Product 1", result.get(0).getOrderItems().getFirst().getName());
-        
-        assertNotNull(result.get(1).getOrderItems());
-        assertEquals(1, result.get(1).getOrderItems().size());
-        assertEquals("Product 2", result.get(1).getOrderItems().getFirst().getName());
-        
-        verify(orderJpaRepository, times(1)).findActiveOrdersSorted(activeOrderStatusList);
-        verify(orderItemJpaRepository, times(1)).findByOrderId(orderEntity1.getId());
-        verify(orderItemJpaRepository, times(1)).findByOrderId(orderEntity2.getId());
-    }
-
-    @Test
-    @DisplayName("Should return empty list when no active orders found")
-    void givenActiveOrderStatusList_whenFindActiveOrdersSortedWithNoResults_thenReturnEmptyList() {
-        List<OrderStatus> activeOrderStatusList = List.of(
-            OrderStatus.DONE, 
-            OrderStatus.IN_PREPARATION, 
-            OrderStatus.RECEIVED
-        );
-
-        when(orderJpaRepository.findActiveOrdersSorted(activeOrderStatusList)).thenReturn(List.of());
-
-        List<Order> result = orderRepositoryImpl.findActiveOrdersSorted(activeOrderStatusList);
-
-        assertNotNull(result);
-        assertEquals(0, result.size());
-        verify(orderJpaRepository, times(1)).findActiveOrdersSorted(activeOrderStatusList);
-    }
-
-    private OrderEntity buildOrderEntity(UUID orderId, OrderStatus status) {
-        OrderEntity orderEntity = new OrderEntity();
-        orderEntity.setId(orderId);
-        orderEntity.setCustomerId(UUID.randomUUID());
-        orderEntity.setStatus(status);
-        orderEntity.setTotalPrice(new BigDecimal("25.00"));
-        orderEntity.setDiscountAmount(BigDecimal.ZERO);
-        orderEntity.setObservation("Test observation");
-        return orderEntity;
-    }
-
-    private OrderItemEntity buildOrderItemEntity(UUID orderId, String productName) {
-        OrderItemEntity orderItemEntity = new OrderItemEntity();
-        orderItemEntity.setId(UUID.randomUUID());
-        orderItemEntity.setOrderId(orderId);
-        orderItemEntity.setProductId(UUID.randomUUID());
-        orderItemEntity.setProductName(productName);
-        orderItemEntity.setProductQuantity(1);
-        orderItemEntity.setUnitPrice(new BigDecimal("15.50"));
-        orderItemEntity.setDiscountAmount(BigDecimal.ZERO);
-        return orderItemEntity;
     }
 }

@@ -4,17 +4,16 @@ import br.com.postech.soat.customer.core.domain.model.CustomerId;
 import br.com.postech.soat.order.domain.entity.Order;
 import br.com.postech.soat.order.domain.entity.OrderId;
 import br.com.postech.soat.order.domain.entity.OrderItem;
-import br.com.postech.soat.order.domain.vo.Observation;
+import br.com.postech.soat.order.domain.valueobject.Observation;
 import br.com.postech.soat.order.infrastructure.persistence.entity.OrderEntity;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Mapper
 public interface OrderEntityMapper {
@@ -40,13 +39,13 @@ public interface OrderEntityMapper {
     default Order toDomain(OrderEntity orderEntity, List<OrderItem> orderItems) {
         OrderId orderId = new OrderId(orderEntity.getId());
         CustomerId customerId = new CustomerId(orderEntity.getCustomerId());
-        List<Observation> observations = orderEntity.getObservation() != null 
+        List<Observation> observations = orderEntity.getObservation() != null
             ? Arrays.stream(orderEntity.getObservation().split(","))
                 .map(Observation::new)
                 .collect(Collectors.toList())
             : List.of();
-        
-        return new Order(orderId, customerId, orderEntity.getStatus(), 
+
+        return new Order(orderId, customerId, orderEntity.getStatus(),
                         orderEntity.getTotalPrice(), orderEntity.getDiscountAmount(), observations, orderItems);
     }
 }

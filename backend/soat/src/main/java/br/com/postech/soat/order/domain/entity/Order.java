@@ -1,9 +1,10 @@
 package br.com.postech.soat.order.domain.entity;
 
 import br.com.postech.soat.commons.domain.AggregateRoot;
-import br.com.postech.soat.customer.core.domain.model.CustomerId;
-import br.com.postech.soat.order.domain.vo.Discount;
-import br.com.postech.soat.order.domain.vo.Observation;
+import br.com.postech.soat.customer.domain.valueobject.CustomerId;
+import br.com.postech.soat.order.domain.valueobject.Discount;
+import br.com.postech.soat.order.domain.valueobject.Observation;
+import br.com.postech.soat.order.domain.valueobject.OrderId;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;

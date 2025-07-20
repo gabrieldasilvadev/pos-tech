@@ -1,9 +1,15 @@
 package br.com.postech.soat.order.infrastructure.http.mapper;
 
-import br.com.postech.soat.openapi.model.*;
+import br.com.postech.soat.openapi.model.CategoryDto;
+import br.com.postech.soat.openapi.model.DiscountDto;
+import br.com.postech.soat.openapi.model.GetOrders200ResponseInnerDto;
+import br.com.postech.soat.openapi.model.OrderItemDto;
+import br.com.postech.soat.openapi.model.OrderStatusDto;
+import br.com.postech.soat.openapi.model.PostOrders201ResponseDiscountsInnerDto;
+import br.com.postech.soat.openapi.model.PostOrders201ResponseDto;
 import br.com.postech.soat.order.domain.entity.Order;
 import br.com.postech.soat.order.domain.entity.OrderItem;
-import br.com.postech.soat.order.domain.vo.Discount;
+import br.com.postech.soat.order.domain.valueobject.Discount;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

@@ -1,7 +1,7 @@
 package br.com.postech.soat.order.infrastructure.http.mapper;
 
 import br.com.postech.soat.openapi.model.DiscountDto;
-import br.com.postech.soat.order.domain.vo.Discount;
+import br.com.postech.soat.order.domain.valueobject.Discount;
 import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
