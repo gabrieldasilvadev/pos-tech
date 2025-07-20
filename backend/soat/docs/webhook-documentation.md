@@ -37,8 +37,31 @@ When a webhook notification is received:
 
 1. The system checks if the `topic` is "payment"
 2. If it is, the system retrieves the payment details using the `id` parameter
-3. The payment status is updated to `FINISHED` if the current status is `APPROVED`
-4. If the payment status is not `APPROVED`, an exception is thrown
+3. The system parses the payment status from the gateway response
+4. The payment status is updated based on the gateway response:
+   - **APPROVED**: Payment is marked as `FINISHED`
+   - **DECLINED**: Payment is marked as `DECLINED`
+   - **FAILED**: Payment is marked as `FAILED`
+5. The updated payment is saved to the repository
+
+## Payment Status Flow
+
+The webhook supports the following payment status transitions:
+
+### Successful Payment Flow
+```
+PENDING → APPROVED → FINISHED (via webhook)
+```
+
+### Declined Payment Flow
+```
+PENDING → DECLINED (via webhook)
+```
+
+### Failed Payment Flow
+```
+PENDING → FAILED (via webhook)
+```
 
 ## Error Handling
 
@@ -68,18 +91,38 @@ Or using a tool like Postman:
 
 ## Simulating Different Scenarios
 
-The FakeCheckoutClient implementation supports simulating different scenarios:
+The FakeCheckoutClient implementation supports simulating different payment scenarios:
 
-- Success: Normal processing of the payment
-- Failure: The payment gateway returns an empty response
-- Timeout: The payment gateway throws an exception
+### Available Scenarios
+- **Success (Approved)**: Normal processing resulting in approved payment
+- **Decline**: Payment is declined by the gateway
+- **Failure**: Technical failure during payment processing
+- **Timeout**: The payment gateway throws a timeout exception
+
+### Configuration Properties
 
 These scenarios can be configured using the following properties:
 
 ```properties
+# Enable/disable network delay simulation
 payment.gateway.simulation.delay.enabled=true
+
+# Network delay range in milliseconds
 payment.gateway.simulation.delay.min=100
 payment.gateway.simulation.delay.max=1000
-payment.gateway.simulation.failure.rate=0.1
-payment.gateway.simulation.timeout.rate=0.05
+
+# Failure simulation rates (0.0 = never, 1.0 = always)
+payment.gateway.simulation.failure.rate=0.1    # 10% chance of technical failure
+payment.gateway.simulation.timeout.rate=0.05   # 5% chance of timeout
+payment.gateway.simulation.decline.rate=0.15   # 15% chance of payment decline
 ```
+
+### Testing Different Outcomes
+
+To test different payment outcomes:
+
+1. **Test Approved Payment**: Most webhook calls will result in approved payments
+2. **Test Declined Payment**: Some webhook calls will randomly result in declined payments
+3. **Test Failed Payment**: Some webhook calls will randomly result in failed payments
+
+The actual outcome is determined randomly based on the configured rates when the webhook processes the notification.

@@ -38,6 +38,9 @@ public class FakeCheckoutClient {
     @Value("${payment.gateway.simulation.timeout.rate:0.05}")
     private double timeoutRate;
 
+    @Value("${payment.gateway.simulation.decline.rate:0.15}")
+    private double declineRate;
+
     public String createPayment(Payment payment) {
         logger.info("Creating payment with ID: {}", payment.getId().getValue());
 
@@ -82,7 +85,8 @@ public class FakeCheckoutClient {
                 payment.getAmount());
         }
 
-        return "Payment details for ID: " + paymentId.getValue() + ", Status: " + PaymentStatus.APPROVED;
+        PaymentStatus simulatedStatus = shouldSimulateDecline() ? PaymentStatus.DECLINED : PaymentStatus.APPROVED;
+        return "Payment details for ID: " + paymentId.getValue() + ", Status: " + simulatedStatus;
     }
 
     private void simulateNetworkDelay() {
@@ -104,5 +108,9 @@ public class FakeCheckoutClient {
 
     private boolean shouldSimulateTimeout() {
         return random.nextDouble() < timeoutRate;
+    }
+
+    private boolean shouldSimulateDecline() {
+        return random.nextDouble() < declineRate;
     }
 }

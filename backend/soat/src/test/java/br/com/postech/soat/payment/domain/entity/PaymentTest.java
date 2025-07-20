@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PaymentTest {
@@ -60,5 +61,78 @@ class PaymentTest {
             Payment.initiate(orderId, customerId, null, amount)
         );
         assertEquals("Payment method cannot be null", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should decline payment when in PENDING status")
+    void shouldDeclinePaymentWhenInPendingStatus() {
+        // Arrange
+        OrderId orderId = new OrderId(UUID.randomUUID());
+        CustomerId customerId = new CustomerId(UUID.randomUUID());
+        BigDecimal amount = new BigDecimal("100.00");
+        
+        Payment payment = Payment.initiate(orderId, customerId, PaymentMethod.PIX, amount);
+        
+        // Act
+        payment.decline();
+        
+        // Assert
+        assertEquals(PaymentStatus.DECLINED, payment.getStatus());
+        assertNotNull(payment.getProcessedAt());
+    }
+
+    @Test
+    @DisplayName("Should throw exception when declining payment from FINISHED status")
+    void shouldThrowExceptionWhenDecliningPaymentFromFinishedStatus() {
+        // Arrange
+        OrderId orderId = new OrderId(UUID.randomUUID());
+        CustomerId customerId = new CustomerId(UUID.randomUUID());
+        BigDecimal amount = new BigDecimal("100.00");
+        
+        Payment payment = Payment.initiate(orderId, customerId, PaymentMethod.PIX, amount);
+        payment.approve();
+        payment.finish(); // Move to FINISHED status
+        
+        // Act & Assert
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () ->
+            payment.decline()
+        );
+        assertEquals("Payment cannot be declined from status FINISHED", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw exception when declining payment from FAILED status")
+    void shouldThrowExceptionWhenDecliningPaymentFromFailedStatus() {
+        // Arrange
+        OrderId orderId = new OrderId(UUID.randomUUID());
+        CustomerId customerId = new CustomerId(UUID.randomUUID());
+        BigDecimal amount = new BigDecimal("100.00");
+        
+        Payment payment = Payment.initiate(orderId, customerId, PaymentMethod.PIX, amount);
+        payment.fail(); // Move to FAILED status
+        
+        // Act & Assert
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () ->
+            payment.decline()
+        );
+        assertEquals("Payment cannot be declined from status FAILED", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw exception when declining payment from DECLINED status")
+    void shouldThrowExceptionWhenDecliningPaymentFromDeclinedStatus() {
+        // Arrange
+        OrderId orderId = new OrderId(UUID.randomUUID());
+        CustomerId customerId = new CustomerId(UUID.randomUUID());
+        BigDecimal amount = new BigDecimal("100.00");
+        
+        Payment payment = Payment.initiate(orderId, customerId, PaymentMethod.PIX, amount);
+        payment.decline(); // Move to DECLINED status
+        
+        // Act & Assert
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () ->
+            payment.decline()
+        );
+        assertEquals("Payment cannot be declined from status DECLINED", exception.getMessage());
     }
 }
