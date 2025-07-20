@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CustomerController implements CustomerApi {
 
-    private final FindCustomerUseCase findCustomerUseCase;
     private final CreateCustomerUseCase createCustomerUseCase;
+    private final FindCustomerUseCase findCustomerUseCase;
     private final CustomerWebMapper customerWebMapper;
 
     public CustomerController(CustomerRepository customerRepository) {
