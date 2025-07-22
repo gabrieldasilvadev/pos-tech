@@ -3,6 +3,12 @@ kind: Service
 metadata:
   name: soat-backend
   namespace: soat
+  labels:
+    app: soat-backend
+    tier: backend
+  annotations:
+    maintainer: "SOAT - Grupo 75"
+    description: "Expor a API do backend via LoadBalancer"
 spec:
   selector:
     app: soat-backend

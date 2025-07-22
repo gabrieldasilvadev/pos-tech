@@ -3,6 +3,11 @@ kind: PersistentVolumeClaim
 metadata:
   name: soat-postgres-pvc
   namespace: soat
+  labels:
+    app: soat-postgres
+  annotations:
+    maintainer: "SOAT - Grupo 75"
+    description: "Armazenamento persistente do banco de dados PostgreSQL"
 spec:
   accessModes:
     - ReadWriteOnce

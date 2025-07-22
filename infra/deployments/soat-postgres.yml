@@ -3,6 +3,12 @@ kind: Deployment
 metadata:
   name: soat-postgres
   namespace: soat
+  labels:
+    app: soat-postgres
+    tier: database
+  annotations:
+    maintainer: "SOAT - Grupo 75"
+    description: "Deployment do banco de dados PostgreSQL utilizado pela aplicação Java"
 spec:
   replicas: 1
   selector:
@@ -26,6 +32,25 @@ spec:
           volumeMounts:
             - name: soat-postgres-storage
               mountPath: /var/lib/postgresql/data
+          startupProbe:
+            tcpSocket:
+              port: 5432
+            periodSeconds: 5
+            failureThreshold: 30
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+          readinessProbe:
+            tcpSocket:
+              port: 5432
+            periodSeconds: 5
+            failureThreshold: 3
+            timeoutSeconds: 2
+          livenessProbe:
+            tcpSocket:
+              port: 5432
+            periodSeconds: 10
+            failureThreshold: 3
+            timeoutSeconds: 2
       volumes:
         - name: soat-postgres-storage
           persistentVolumeClaim:

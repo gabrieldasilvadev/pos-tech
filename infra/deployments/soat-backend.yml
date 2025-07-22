@@ -3,6 +3,12 @@ kind: Deployment
 metadata:
   name: soat-backend
   namespace: soat
+  labels:
+    app: soat-backend
+    tier: backend
+  annotations:
+    maintainer: "SOAT - Grupo 75"
+    description: "Deployment do backend da aplicação Java"
 spec:
   replicas: 1
   selector:
@@ -16,7 +22,7 @@ spec:
       containers:
         - name: soat-backend
           image: soat:latest
-          imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
           resources:
@@ -31,3 +37,27 @@ spec:
                 name: soat-backend-config
             - secretRef:
                 name: soat-backend-secret
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            failureThreshold: 30
+            timeoutSeconds: 1
+            periodSeconds: 2
+            initialDelaySeconds: 0
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3

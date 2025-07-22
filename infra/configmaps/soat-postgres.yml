@@ -3,5 +3,11 @@ kind: ConfigMap
 metadata:
   name: soat-postgres-config
   namespace: soat
+  labels:
+    app: soat-postgres
+    tier: database
+  annotations:
+    maintainer: "SOAT - Grupo 75"
+    description: "ConfigMap com variáveis de ambiente para o PostgreSQL"
 data:
   POSTGRES_DB: soat
