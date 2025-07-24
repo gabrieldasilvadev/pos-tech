@@ -2,11 +2,12 @@ package br.com.postech.soat.order.infrastructure.persistence.jpa;
 
 import br.com.postech.soat.order.domain.entity.OrderStatus;
 import br.com.postech.soat.order.infrastructure.persistence.entity.OrderEntity;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
-import java.util.List;
-import java.util.UUID;
 
 public interface OrderJpaRepository extends JpaRepository<OrderEntity, UUID> {
     
@@ -22,5 +23,5 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity, UUID> {
             END,
             o.createdAt ASC
         """)
-    List<OrderEntity> findActiveOrdersSorted(List<OrderStatus> activeStatusList);
+    List<OrderEntity> findActiveOrdersSorted(Set<OrderStatus> activeStatusList, Pageable pageable);
 }

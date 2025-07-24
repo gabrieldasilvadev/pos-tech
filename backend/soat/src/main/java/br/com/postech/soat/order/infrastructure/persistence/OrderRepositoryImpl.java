@@ -1,5 +1,6 @@
 package br.com.postech.soat.order.infrastructure.persistence;
 
+import br.com.postech.soat.commons.application.Pagination;
 import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;
 import br.com.postech.soat.order.application.repositories.OrderRepository;
 import br.com.postech.soat.order.domain.entity.Order;
@@ -13,9 +14,12 @@ import br.com.postech.soat.order.infrastructure.persistence.jpa.OrderJpaReposito
 import br.com.postech.soat.order.infrastructure.persistence.mapper.OrderEntityMapper;
 import br.com.postech.soat.order.infrastructure.persistence.mapper.OrderItemEntityMapper;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -44,9 +48,12 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public List<Order> findActiveOrdersSorted(List<OrderStatus> activeOrderStatusList) {
-        List<OrderEntity> orderEntities = orderJpaRepository.findActiveOrdersSorted(activeOrderStatusList);
-        logger.info("Found {} active orders", orderEntities.size());
+    public List<Order> findActiveOrdersSorted(Set<OrderStatus> activeOrderStatusList, Pagination pagination) {
+        Pageable pageable = PageRequest.of(pagination.page(), pagination.size());
+        List<OrderEntity> orderEntities = orderJpaRepository.findActiveOrdersSorted(activeOrderStatusList, pageable);
+
+        logger.info("Found {} active orders with pagination - page: {}, size: {}",
+                   orderEntities.size(), pagination.page(), pagination.size());
 
         return orderEntities.stream()
             .map(orderEntity -> {

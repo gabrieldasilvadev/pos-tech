@@ -1,5 +1,6 @@
 package br.com.postech.soat.order.infrastructure.persistence;
 
+import br.com.postech.soat.commons.application.Pagination;
 import br.com.postech.soat.customer.domain.valueobject.CustomerId;
 import br.com.postech.soat.order.domain.entity.Order;
 import br.com.postech.soat.order.domain.entity.OrderItem;
@@ -11,6 +12,7 @@ import br.com.postech.soat.order.infrastructure.persistence.jpa.OrderJpaReposito
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Pageable;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -81,13 +84,14 @@ class OrderRepositoryImplTest {
 
     @Test
     @DisplayName("Should return active orders when found")
-    void givenActiveOrderStatusList_whenFindActiveOrdersSorted_thenReturnOrdersList() {
+    void givenActiveOrderStatusListAndPagination_whenFindActiveOrdersSorted_thenReturnOrdersList() {
         // Arrange
-        List<OrderStatus> activeOrderStatusList = List.of(
+        Set<OrderStatus> activeOrderStatusList = Set.of(
             OrderStatus.DONE,
             OrderStatus.IN_PREPARATION,
             OrderStatus.RECEIVED
         );
+        Pagination pagination = new Pagination(0, 10);
 
         OrderEntity orderEntity1 = buildOrderEntity(UUID.randomUUID(), OrderStatus.RECEIVED);
         OrderEntity orderEntity2 = buildOrderEntity(UUID.randomUUID(), OrderStatus.IN_PREPARATION);
@@ -96,12 +100,12 @@ class OrderRepositoryImplTest {
         OrderItemEntity orderItemEntity1 = buildOrderItemEntity(orderEntity1.getId(), "Product 1");
         OrderItemEntity orderItemEntity2 = buildOrderItemEntity(orderEntity2.getId(), "Product 2");
 
-        when(orderJpaRepository.findActiveOrdersSorted(activeOrderStatusList)).thenReturn(orderEntities);
+        when(orderJpaRepository.findActiveOrdersSorted(any(), any(Pageable.class))).thenReturn(orderEntities);
         when(orderItemJpaRepository.findByOrderId(orderEntity1.getId())).thenReturn(List.of(orderItemEntity1));
         when(orderItemJpaRepository.findByOrderId(orderEntity2.getId())).thenReturn(List.of(orderItemEntity2));
 
         // Act
-        List<Order> result = orderRepositoryImpl.findActiveOrdersSorted(activeOrderStatusList);
+        List<Order> result = orderRepositoryImpl.findActiveOrdersSorted(activeOrderStatusList, pagination);
 
         // Assert
         assertNotNull(result);
@@ -117,30 +121,31 @@ class OrderRepositoryImplTest {
         assertEquals(1, result.get(1).getOrderItems().size());
         assertEquals("Product 2", result.get(1).getOrderItems().getFirst().getName());
 
-        verify(orderJpaRepository, times(1)).findActiveOrdersSorted(activeOrderStatusList);
+        verify(orderJpaRepository, times(1)).findActiveOrdersSorted(any(), any(Pageable.class));
         verify(orderItemJpaRepository, times(1)).findByOrderId(orderEntity1.getId());
         verify(orderItemJpaRepository, times(1)).findByOrderId(orderEntity2.getId());
     }
 
     @Test
     @DisplayName("Should return empty list when no active orders found")
-    void givenActiveOrderStatusList_whenFindActiveOrdersSortedWithNoResults_thenReturnEmptyList() {
+    void givenActiveOrderStatusListAndPagination_whenFindActiveOrdersSortedWithNoResults_thenReturnEmptyList() {
         // Arrange
-        List<OrderStatus> activeOrderStatusList = List.of(
+        Set<OrderStatus> activeOrderStatusList = Set.of(
             OrderStatus.DONE,
             OrderStatus.IN_PREPARATION,
             OrderStatus.RECEIVED
         );
+        Pagination pagination = new Pagination(0, 10);
 
-        when(orderJpaRepository.findActiveOrdersSorted(activeOrderStatusList)).thenReturn(List.of());
+        when(orderJpaRepository.findActiveOrdersSorted(any(), any(Pageable.class))).thenReturn(List.of());
 
         // Act
-        List<Order> result = orderRepositoryImpl.findActiveOrdersSorted(activeOrderStatusList);
+        List<Order> result = orderRepositoryImpl.findActiveOrdersSorted(activeOrderStatusList, pagination);
 
         // Assert
         assertNotNull(result);
         assertEquals(0, result.size());
-        verify(orderJpaRepository, times(1)).findActiveOrdersSorted(activeOrderStatusList);
+        verify(orderJpaRepository, times(1)).findActiveOrdersSorted(any(), any(Pageable.class));
     }
 
     private OrderEntity buildOrderEntity(UUID orderId, OrderStatus status) {

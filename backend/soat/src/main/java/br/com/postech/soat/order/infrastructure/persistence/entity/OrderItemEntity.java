@@ -35,7 +35,7 @@ public class OrderItemEntity {
     @Column(name = "product_quantity", nullable = false)
     private Integer productQuantity;
 
-    @Column(name = "product_category")
+    @Column(name = "product_category", nullable = false)
     private String productCategory;
 
     @Column(name = "unit_price", nullable = false, precision = 18, scale = 4)
@@ -51,8 +51,4 @@ public class OrderItemEntity {
     @Column(name = "updated_at")
     @UpdateTimestamp
     private Instant updatedAt;
-
-    public String getProductCategory() {
-        return productCategory != null ? productCategory : "OTHER"; // Legacy data treatment
-    }
 }

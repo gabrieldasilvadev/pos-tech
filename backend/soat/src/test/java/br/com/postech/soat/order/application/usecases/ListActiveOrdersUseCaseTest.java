@@ -1,10 +1,12 @@
 package br.com.postech.soat.order.application.usecases;
 
+import br.com.postech.soat.commons.application.Pagination;
 import br.com.postech.soat.order.application.repositories.OrderRepository;
 import br.com.postech.soat.order.domain.entity.Order;
 import br.com.postech.soat.order.domain.entity.OrderStatus;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,31 +30,61 @@ class ListActiveOrdersUseCaseTest {
     @InjectMocks
     private ListActiveOrdersUseCase listActiveOrdersUseCase;
     
-    private final List<OrderStatus> activeOrderStatusList = OrderStatus.activeOrderStatusList();
+    private final Set<OrderStatus> activeOrderStatusList = OrderStatus.activeOrderStatusList();
 
     @Test
     @DisplayName("Should return active orders sorted by priority and creation date")
     void givenActiveOrders_whenExecute_thenReturnOrdersSorted() {
+        // Arrange
+        Pagination pagination = new Pagination(0, 10);
         List<Order> expectedOrders = createMockOrders();
-        when(orderRepository.findActiveOrdersSorted(activeOrderStatusList)).thenReturn(expectedOrders);
+        when(orderRepository.findActiveOrdersSorted(activeOrderStatusList, pagination)).thenReturn(expectedOrders);
 
-        List<Order> result = listActiveOrdersUseCase.execute();
+        // Act
+        List<Order> result = listActiveOrdersUseCase.execute(pagination);
 
+        // Assert
         assertNotNull(result);
         assertEquals(2, result.size());
-        verify(orderRepository).findActiveOrdersSorted(activeOrderStatusList);
+        verify(orderRepository).findActiveOrdersSorted(activeOrderStatusList, pagination);
     }
 
     @Test
     @DisplayName("Should return empty list when no active orders found")
     void givenNoActiveOrders_whenExecute_thenReturnEmptyList() {
-        when(orderRepository.findActiveOrdersSorted(activeOrderStatusList)).thenReturn(List.of());
+        // Arrange
+        Pagination pagination = new Pagination(0, 10);
+        when(orderRepository.findActiveOrdersSorted(activeOrderStatusList, pagination)).thenReturn(List.of());
 
-        List<Order> result = listActiveOrdersUseCase.execute();
+        // Act
+        List<Order> result = listActiveOrdersUseCase.execute(pagination);
 
+        // Assert
         assertNotNull(result);
         assertTrue(result.isEmpty());
-        verify(orderRepository).findActiveOrdersSorted(activeOrderStatusList);
+        verify(orderRepository).findActiveOrdersSorted(activeOrderStatusList, pagination);
+    }
+
+    @Test
+    @DisplayName("Should handle different pagination parameters correctly")
+    void givenDifferentPaginationParams_whenExecute_thenPassCorrectParametersToRepository() {
+        // Arrange
+        Pagination pagination1 = new Pagination(1, 5);
+        Pagination pagination2 = new Pagination(2, 20);
+        List<Order> expectedOrders = createMockOrders();
+        
+        when(orderRepository.findActiveOrdersSorted(activeOrderStatusList, pagination1)).thenReturn(expectedOrders);
+        when(orderRepository.findActiveOrdersSorted(activeOrderStatusList, pagination2)).thenReturn(List.of());
+
+        // Act
+        List<Order> result1 = listActiveOrdersUseCase.execute(pagination1);
+        List<Order> result2 = listActiveOrdersUseCase.execute(pagination2);
+
+        // Assert
+        assertEquals(2, result1.size());
+        assertEquals(0, result2.size());
+        verify(orderRepository).findActiveOrdersSorted(activeOrderStatusList, pagination1);
+        verify(orderRepository).findActiveOrdersSorted(activeOrderStatusList, pagination2);
     }
 
     private List<Order> createMockOrders() {

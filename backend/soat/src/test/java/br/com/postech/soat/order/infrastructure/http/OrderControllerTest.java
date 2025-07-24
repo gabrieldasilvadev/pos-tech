@@ -76,7 +76,7 @@ class OrderControllerTest {
         );
 
         Order createdOrder = Order.receive(
-            new br.com.postech.soat.customer.domain.valueobject.CustomerId(customerId),
+            new CustomerId(customerId),
             List.of(orderItem),
             new ArrayList<>(),
             new ArrayList<>()
@@ -121,10 +121,10 @@ class OrderControllerTest {
         Order order = Order.receive(customerId, orderItems, new ArrayList<>(), new ArrayList<>());
         List<Order> orders = List.of(order);
 
-        when(orderRepository.findActiveOrdersSorted(OrderStatus.activeOrderStatusList())).thenReturn(orders);
+        when(orderRepository.findActiveOrdersSorted(any(), any())).thenReturn(orders);
 
         // Act
-        ResponseEntity<List<GetOrders200ResponseInnerDto>> response = orderController.getOrders();
+        ResponseEntity<List<GetOrders200ResponseInnerDto>> response = orderController.getOrders(0, 10);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -145,12 +145,77 @@ class OrderControllerTest {
     @DisplayName("Should return no content when no active orders are found")
     void givenNoActiveOrders_whenGetOrders_thenReturnNoContent() {
         // Arrange
-        when(orderRepository.findActiveOrdersSorted(OrderStatus.activeOrderStatusList())).thenReturn(List.of());
+        when(orderRepository.findActiveOrdersSorted(any(), any())).thenReturn(List.of());
 
         // Act
-        ResponseEntity<List<GetOrders200ResponseInnerDto>> response = orderController.getOrders();
+        ResponseEntity<List<GetOrders200ResponseInnerDto>> response = orderController.getOrders(0, 10);
 
         // Assert
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Should return active orders with pagination parameters when orders are found")
+    void givenActiveOrdersAndPaginationParams_whenGetOrders_thenReturnOrdersListWithPagination() {
+        // Arrange
+        CustomerId customerId = new CustomerId(UUID.randomUUID());
+        Discount discount = new Discount(BigDecimal.ZERO);
+        OrderItem orderItem = new OrderItem(
+            UUID.randomUUID(),
+            "Test Product",
+            2,
+            new BigDecimal("15.50"),
+            "SNACK",
+            discount
+        );
+
+        List<OrderItem> orderItems = List.of(orderItem);
+        Order order = Order.receive(customerId, orderItems, new ArrayList<>(), new ArrayList<>());
+        List<Order> orders = List.of(order);
+
+        when(orderRepository.findActiveOrdersSorted(any(), any())).thenReturn(orders);
+
+        // Act
+        ResponseEntity<List<GetOrders200ResponseInnerDto>> response = orderController.getOrders(1, 5);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(1, response.getBody().size());
+
+        GetOrders200ResponseInnerDto responseDto = response.getBody().getFirst();
+        assertEquals(order.getId().getValue(), responseDto.getOrderId());
+        assertEquals(order.getCustomerId().value(), responseDto.getCustomerId());
+        assertEquals(order.getTotalPrice().doubleValue(), responseDto.getTotal());
+    }
+
+    @Test
+    @DisplayName("Should use default pagination when no parameters provided")
+    void givenNoParams_whenGetOrders_thenUseDefaultPagination() {
+        // Arrange
+        CustomerId customerId = new CustomerId(UUID.randomUUID());
+        Discount discount = new Discount(BigDecimal.ZERO);
+        OrderItem orderItem = new OrderItem(
+            UUID.randomUUID(),
+            "Test Product",
+            1,
+            new BigDecimal("10.00"),
+            "SNACK",
+            discount
+        );
+
+        List<OrderItem> orderItems = List.of(orderItem);
+        Order order = Order.receive(customerId, orderItems, new ArrayList<>(), new ArrayList<>());
+        List<Order> orders = List.of(order);
+
+        when(orderRepository.findActiveOrdersSorted(any(), any())).thenReturn(orders);
+
+        // Act - Using default parameters (0, 10)
+        ResponseEntity<List<GetOrders200ResponseInnerDto>> response = orderController.getOrders(0, 10);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(1, response.getBody().size());
     }
 }

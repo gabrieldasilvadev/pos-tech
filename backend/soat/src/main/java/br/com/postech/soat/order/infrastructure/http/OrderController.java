@@ -1,5 +1,6 @@
 package br.com.postech.soat.order.infrastructure.http;
 
+import br.com.postech.soat.commons.application.Pagination;
 import br.com.postech.soat.openapi.api.OrderApi;
 import br.com.postech.soat.openapi.model.GetOrders200ResponseInnerDto;
 import br.com.postech.soat.openapi.model.PostOrders201ResponseDto;
@@ -16,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -32,18 +34,22 @@ public class OrderController implements OrderApi {
     }
 
     @Override
-    public ResponseEntity<List<GetOrders200ResponseInnerDto>> getOrders() {
-        logger.info("Retrieving active orders list");
-        final List<Order> orders = listActiveOrdersUseCase.execute();
-        
+    public ResponseEntity<List<GetOrders200ResponseInnerDto>> getOrders(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size) {
+        logger.info("Retrieving active orders list with pagination - page: {}, size: {}", page, size);
+
+        final Pagination pagination = new Pagination(page, size);
+        final List<Order> orders = listActiveOrdersUseCase.execute(pagination);
+
         if (orders.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        
+
         final List<GetOrders200ResponseInnerDto> response = orders.stream()
             .map(OrderResponseMapper.INSTANCE::toListResponse)
             .toList();
-            
+
         return ResponseEntity.ok(response);
     }
 
