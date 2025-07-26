@@ -124,6 +124,12 @@ http://0.0.0.0:8080/health
 http://0.0.0.0:8080/swagger-ui/index.html
 ```
 
+### Arquitetura da infraestrutura
+
+<div align="center">
+    <img src="./docs/images/infra_kubernetes.png"width="60%">
+</div>
+
 ### Executando o app com o minikube localmente
 
 Primeiro precisamos instalar o minikube conforme o sistema operacional, para isso siga as [instruções de instalação na documentação](https://minikube.sigs.k8s.io/docs/start/?arch=%2Fmacos%2Farm64%2Fstable%2Fbinary+download)
