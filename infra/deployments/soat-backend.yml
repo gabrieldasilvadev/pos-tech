@@ -41,10 +41,10 @@ spec:
             httpGet:
               path: /health
               port: 8080
-            failureThreshold: 30
-            timeoutSeconds: 1
-            periodSeconds: 2
-            initialDelaySeconds: 0
+            failureThreshold: 60
+            timeoutSeconds: 5
+            periodSeconds: 5
+            initialDelaySeconds: 30
           readinessProbe:
             httpGet:
               path: /health

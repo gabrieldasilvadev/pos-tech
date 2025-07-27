@@ -126,62 +126,111 @@ http://0.0.0.0:8080/swagger-ui/index.html
 
 ### Arquitetura da infraestrutura
 
-<div align="center">
-    <img src="./docs/images/infra_kubernetes.png"width="60%">
+<div style="text-align: center;">
+    <img 
+        src="./docs/images/infra_kubernetes.png" 
+        width="60%" 
+        alt="Diagrama da arquitetura de infraestrutura Kubernetes com backend Spring Boot e banco de dados PostgreSQL."
+    >
 </div>
 
 ### Executando o app com o minikube localmente
+> Comandos realizados utilizando o Windows + Powershell (administrador) e driver sendo o Docker Desktop
 
 Primeiro precisamos instalar o minikube conforme o sistema operacional, para isso siga as [instruções de instalação na documentação](https://minikube.sigs.k8s.io/docs/start/?arch=%2Fmacos%2Farm64%2Fstable%2Fbinary+download)
 
-##### Feito isso, inicie o minikube
+#### Iniciar o software do Docker Desktop
+
+#### Iniciar o Minikube com driver Docker
 
 ```sh
-minikube start
+minikube start --driver=docker
 ```
 
-##### Também podemos habilitar as métricas do minikube, mas esse passo é opcional
+#### Habilitar o Metrics Server (necessário para o HPA funcionar)
 
 ```sh
 minikube addons enable metrics-server
 ```
 
-##### Agora precisamos fazer o build atualizado da última versão da aplicação
+#### Configurar o ambiente Docker para usar o daemon interno do Minikube
 
 ```sh
-docker build -t soat ./backend/soat
+& minikube -p minikube docker-env | Invoke-Expression
 ```
 
-##### O minikube, por padrão, não consegue acessar as imagens no nosso host, então precisamos carrega-las dentro do minikube
+#### Construir a imagem Docker da aplicação backend
 
 ```sh
-minikube image load soat:latest
+docker build -t soat:latest ./backend/soat
 ```
 
-##### Feito isso, podemos carregar todos os arquivos de configuração de uma só vez com o comando abaixo
+#### Aplicar os manifests do Kubernetes na ordem correta
+> Os comandos a seguir estão levando em conta a pasta raiz do projeto
+#### Namespace
 
 ```sh
-kubectl apply -R -f ./infra/
+kubectl apply -f ./infra/namespace.yml
 ```
 
-##### Para expor uma porta do minikube para o nosso host e possibilitar o acesso, executamos o comando abaixo
+#### Volumes persistentes para o banco de dados PostgreSQL
+
+```sh
+kubectl apply -f ./infra/volumes/soat-postgres.yml
+```
+
+#### Configurações e segredos do banco de dados PostgreSQL
+
+```sh
+kubectl apply -f ./infra/secrets/soat-postgres.yml
+kubectl apply -f ./infra/configmaps/soat-postgres.yml
+```
+
+#### Serviço e Deployment do banco de dados PostgreSQL
+
+```sh
+kubectl apply -f ./infra/services/soat-postgres.yml
+kubectl apply -f ./infra/deployments/soat-postgres.yml
+```
+
+#### Espere o pod do postgres ficar READY
+
+```sh
+kubectl get pods -n soat -w
+```
+
+#### Configurações e segredos do backend
+
+```sh
+kubectl apply -f ./infra/secrets/soat-backend.yml
+kubectl apply -f ./infra/configmaps/soat-backend.yml
+```
+
+#### Deployment e Service do backend
+
+```sh
+kubectl apply -f ./infra/deployments/soat-backend.yml
+kubectl apply -f ./infra/services/soat-backend.yml
+```
+
+#### HPA para autoescalonamento do backend
+
+```sh
+kubectl apply -f ./infra/hpas/soat-backend.yml
+```
+
+#### Acessar o serviço exposto no Minikube
 
 ```sh
 minikube service soat-backend -n soat
 ```
 
-> No exemplo abaixo o acesso a aplicação está liberada no endereço **http://127.0.0.1:50189**
+> No exemplo abaixo, o acesso a aplicação está liberada no endereço **http://127.0.0.1:54754**
 
-<div align="center">
-    <img src="./docs/images/minikube_service.png"width="60%">
+<div style="text-align: center;">
+    <img 
+        src="docs/images/minikube_service.png" 
+        width="60%"
+        alt="Porta exposta pelo minikube"
+    >
 </div>
-
-##### Opcionalmente também podemos fazer um redirecionamento de porta.
-
-```sh
-kubectl port-forward service/soat-backend 8080:8080 -n soat
-```
-
-##### Para forçar a aplicação escalar o número de pods, podemos usar o comando abaixo
-
-while true; do curl -X 'GET' 'http://127.0.0.1:8080/products' -H 'accept: application/json'; sleep 0.2; done
