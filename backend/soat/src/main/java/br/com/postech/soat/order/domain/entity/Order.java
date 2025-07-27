@@ -25,6 +25,18 @@ public class Order extends AggregateRoot<OrderId> {
         super(orderId);
     }
 
+    public Order(OrderId orderId, CustomerId customerId, OrderStatus status,
+                 BigDecimal totalPrice, BigDecimal discountAmount, List<Observation> observations,
+                 List<OrderItem> orderItems) {
+        super(orderId);
+        this.customerId = customerId;
+        this.status = status;
+        this.totalPrice = totalPrice;
+        this.discountAmount = discountAmount;
+        this.observations = observations;
+        this.orderItems = orderItems;
+    }
+
     public static Order receive(CustomerId customerId,
                                 List<OrderItem> orderItems,
                                 List<Discount> discounts,
