@@ -35,6 +35,9 @@ public class OrderItemEntity {
     @Column(name = "product_quantity", nullable = false)
     private Integer productQuantity;
 
+    @Column(name = "product_category", nullable = false)
+    private String productCategory;
+
     @Column(name = "unit_price", nullable = false, precision = 18, scale = 4)
     private BigDecimal unitPrice;
 
