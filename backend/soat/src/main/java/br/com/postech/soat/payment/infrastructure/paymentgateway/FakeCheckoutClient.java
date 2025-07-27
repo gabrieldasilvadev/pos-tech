@@ -2,8 +2,8 @@ package br.com.postech.soat.payment.infrastructure.paymentgateway;
 
 import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;
 import br.com.postech.soat.payment.domain.entity.Payment;
-import br.com.postech.soat.payment.domain.valueobject.PaymentId;
 import br.com.postech.soat.payment.domain.entity.PaymentStatus;
+import br.com.postech.soat.payment.domain.valueobject.PaymentId;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,12 +12,14 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 @Monitorable
-public class FakeCheckoutClient {
+@Profile("fakeCheckoutClient")
+public class FakeCheckoutClient implements CheckoutClient {
 
     private final Logger logger = LoggerFactory.getLogger(FakeCheckoutClient.class);
     private final Map<String, Payment> paymentStore = new ConcurrentHashMap<>();
