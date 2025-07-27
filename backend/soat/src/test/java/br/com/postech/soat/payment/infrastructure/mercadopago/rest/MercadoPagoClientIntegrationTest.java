@@ -6,6 +6,7 @@ import br.com.postech.soat.payment.domain.entity.Payment;
 import br.com.postech.soat.payment.domain.entity.PaymentMethod;
 import br.com.postech.soat.payment.infrastructure.paymentgateway.MercadoPagoClient;
 import com.mercadopago.MercadoPagoConfig;
+import com.mercadopago.client.payment.PaymentClient;
 
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
@@ -50,9 +51,8 @@ class MercadoPagoClientIntegrationTest {
     @DisplayName("Should parse ticket url from Mercado Pago response")
     void shouldParseTicketUrlFromResponse() throws MPException, MPApiException {
         MercadoPagoConfig.setAccessToken("test-token");
-        MercadoPagoConfig.setHttpClient(new FakeMPHttpClient(201, PAYMENT_RESPONSE));
-
-        MercadoPagoClient client = new MercadoPagoClient();
+        PaymentClient paymentClient = new PaymentClient(new FakeMPHttpClient(201, PAYMENT_RESPONSE));
+        MercadoPagoClient client = new MercadoPagoClient(paymentClient);
         String ticketUrl = client.createPayment(payment);
         Assertions.assertEquals("https://www.mercadopago.com/mlb/payments/ticket?foo=bar", ticketUrl);
     }
@@ -61,10 +61,10 @@ class MercadoPagoClientIntegrationTest {
     @DisplayName("Should throw MPApiException on error response")
     void shouldThrowExceptionOnErrorResponse() {
         MercadoPagoConfig.setAccessToken("test-token");
-        MercadoPagoConfig.setHttpClient(new FakeMPHttpClient(400, "{\"message\":\"error\"}"));
-
-        MercadoPagoClient client = new MercadoPagoClient();
-        Assertions.assertThrows(MPApiException.class, () -> client.createPayment(payment));
+        PaymentClient paymentClient = new PaymentClient(new FakeMPHttpClient(400, "{\"message\":\"error\"}"));
+        MercadoPagoClient client = new MercadoPagoClient(paymentClient);
+        RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> client.createPayment(payment));
+        Assertions.assertTrue(thrown.getCause() instanceof MPApiException);
     }
 
     static class FakeMPHttpClient implements MPHttpClient {
