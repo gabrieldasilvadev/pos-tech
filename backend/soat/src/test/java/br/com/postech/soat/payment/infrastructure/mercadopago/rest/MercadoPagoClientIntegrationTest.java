@@ -6,7 +6,7 @@ import br.com.postech.soat.payment.domain.entity.Payment;
 import br.com.postech.soat.payment.domain.entity.PaymentMethod;
 import br.com.postech.soat.payment.infrastructure.paymentgateway.MercadoPagoClient;
 import com.mercadopago.MercadoPagoConfig;
-import com.mercadopago.client.payment.PaymentClient;
+
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
 import com.mercadopago.net.MPHttpClient;
@@ -24,14 +24,14 @@ class MercadoPagoClientIntegrationTest {
 
     private static final String PAYMENT_RESPONSE = """
         {
-          \"id\": 123456789,
-          \"status\": \"approved\",
-          \"status_detail\": \"accredited\",
-          \"payment_method_id\": \"pix\",
-          \"point_of_interaction\": {
-            \"transaction_data\": {
-              \"ticket_url\": \"https://www.mercadopago.com/mlb/payments/ticket?foo=bar\",
-              \"qr_code\": \"00020101021226820014br.gov.bcb.pix...\"
+          "id": 123456789,
+          "status": "approved",
+          "status_detail": "accredited",
+          "payment_method_id": "pix",
+          "point_of_interaction": {
+            "transaction_data": {
+              "ticket_url": "https://www.mercadopago.com/mlb/payments/ticket?foo=bar",
+              "qr_code": "00020101021226820014br.gov.bcb.pix..."
             }
           }
         }
@@ -61,7 +61,7 @@ class MercadoPagoClientIntegrationTest {
     @DisplayName("Should throw MPApiException on error response")
     void shouldThrowExceptionOnErrorResponse() {
         MercadoPagoConfig.setAccessToken("test-token");
-        MercadoPagoConfig.setHttpClient(new FakeMPHttpClient(400, "{\\"message\\":\\"error\\"}"));
+        MercadoPagoConfig.setHttpClient(new FakeMPHttpClient(400, "{\"message\":\"error\"}"));
 
         MercadoPagoClient client = new MercadoPagoClient();
         Assertions.assertThrows(MPApiException.class, () -> client.createPayment(payment));
@@ -75,7 +75,7 @@ class MercadoPagoClientIntegrationTest {
             this.body = body;
         }
         @Override
-        public MPResponse send(MPRequest request) throws MPException, MPApiException {
+        public MPResponse send(MPRequest request) throws MPApiException {
             MPResponse response = new MPResponse(status, Collections.emptyMap(), body);
             if (status >= 300) {
                 throw new MPApiException("error", response);
