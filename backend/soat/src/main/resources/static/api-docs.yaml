@@ -229,6 +229,32 @@ paths:
       servers:
         - url: 'http://localhost:8080'
           description: Localhost
+  '/payments/{paymentId}/status':
+    get:
+      tags:
+        - Payment
+      summary: Consultar status do pagamento
+      description: |-
+        Este endpoint permite consultar apenas o status de uma transação de pagamento.
+        É uma versão otimizada para verificação rápida do status sem retornar todos os detalhes do pagamento.
+      operationId: get-payments-paymentId-status
+      parameters:
+        - name: paymentId
+          in: path
+          description: Identificador único da transação de pagamento gerada durante o processo de checkout.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/PaymentStatusResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ErrorResponse'
+      servers:
+        - url: 'http://localhost:8080'
+          description: Localhost
 tags:
   - name: Customer
     description: Operações relacionadas a clientes
@@ -593,6 +619,26 @@ components:
                 amount: 1946.32
                 paymentStatus: APPROVED
                 processedAt: '2025-05-20T00:00:00Z'
+    PaymentStatusResponse:
+      description: Representa o status atual de uma transação de pagamento de forma simplificada.
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              paymentId:
+                $ref: '#/components/schemas/UUID'
+              status:
+                $ref: '#/components/schemas/PaymentStatus'
+            required:
+              - paymentId
+              - status
+          examples:
+            Example 1:
+              value:
+                paymentId: 241fae7b-0210-4d29-a928-90653c9a9a89
+                status: APPROVED
     Product200ListResponse:
       description: Example response
       content:
