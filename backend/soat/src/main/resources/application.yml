@@ -15,6 +15,9 @@ spring:
     enabled: true
     baseline-on-migrate: true
     placeholder-replacement: false
+  profiles:
+    active:
+      - fakeCheckoutClient
 
 server:
   error:
@@ -27,3 +30,8 @@ management:
   endpoints:
     web:
       base-path: /
+
+app:
+  payment-gateway:
+    mercadopago:
+      access-token: ${MERCADO_PAGO_ACCESS_TOKEN:accesstoken}
