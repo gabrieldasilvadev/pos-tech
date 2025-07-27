@@ -21,12 +21,8 @@ public class MercadoPagoAdapter implements PaymentGateway {
     public GatewayOperationResult processPayment(Payment payment) {
         logger.info("Processing payment with MercadoPagoAdapter for payment ID: {}", payment.getId());
         String paymentProcessed;
-        try {
-            paymentProcessed = checkoutClient.createPayment(payment);
-        } catch (Exception e) {
-            logger.error("Payment processing failed for payment ID: {}", payment.getId());
-            return GatewayOperationResult.FAILURE;
-        }
+
+        paymentProcessed = checkoutClient.createPayment(payment);
 
         if (Objects.isNull(paymentProcessed) || paymentProcessed.trim().isEmpty()) {
             logger.error("Payment processing failed for payment ID: {}", payment.getId());

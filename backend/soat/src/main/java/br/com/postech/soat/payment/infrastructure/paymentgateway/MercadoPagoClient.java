@@ -21,7 +21,7 @@ public class MercadoPagoClient implements CheckoutClient {
     private String payerEmail;
 
     @Override
-    public String createPayment(Payment payment) throws MPException, MPApiException {
+    public String createPayment(Payment payment) {
         logger.info("Creating payment with ID: {}", payment.getId());
         PaymentClient paymentClient = new PaymentClient();
         final PaymentCreateRequest paymentRequest = PaymentCreateRequest.builder()
@@ -32,8 +32,14 @@ public class MercadoPagoClient implements CheckoutClient {
             .payer(PaymentPayerRequest.builder().email(payerEmail).build())
             .build();
 
-            final com.mercadopago.resources.payment.Payment mercadoPagoPaymentResult = paymentClient.create(paymentRequest);
-            logger.info("Payment created successfully with ID: {}", mercadoPagoPaymentResult.getId());
+        final com.mercadopago.resources.payment.Payment mercadoPagoPaymentResult;
+        try {
+            mercadoPagoPaymentResult = paymentClient.create(paymentRequest);
+        } catch (MPException |MPApiException e) {
+            logger.error("Payment creation failed for payment ID: {}", payment.getId(), e);
+            return null;
+        }
+        logger.info("Payment created successfully with ID: {}", mercadoPagoPaymentResult.getId());
             return mercadoPagoPaymentResult.getPointOfInteraction().getTransactionData().getTicketUrl();
     }
 }
