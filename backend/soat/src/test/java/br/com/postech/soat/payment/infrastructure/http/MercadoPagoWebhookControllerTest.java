@@ -1,8 +1,7 @@
-package br.com.postech.soat.payment.infrastructure.mercadopago.rest;
+package br.com.postech.soat.payment.infrastructure.http;
 
 import br.com.postech.soat.payment.application.usecases.ProcessPaymentNotificationUseCase;
 import br.com.postech.soat.payment.domain.valueobject.PaymentId;
-import br.com.postech.soat.payment.infrastructure.http.MercadoPagoWebhookController;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

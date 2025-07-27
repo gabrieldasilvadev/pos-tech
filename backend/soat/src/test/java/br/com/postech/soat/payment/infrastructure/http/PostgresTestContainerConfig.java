@@ -1,4 +1,4 @@
-package br.com.postech.soat.payment.infrastructure.mercadopago.rest;
+package br.com.postech.soat.payment.infrastructure.http;
 
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
