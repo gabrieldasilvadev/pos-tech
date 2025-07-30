@@ -4,7 +4,7 @@ import br.com.postech.soat.commons.infrastructure.aop.monitorable.Monitorable;
 import br.com.postech.soat.payment.application.repositories.PaymentRepository;
 import br.com.postech.soat.payment.domain.entity.Payment;
 import br.com.postech.soat.payment.domain.valueobject.PaymentId;
-import br.com.postech.soat.payment.infrastructure.paymentgateway.FakeCheckoutClient;
+import br.com.postech.soat.payment.infrastructure.paymentgateway.CheckoutClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ProcessPaymentNotificationUseCase {
   private final PaymentRepository paymentRepository;
-  private final FakeCheckoutClient fakeCheckoutClient;
+  private final CheckoutClient checkoutClient;
 
   public void execute(PaymentId paymentId) {
 
-    final String paymentProcessed = fakeCheckoutClient.getPaymentDetails(paymentId);
+    final String paymentProcessed = checkoutClient.getPaymentDetails(paymentId);
     if (paymentProcessed == null || paymentProcessed.trim().isEmpty()) {
       throw new RuntimeException("Failed to process payment notification");
     }
