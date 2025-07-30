@@ -36,11 +36,8 @@ public class InitiatePaymentUseCase {
             return payment.getId();
         }
 
-        if (result.equals(GatewayOperationResult.SUCCESS)) {
-            payment.approve();
-            paymentRepository.save(payment);
-            logger.info("Payment processed successfully for payment ID: {}", payment.getId());
-        }
+        logger.info("Payment processed successfully for payment ID: {}", payment.getId());
+        paymentRepository.save(payment);
 
         return payment.getId();
     }

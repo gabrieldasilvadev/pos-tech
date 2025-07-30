@@ -1,6 +1,7 @@
 package br.com.postech.soat.payment.infrastructure.paymentgateway;
 
 import br.com.postech.soat.payment.domain.entity.Payment;
+import br.com.postech.soat.payment.domain.valueobject.PaymentId;
 import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.payment.PaymentCreateRequest;
 import com.mercadopago.client.payment.PaymentPayerRequest;
@@ -25,7 +26,6 @@ public class MercadoPagoClient implements CheckoutClient {
         this(new PaymentClient());
     }
 
-    // Construtor para injeção de mock nos testes
     public MercadoPagoClient(PaymentClient paymentClient) {
         this.paymentClient = paymentClient;
     }
@@ -50,5 +50,10 @@ public class MercadoPagoClient implements CheckoutClient {
         }
         logger.info("Payment created successfully with ID: {}", mercadoPagoPaymentResult.getId());
             return mercadoPagoPaymentResult.getPointOfInteraction().getTransactionData().getTicketUrl();
+    }
+
+    @Override
+    public String getPaymentDetails(PaymentId paymentId) {
+        return "processed";
     }
 }
