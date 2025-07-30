@@ -76,6 +76,14 @@ public class Payment extends AggregateRoot<PaymentId> {
         this.processedAt = Instant.now();
     }
 
+    public void decline() {
+        if (this.status != PaymentStatus.PENDING) {
+            throw new IllegalStateException("Payment cannot be declined from status " + this.status);
+        }
+        this.status = PaymentStatus.DECLINED;
+        this.processedAt = Instant.now();
+    }
+
     public void finish() {
         if (!this.status.equals(PaymentStatus.APPROVED)) {
             throw new IllegalStateException("Payment cannot be finished from status " + this.status);

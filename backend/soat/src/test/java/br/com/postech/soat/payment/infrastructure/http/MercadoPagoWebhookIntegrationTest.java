@@ -1,17 +1,17 @@
-package br.com.postech.soat.payment.infrastructure.mercadopago.rest;
+package br.com.postech.soat.payment.infrastructure.http;
 
 import br.com.postech.soat.customer.domain.valueobject.CustomerId;
 import br.com.postech.soat.order.domain.valueobject.OrderId;
+import br.com.postech.soat.payment.application.repositories.PaymentRepository;
 import br.com.postech.soat.payment.domain.entity.Payment;
-import br.com.postech.soat.payment.domain.valueobject.PaymentId;
 import br.com.postech.soat.payment.domain.entity.PaymentMethod;
 import br.com.postech.soat.payment.domain.entity.PaymentStatus;
-import br.com.postech.soat.payment.application.repositories.PaymentRepository;
+import br.com.postech.soat.payment.domain.valueobject.PaymentId;
 import br.com.postech.soat.payment.infrastructure.paymentgateway.CheckoutClient;
+import br.com.postech.soat.product.application.adapters.LoggerPort;
+import br.com.postech.soat.product.infrastructure.LoggerAdapter;
 import java.math.BigDecimal;
 import java.util.UUID;
-import br.com.postech.soat.product.infrastructure.LoggerAdapter;
-import br.com.postech.soat.product.application.adapters.LoggerPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,11 +24,11 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -41,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ActiveProfiles("test")
 @DisplayName("MercadoPago Webhook Integration Tests")
 class MercadoPagoWebhookIntegrationTest extends PostgresTestContainerConfig {
+
     @TestConfiguration
     static class ExcludeMockControllersConfig {
 

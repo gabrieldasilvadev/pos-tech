@@ -35,12 +35,12 @@ class ProcessPaymentNotificationUseCaseTest {
     private ProcessPaymentNotificationUseCase service;
 
     @Test
-    @DisplayName("Should process payment notification successfully")
-    void shouldHandleSuccessfully() {
+    @DisplayName("Should process approved payment notification successfully")
+    void shouldHandleApprovedPaymentSuccessfully() {
         PaymentId paymentId = PaymentId.of(UUID.randomUUID());
         Payment payment = mock(Payment.class);
 
-        when(fakeCheckoutClient.getPaymentDetails(paymentId)).thenReturn("Payment details");
+        when(fakeCheckoutClient.getPaymentDetails(paymentId)).thenReturn("Payment details for ID: uuid, Status: APPROVED, Amount: 100.0");
         when(paymentRepository.findById(paymentId)).thenReturn(payment);
 
         service.execute(paymentId);
@@ -73,5 +73,73 @@ class ProcessPaymentNotificationUseCaseTest {
         verify(fakeCheckoutClient, times(1)).getPaymentDetails(paymentId);
         verify(paymentRepository, never()).findById(any());
         verify(paymentRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Should process declined payment notification successfully")
+    void shouldHandleDeclinedPaymentSuccessfully() {
+        PaymentId paymentId = PaymentId.of(UUID.randomUUID());
+        Payment payment = mock(Payment.class);
+
+        when(fakeCheckoutClient.getPaymentDetails(paymentId)).thenReturn("Payment details for ID: uuid, Status: DECLINED, Amount: 100.0");
+        when(paymentRepository.findById(paymentId)).thenReturn(payment);
+
+        service.execute(paymentId);
+
+        verify(fakeCheckoutClient, times(1)).getPaymentDetails(paymentId);
+        verify(paymentRepository, times(1)).findById(paymentId);
+        verify(payment, times(1)).decline();
+        verify(paymentRepository, times(1)).save(payment);
+    }
+
+    @Test
+    @DisplayName("Should process failed payment notification successfully")
+    void shouldHandleFailedPaymentSuccessfully() {
+        PaymentId paymentId = PaymentId.of(UUID.randomUUID());
+        Payment payment = mock(Payment.class);
+
+        when(fakeCheckoutClient.getPaymentDetails(paymentId)).thenReturn("Payment details for ID: uuid, Status: FAILED, Amount: 100.0");
+        when(paymentRepository.findById(paymentId)).thenReturn(payment);
+
+        service.execute(paymentId);
+
+        verify(fakeCheckoutClient, times(1)).getPaymentDetails(paymentId);
+        verify(paymentRepository, times(1)).findById(paymentId);
+        verify(payment, times(1)).fail();
+        verify(paymentRepository, times(1)).save(payment);
+    }
+
+    @Test
+    @DisplayName("Should default to approved for unknown payment status")
+    void shouldDefaultToApprovedForUnknownPaymentStatus() {
+        PaymentId paymentId = PaymentId.of(UUID.randomUUID());
+        Payment payment = mock(Payment.class);
+
+        when(fakeCheckoutClient.getPaymentDetails(paymentId)).thenReturn("Payment details for ID: uuid, Status: UNKNOWN, Amount: 100.0");
+        when(paymentRepository.findById(paymentId)).thenReturn(payment);
+
+        service.execute(paymentId);
+
+        verify(fakeCheckoutClient, times(1)).getPaymentDetails(paymentId);
+        verify(paymentRepository, times(1)).findById(paymentId);
+        verify(payment, times(1)).finish(); // Should default to approved/finish for unknown statuses
+        verify(paymentRepository, times(1)).save(payment);
+    }
+
+    @Test
+    @DisplayName("Should default to approved when status cannot be parsed")
+    void shouldDefaultToApprovedWhenStatusCannotBeParsed() {
+        PaymentId paymentId = PaymentId.of(UUID.randomUUID());
+        Payment payment = mock(Payment.class);
+
+        when(fakeCheckoutClient.getPaymentDetails(paymentId)).thenReturn("Invalid payment response without status");
+        when(paymentRepository.findById(paymentId)).thenReturn(payment);
+
+        service.execute(paymentId);
+
+        verify(fakeCheckoutClient, times(1)).getPaymentDetails(paymentId);
+        verify(paymentRepository, times(1)).findById(paymentId);
+        verify(payment, times(1)).finish(); // Should default to approved/finish
+        verify(paymentRepository, times(1)).save(payment);
     }
 }
