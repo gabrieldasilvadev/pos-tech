@@ -193,7 +193,7 @@ kubectl apply -f ./infra/services/soat-postgres.yml
 kubectl apply -f ./infra/deployments/soat-postgres.yml
 ```
 
-#### Espere o pod do postgres ficar READY
+#### Espere o pod do postgres ficar com Status Running
 
 ```sh
 kubectl get pods -n soat -w
@@ -232,5 +232,82 @@ minikube service soat-backend -n soat
         src="docs/images/minikube_service.png" 
         width="60%"
         alt="Porta exposta pelo minikube"
+    >
+</div>
+
+### Aplicando o escalonamento dos PODs usando o HPA na prática
+> Para demonstrar o funcionamento do Horizontal Pod Autoscaler (HPA), vamos gerar uma carga de requisições na API do backend utilizando a ferramenta k6 e observar o Kubernetes escalonar os pods automaticamente
+
+#### Obtenha a URL do serviço de backend
+> Certifique-se que o minikube tunnel esteja rodando em um terminal separado. Em seguida, use o comando minikube service para obter a URL completa do serviço de backend
+
+```sh
+minikube service soat-backend --url -n soat
+```
+
+> Anote a URL completa retornada, ela será utilizada para o teste de carga
+
+#### Monitore o HPA e os PODs
+> Abra dois novos terminais
+
+#### Terminal 1 (Monitoramento do HPA)
+> Neste terminal, será monitorado o status do HPA, que mostrará a utilização atual da CPU e o número de réplicas
+
+```sh
+kubectl get hpa -n soat -w
+```
+
+> Você verá a coluna TARGETS (utilização de CPU) e REPLICAS (número atual de pods). O HPA está configurado para escalar quando a CPU atingir o limite estabelecido no manifesto .yaml
+
+#### Terminal 2 (Monitoramento dos PODs)
+> Neste terminal, será mostrado os pods sendo criados e excluídos conforme o HPA escala
+
+```sh
+kubectl get pods -n soat -w
+```
+
+#### Gerar carga na API
+> Abra um terceiro terminal. Usaremos a ferramenta k6 para gerar requisições HTTP na API
+
+#### Instale k6 (se ainda não tiver)
+> O k6 é uma ferramenta de teste de carga moderna e eficiente, escrita em JavaScript
+
+#### No Windows (via Chocholatey)
+
+```sh
+choco install k6
+```
+
+#### No Linux/macOS (via Homebrew)
+
+```sh
+brew install k6
+```
+
+#### Execute o teste de carga com k6
+> Substitua <URL_DO_SERVICO> no script load-test.js, contido na pasta raiz, pela URL obtida do serviço de backend. Em seguida, execute o script no terminal
+
+```sh
+k6 run load-test.js
+```
+
+#### Observe o escalonamento
+> No Terminal 1 (HPA), você deverá ver a coluna TARGETS (CPU) aumentar. Quando ela ultrapassar o limite estabelecido de CPU, o HPA começará a criar novos pods
+
+> No Terminal 2 (Pods), você verá novos pods do backend sendo criados (ContainerCreating, depois Running). O número de pods em REPLICAS no Terminal 1 também aumentará (até o maxReplicas configurado, que é 5)
+
+#### Observe o desescalonamento
+> No Terminal 1 (HPA), a coluna TARGETS (CPU) voltará a valores baixos
+
+> Após um período de estabilização (configurado no HPA, 60 segundos), o HPA começará a reduzir o número de réplicas, e você verá pods sendo terminados no Terminal 2 (Pods)
+
+#### Por fim, teremos algo próximo do seguinte
+> Para este teste de carga, o limite de CPU do HPA foi configurado em 25% para facilitar a observação do escalonamento
+
+<div style="text-align: center;">
+    <img 
+        src="docs/images/hpa_na_pratica.png" 
+        width="60%"
+        alt="HPA escalonando e desescalonando"
     >
 </div>
