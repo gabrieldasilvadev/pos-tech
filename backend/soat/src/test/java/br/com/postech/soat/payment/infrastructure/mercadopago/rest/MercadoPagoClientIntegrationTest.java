@@ -9,7 +9,6 @@ import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.payment.PaymentClient;
 
 import com.mercadopago.exceptions.MPApiException;
-import com.mercadopago.exceptions.MPException;
 import com.mercadopago.net.MPHttpClient;
 import com.mercadopago.net.MPRequest;
 import com.mercadopago.net.MPResponse;
@@ -49,7 +48,7 @@ class MercadoPagoClientIntegrationTest {
 
     @Test
     @DisplayName("Should parse ticket url from Mercado Pago response")
-    void shouldParseTicketUrlFromResponse() throws MPException, MPApiException {
+    void shouldParseTicketUrlFromResponse() {
         MercadoPagoConfig.setAccessToken("test-token");
         PaymentClient paymentClient = new PaymentClient(new FakeMPHttpClient(201, PAYMENT_RESPONSE));
         MercadoPagoClient client = new MercadoPagoClient(paymentClient);
@@ -64,7 +63,7 @@ class MercadoPagoClientIntegrationTest {
         PaymentClient paymentClient = new PaymentClient(new FakeMPHttpClient(400, "{\"message\":\"error\"}"));
         MercadoPagoClient client = new MercadoPagoClient(paymentClient);
         RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> client.createPayment(payment));
-        Assertions.assertTrue(thrown.getCause() instanceof MPApiException);
+        Assertions.assertInstanceOf(MPApiException.class, thrown.getCause());
     }
 
     static class FakeMPHttpClient implements MPHttpClient {

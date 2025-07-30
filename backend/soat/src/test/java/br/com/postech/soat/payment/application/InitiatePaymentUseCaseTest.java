@@ -46,35 +46,6 @@ class InitiatePaymentUseCaseTest {
     private ArgumentCaptor<Payment> paymentCaptor;
 
     @Test
-    @DisplayName("Should initiate payment successfully when gateway returns success")
-    void shouldInitiatePaymentSuccessfullyWhenGatewayReturnsSuccess() {
-        OrderId orderId = new OrderId(UUID.randomUUID());
-        CustomerId customerId = new CustomerId(UUID.randomUUID());
-        BigDecimal amount = new BigDecimal("100.00");
-
-        InitiatePaymentCommand command = new InitiatePaymentCommand(
-            orderId,
-            customerId,
-            PaymentMethod.PIX,
-            amount
-        );
-
-        when(paymentGateway.processPayment(any(Payment.class))).thenReturn(GatewayOperationResult.SUCCESS);
-
-        PaymentId result = handler.execute(command);
-
-        assertNotNull(result);
-        verify(paymentRepository, times(1)).save(paymentCaptor.capture());
-
-        Payment capturedPayment = paymentCaptor.getValue();
-        assertEquals(orderId, capturedPayment.getOrderId());
-        assertEquals(customerId, capturedPayment.getCustomerId());
-        assertEquals(PaymentMethod.PIX, capturedPayment.getMethod());
-        assertEquals(amount, capturedPayment.getAmount());
-        assertEquals(PaymentStatus.APPROVED, capturedPayment.getStatus());
-    }
-
-    @Test
     @DisplayName("Should mark payment as failed when gateway returns failure")
     void shouldMarkPaymentAsFailedWhenGatewayReturnsFailure() {
         OrderId orderId = new OrderId(UUID.randomUUID());
@@ -101,5 +72,34 @@ class InitiatePaymentUseCaseTest {
         assertEquals(PaymentMethod.PIX, capturedPayment.getMethod());
         assertEquals(amount, capturedPayment.getAmount());
         assertEquals(PaymentStatus.FAILED, capturedPayment.getStatus());
+    }
+
+    @Test
+    @DisplayName("Should save payment as PENDING before gateway approval")
+    void shouldSavePaymentAsPendingBeforeGatewayApproval() {
+        OrderId orderId = new OrderId(UUID.randomUUID());
+        CustomerId customerId = new CustomerId(UUID.randomUUID());
+        BigDecimal amount = new BigDecimal("100.00");
+
+        InitiatePaymentCommand command = new InitiatePaymentCommand(
+            orderId,
+            customerId,
+            PaymentMethod.PIX,
+            amount
+        );
+
+        when(paymentGateway.processPayment(any(Payment.class))).thenReturn(GatewayOperationResult.SUCCESS);
+
+        PaymentId result = handler.execute(command);
+
+        assertNotNull(result);
+        verify(paymentRepository, times(1)).save(paymentCaptor.capture());
+
+        Payment capturedPayment = paymentCaptor.getValue();
+        assertEquals(orderId, capturedPayment.getOrderId());
+        assertEquals(customerId, capturedPayment.getCustomerId());
+        assertEquals(PaymentMethod.PIX, capturedPayment.getMethod());
+        assertEquals(amount, capturedPayment.getAmount());
+        assertEquals(PaymentStatus.PENDING, capturedPayment.getStatus());
     }
 }

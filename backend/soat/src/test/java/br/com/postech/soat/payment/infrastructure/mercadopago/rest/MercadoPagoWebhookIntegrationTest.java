@@ -7,7 +7,7 @@ import br.com.postech.soat.payment.domain.valueobject.PaymentId;
 import br.com.postech.soat.payment.domain.entity.PaymentMethod;
 import br.com.postech.soat.payment.domain.entity.PaymentStatus;
 import br.com.postech.soat.payment.application.repositories.PaymentRepository;
-import br.com.postech.soat.payment.infrastructure.paymentgateway.FakeCheckoutClient;
+import br.com.postech.soat.payment.infrastructure.paymentgateway.CheckoutClient;
 import java.math.BigDecimal;
 import java.util.UUID;
 import br.com.postech.soat.product.infrastructure.LoggerAdapter;
@@ -21,8 +21,8 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -32,7 +32,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 
 @SpringBootTest(classes = {
     MercadoPagoWebhookIntegrationTest.ExcludeMockControllersConfig.class
@@ -59,8 +58,15 @@ class MercadoPagoWebhookIntegrationTest extends PostgresTestContainerConfig {
             };
         }
 
+        @Bean
+        @Primary
         public LoggerPort loggerPort() {
             return new LoggerAdapter();
+        }
+
+        @Bean
+        public CheckoutClient checkoutClient() {
+            return new br.com.postech.soat.payment.infrastructure.paymentgateway.MercadoPagoClient();
         }
     }
 
@@ -71,7 +77,7 @@ class MercadoPagoWebhookIntegrationTest extends PostgresTestContainerConfig {
     private PaymentRepository paymentRepository;
 
     @Autowired
-    private FakeCheckoutClient fakeCheckoutClient;
+    private CheckoutClient checkoutClient;
 
     private Payment testPayment;
     private PaymentId paymentId;
@@ -93,7 +99,6 @@ class MercadoPagoWebhookIntegrationTest extends PostgresTestContainerConfig {
     @Test
     @DisplayName("Should process webhook and update payment status")
     void shouldProcessWebhookAndUpdatePaymentStatus() throws Exception {
-        fakeCheckoutClient.createPayment(testPayment);
         Payment initialPayment = paymentRepository.findById(paymentId);
         assertNotNull(initialPayment);
         assertEquals(PaymentStatus.APPROVED, initialPayment.getStatus());
