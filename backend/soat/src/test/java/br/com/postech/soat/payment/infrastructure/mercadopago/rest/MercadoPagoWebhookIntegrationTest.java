@@ -21,7 +21,6 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -62,6 +61,11 @@ class MercadoPagoWebhookIntegrationTest extends PostgresTestContainerConfig {
         public LoggerPort loggerPort() {
             return new LoggerAdapter();
         }
+
+        @Bean
+        public br.com.postech.soat.payment.infrastructure.paymentgateway.CheckoutClient checkoutClient() {
+            return new FakeCheckoutClient();
+        }
     }
 
     @Autowired
@@ -71,7 +75,7 @@ class MercadoPagoWebhookIntegrationTest extends PostgresTestContainerConfig {
     private PaymentRepository paymentRepository;
 
     @Autowired
-    private FakeCheckoutClient fakeCheckoutClient;
+    private br.com.postech.soat.payment.infrastructure.paymentgateway.CheckoutClient checkoutClient;
 
     private Payment testPayment;
     private PaymentId paymentId;
@@ -90,10 +94,14 @@ class MercadoPagoWebhookIntegrationTest extends PostgresTestContainerConfig {
         paymentRepository.save(testPayment);
     }
 
+    private FakeCheckoutClient getFakeCheckoutClient() {
+        return (FakeCheckoutClient) checkoutClient;
+    }
+
     @Test
     @DisplayName("Should process webhook and update payment status")
     void shouldProcessWebhookAndUpdatePaymentStatus() throws Exception {
-        fakeCheckoutClient.createPayment(testPayment);
+        getFakeCheckoutClient().createPayment(testPayment);
         Payment initialPayment = paymentRepository.findById(paymentId);
         assertNotNull(initialPayment);
         assertEquals(PaymentStatus.APPROVED, initialPayment.getStatus());

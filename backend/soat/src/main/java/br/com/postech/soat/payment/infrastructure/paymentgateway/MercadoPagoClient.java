@@ -25,7 +25,6 @@ public class MercadoPagoClient implements CheckoutClient {
         this(new PaymentClient());
     }
 
-    // Construtor para injeção de mock nos testes
     public MercadoPagoClient(PaymentClient paymentClient) {
         this.paymentClient = paymentClient;
     }
