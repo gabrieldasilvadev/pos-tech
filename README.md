@@ -8,6 +8,30 @@ O **Fast Food Tech** é uma solução completa para digitalização e automaçã
 
 O objetivo é proporcionar uma plataforma robusta, intuitiva e eficiente, facilitando o dia a dia de operadores, gerentes e clientes.
 
+## Guia de Execução dos Endpoints
+
+Para uma experiência de teste completa e coerente, recomendamos seguir uma ordem lógica que simula um fluxo de usuário real. A história é simples: um cliente chega, faz um pedido, paga, e a cozinha o prepara.
+
+Para detalhes técnicos, exemplos de requisição e resposta, consulte a [documentação do Swagger](http://localhost:8080/swagger-ui/index.html) ou a coleção do Postman.
+
+1.  **`POST /products` - Montando o Cardápio:**
+    Antes de tudo, precisamos ter itens para vender. Use este endpoint para cadastrar os produtos que farão parte do cardápio, como lanches, bebidas e acompanhamentos.
+
+2.  **`POST /customers` - Identificando o Cliente:**
+    Com o cardápio pronto, o próximo passo é identificar quem está comprando. Este endpoint registra um novo cliente no sistema. O CPF é o identificador principal.
+
+3.  **`POST /orders` - Anotando o Pedido:**
+    Cliente identificado e produtos no cardápio, é hora de fazer o pedido. Este endpoint cria um novo pedido, associando o cliente aos itens que ele deseja consumir.
+
+4.  **`POST /payments` - Processando o Pagamento:**
+    Com o pedido confirmado, o pagamento é iniciado. Este endpoint recebe os dados do pedido e aciona o fluxo de pagamento de forma assíncrona.
+
+5.  **`GET /payments/{paymentId}/status` - Verificando o Pagamento:**
+    Para saber se o pagamento foi aprovado, consulte este endpoint. Ele informa o status final da transação (aprovado, recusado, etc.).
+
+6.  **`GET /orders` - Acompanhando a Fila:**
+    Após a aprovação do pagamento, o pedido entra na fila da cozinha. Este endpoint permite visualizar todos os pedidos que estão em preparação ou prontos para serem entregues, garantindo que a ordem de preparo seja respeitada.
+
 ## Principais Funcionalidades
 
 - Cadastro e gerenciamento de produtos e categorias
