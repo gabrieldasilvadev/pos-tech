@@ -16,7 +16,9 @@ paths:
       tags:
         - Customer
       summary: Buscar cliente por CPF
-      description: Busca cliente por CPF
+      description: |-
+        Localiza e retorna os dados de um cliente específico com base no CPF fornecido.
+        O CPF deve ser informado como um parâmetro de consulta (query parameter) e conter apenas os 11 dígitos.
       operationId: findCustomer
       parameters:
         - $ref: '#/components/parameters/CpfParam'
@@ -26,7 +28,16 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '404':
-          $ref: '#/components/responses/ErrorResponse'
+          description: Cliente não encontrado para o CPF informado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 404
+                message: 'Not Found'
+                error:
+                  - 'Customer with document 11122233344 not found'
         '500':
           $ref: '#/components/responses/ErrorResponse'
       servers:
@@ -35,8 +46,10 @@ paths:
     post:
       tags:
         - Customer
-      summary: Criar cliente
-      description: Cria um cliente
+      summary: Criar um novo cliente
+      description: |-
+        Registra um novo cliente no sistema.
+        O CPF é usado como um identificador único. Se um cliente com o mesmo CPF já existir, a API retornará um erro de conflito.
       operationId: createCustomer
       requestBody:
         $ref: '#/components/requestBodies/CustomerRequest'
@@ -46,7 +59,16 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '409':
-          $ref: '#/components/responses/ErrorResponse'
+          description: Cliente já cadastrado com o CPF informado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 409
+                message: 'Conflict'
+                error:
+                  - 'Customer with document 53731833697 already exists'
         '500':
           $ref: '#/components/responses/ErrorResponse'
       servers:
@@ -56,8 +78,11 @@ paths:
     get:
       tags:
         - Product
-      summary: 'Buscar produtos (todos, por ID ou por categoria)'
-      description: Retorna todos os produtos cadastrados ou realiza filtros por ID ou categoria
+      summary: Buscar produtos
+      description: |-
+        Retorna uma lista de produtos.
+        - Se nenhum parâmetro for fornecido, retorna todos os produtos ativos.
+        - É possível filtrar por `category` para obter produtos de uma categoria específica.
       operationId: getProduct
       parameters:
         - $ref: '#/components/parameters/SKU'
@@ -77,8 +102,9 @@ paths:
     post:
       tags:
         - Product
-      summary: Criar produto
-      description: 'Cria um novo produto no catálogo, exigindo dados como nome, SKU, preço e categoria.'
+      summary: Criar um novo produto
+      description: |-
+        Cria um novo produto no catálogo, exigindo dados como nome, SKU, preço e categoria.
       operationId: postProducts
       requestBody:
         $ref: '#/components/requestBodies/ProductCreateRequest'
@@ -100,7 +126,10 @@ paths:
     delete:
       tags:
         - Product
-      summary: Inativar produto
+      summary: Inativar um produto
+      description: |-
+        Realiza a inativação de um produto, tornando-o indisponível para novos pedidos.
+        A operação é lógica e não remove o registro do banco de dados.
       operationId: deleteProducts
       parameters:
         - name: productId
@@ -124,8 +153,9 @@ paths:
     put:
       tags:
         - Product
-      summary: Atualizar produto
-      description: Atualiza um produto existente com base no identificador e nos novos dados enviados.
+      summary: Atualizar um produto
+      description: |-
+        Atualiza os dados de um produto existente com base no seu `productId`.
       operationId: putProducts
       parameters:
         - name: productId
@@ -166,10 +196,9 @@ paths:
         - Order
       summary: Listar pedidos ativos
       description: |-
-        Retorna a lista de pedidos ativos ordenados por prioridade: Pronto > Em Preparação > Recebido.
-        Dentro de cada status, os pedidos são ordenados por data de criação (mais antigos primeiro).
-        Não inclui pedidos com status Finalizado na listagem.
-        Suporte a paginação através dos parâmetros page e size.
+        Retorna uma lista paginada de pedidos que não estão com status `FINALIZED`.
+        A lista é ordenada pela seguinte prioridade de status: `DONE` > `IN_PREPARATION` > `RECEIVED`.
+        Dentro de cada status, os pedidos são ordenados do mais antigo para o mais novo.
       operationId: get-orders
       parameters:
         - $ref: '#/components/parameters/PageParam'
@@ -189,29 +218,17 @@ paths:
     post:
       tags:
         - Order
-      summary: Criar pedido
+      summary: Criar um novo pedido
       description: |-
-        Endpoint responsável por registrar um novo pedido realizado no totem.
-        
-        **Dados obrigatórios:**
-        - `CustomerId`: ID do cliente que está fazendo o pedido
-        - `items`: Lista completa de itens com todos os dados necessários:
-          - `productId`: ID do produto
-          - `name`: Nome do produto
-          - `quantity`: Quantidade desejada
-          - `price`: Preço unitário do produto
-          - `category`: Categoria do produto (SNACK, DRINK, DESSERT, SIDE_DISH)
-          - `discount`: Desconto aplicado ao item (se houver)
-        
-        **Dados opcionais:**
-        - `discounts`: Lista de descontos aplicáveis ao pedido total
-        - `notes`: Observações para o pedido (ex: "sem cebola", "molho à parte")
-        
+        Registra um novo pedido no sistema.
+
+        **Dados necessários:**
+        - `customerId`: O ID do cliente que está realizando o pedido.
+        - `items`: Uma lista de produtos que compõem o pedido. Para cada item, é preciso fornecer o `productId`, a `quantity` e os dados do produto (`name`, `price`, `category`).
+
         **Comportamento:**
-        - Recebe todos os dados do produto na requisição (padrão microserviços)
-        - Aplica validações de disponibilidade e calcula totais
-        - Define o status inicial como "RECEIVED" e avança para "IN_PREPARATION"
-        - Retorna o resumo completo do pedido com valores calculados
+        - O sistema calcula o subtotal e o total do pedido.
+        - O status inicial do pedido é definido como `RECEIVED`.
       operationId: post-orders
       requestBody:
         $ref: '#/components/requestBodies/CreateOrderRequest'
@@ -226,7 +243,10 @@ paths:
       tags:
         - Payment
       summary: Iniciar processo de pagamento
-      description: Solicita o processamento de um pagamento associado a um pedido previamente criado. O endpoint aceita a requisição e retorna imediatamente com o identificador da transação de pagamento.
+      description: |-
+        Inicia o processo de pagamento para um pedido específico.
+        A API recebe a solicitação e retorna imediatamente um `paymentId`, que será usado para consultar o status da transação.
+        O processamento do pagamento ocorre de forma assíncrona.
       operationId: post-payments
       requestBody:
         $ref: '#/components/requestBodies/PaymentRequest'
@@ -253,10 +273,10 @@ paths:
     get:
       tags:
         - Payment
-      summary: Consultar pagamento
+      summary: Consultar dados do pagamento
       description: |-
-        Este endpoint permite consultar as informações de uma transação de pagamento previamente processada.
-        É útil para verificar o status final de um pagamento iniciado de forma assíncrona ou para exibir detalhes ao cliente ou sistemas internos.
+        Retorna os detalhes completos de uma transação de pagamento, incluindo status, valor e data de processamento.
+        Útil para verificar o resultado final de um pagamento.
       operationId: get-payments-paymentId
       parameters:
         - name: paymentId
@@ -277,8 +297,8 @@ paths:
         - Payment
       summary: Consultar status do pagamento
       description: |-
-        Este endpoint permite consultar apenas o status de uma transação de pagamento.
-        É uma versão otimizada para verificação rápida do status sem retornar todos os detalhes do pagamento.
+        Endpoint otimizado para verificar rapidamente o status de uma transação de pagamento.
+        Retorna apenas o `paymentId` e o `status` atual.
       operationId: get-payments-paymentId-status
       parameters:
         - name: paymentId
