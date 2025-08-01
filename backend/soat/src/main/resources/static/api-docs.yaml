@@ -1,8 +1,10 @@
 openapi: 3.0.3
 info:
   version: '1.0'
-  title: PosTech - SOAT
-  description: API para gerenciamento de clientes e pedidos no contexto da disciplina de Soluções de Arquitetura de Software.
+  title: 'Fast Food Tech Challenge - Sistema de Gestão'
+  description: |
+    API para o sistema de autoatendimento de uma rede de fast food.
+    Este projeto gerencia clientes, produtos, pedidos e pagamentos, seguindo as melhores práticas de arquitetura de software.
   termsOfService: ''
   license:
     url: 'https://opensource.org/licenses/MIT'
@@ -323,7 +325,9 @@ tags:
   - name: Product
     description: Operações relacionadas a produtos
   - name: Order
-    description: Operações relacionadas aos pedidos
+    description: Operações relacionadas a pedidos
+  - name: Payment
+    description: Operações relacionadas a pagamentos
 components:
   parameters:
     CpfParam:

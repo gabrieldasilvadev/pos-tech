@@ -335,7 +335,7 @@ Para uma experiência de teste completa e coerente, recomendamos seguir a ordem 
 
 Para detalhes técnicos, exemplos de requisição e resposta, consulte a [documentação do Swagger](http://localhost:8080/swagger-ui/index.html) ou a coleção do Postman.
 
-### 1. Gestão do Cardápio (Ator: Gerente da Loja)
+### 1. Gestão do Cardápio (Ator: Gerente da Lanchonete)
 
 Antes de qualquer venda, o gerente precisa preparar o cardápio, garantindo que os produtos estejam disponíveis, com preços corretos e atualizados.
 
