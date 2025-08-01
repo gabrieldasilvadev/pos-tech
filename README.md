@@ -86,8 +86,14 @@ Feche o terminal e abra um novo
 
 ### Swagger
 
+#### Acesso Web
 ```
 http://localhost:8080/swagger-ui/index.html
+```
+
+#### Acessar documentação em formato JSON para download  e importação no Postman
+```
+http://localhost:8080/v3/api-docs
 ```
 
 ### Health Check
