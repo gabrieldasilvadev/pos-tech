@@ -8,30 +8,6 @@ O **Fast Food Tech** é uma solução completa para digitalização e automaçã
 
 O objetivo é proporcionar uma plataforma robusta, intuitiva e eficiente, facilitando o dia a dia de operadores, gerentes e clientes.
 
-## Guia de Execução dos Endpoints
-
-Para uma experiência de teste completa e coerente, recomendamos seguir uma ordem lógica que simula um fluxo de usuário real. A história é simples: um cliente chega, faz um pedido, paga, e a cozinha o prepara.
-
-Para detalhes técnicos, exemplos de requisição e resposta, consulte a [documentação do Swagger](http://localhost:8080/swagger-ui/index.html) ou a coleção do Postman.
-
-1.  **`POST /products` - Montando o Cardápio:**
-    Antes de tudo, precisamos ter itens para vender. Use este endpoint para cadastrar os produtos que farão parte do cardápio, como lanches, bebidas e acompanhamentos.
-
-2.  **`POST /customers` - Identificando o Cliente:**
-    Com o cardápio pronto, o próximo passo é identificar quem está comprando. Este endpoint registra um novo cliente no sistema. O CPF é o identificador principal.
-
-3.  **`POST /orders` - Anotando o Pedido:**
-    Cliente identificado e produtos no cardápio, é hora de fazer o pedido. Este endpoint cria um novo pedido, associando o cliente aos itens que ele deseja consumir.
-
-4.  **`POST /payments` - Processando o Pagamento:**
-    Com o pedido confirmado, o pagamento é iniciado. Este endpoint recebe os dados do pedido e aciona o fluxo de pagamento de forma assíncrona.
-
-5.  **`GET /payments/{paymentId}/status` - Verificando o Pagamento:**
-    Para saber se o pagamento foi aprovado, consulte este endpoint. Ele informa o status final da transação (aprovado, recusado, etc.).
-
-6.  **`GET /orders` - Acompanhando a Fila:**
-    Após a aprovação do pagamento, o pedido entra na fila da cozinha. Este endpoint permite visualizar todos os pedidos que estão em preparação ou prontos para serem entregues, garantindo que a ordem de preparo seja respeitada.
-
 ## Principais Funcionalidades
 
 - Cadastro e gerenciamento de produtos e categorias
@@ -68,53 +44,53 @@ O projeto adota tecnologias, práticas e ferramentas alinhadas com o Pós Tech e
 
 ---
 
-### Instalação
+## Instalação
 
-##### Instale o gerenciador de versões para Java [sdkman](https://sdkman.io/install/)
+### Instale o gerenciador de versões para Java [sdkman](https://sdkman.io/install/)
 
 ```sh
-curl -s "https://get.sdkman.io" | bash
+  curl -s "https://get.sdkman.io" | bash
 ```
 
 Feche o terminal e abra um novo
 
-##### Execute o comando abaixo para testar a instalação
+### Execute o comando abaixo para testar a instalação
 
 ```sh
-sdk version
+  sdk version
 ```
 
-##### Instalação do Java 21
+### Instalação do Java 21
 
 ```sh
-sdk install java 21-zulu
+  sdk install java 21-zulu
 ```
 
-##### Para validar a instalação do Java execute o comando:
+### Para validar a instalação do Java execute o comando:
 
 ```sh
-java --version
+  java --version
 ```
 
-##### Para iniciar o app execute:
+### Para iniciar o app execute:
 
 ```sh
-mvn spring-boot:run
+  mvn spring-boot:run
 ```
 
-##### Executar os testes unitários
+### Executar os testes unitários
 
 ```sh
-export $(cat .env | xargs) && ./mvnw test
+  export $(cat .env | xargs) && ./mvnw test
 ```
 
-##### Swagger
+### Swagger
 
 ```
 http://localhost:8080/swagger-ui/index.html
 ```
 
-##### Health Check
+### Health Check
 
 ```
 http://localhost:8080/health
@@ -122,33 +98,33 @@ http://localhost:8080/health
 
 ### Utilizando o docker compose
 
-##### Criar o arquivo .env a partir do arquivo de exemplo pos-tech/backend/soat/contrib/env.example ou exportar as variáveis de ambiente abaixo:
+#### Criar o arquivo .env a partir do arquivo de exemplo pos-tech/backend/soat/contrib/env.example ou exportar as variáveis de ambiente abaixo:
 
 ```sh
-export DB_URL=jdbc:postgresql://soat-postgres:5432/soat
-export DB_USER=<DB_USER>
-export DB_PASSWORD=<DB_PASSWORD>
+  export DB_URL=jdbc:postgresql://soat-postgres:5432/soat
+  export DB_USER=<DB_USER>
+  export DB_PASSWORD=<DB_PASSWORD>
 ```
 
-##### Executar o docker compose
+#### Executar o docker compose
 
 ```sh
 docker compose up -d
 ```
 
-##### Para validar se todos os serviços estão up acesse:
+#### Para validar se todos os serviços estão up acesse:
 
 ```
 http://0.0.0.0:8080/health
 ```
 
-##### Api docs:
+#### Api docs:
 
 ```
 http://0.0.0.0:8080/swagger-ui/index.html
 ```
 
-### Arquitetura da infraestrutura
+## Arquitetura da infraestrutura
 
 <div style="text-align: center;">
     <img 
@@ -163,93 +139,94 @@ http://0.0.0.0:8080/swagger-ui/index.html
 
 Primeiro precisamos instalar o minikube conforme o sistema operacional, para isso siga as [instruções de instalação na documentação](https://minikube.sigs.k8s.io/docs/start/?arch=%2Fmacos%2Farm64%2Fstable%2Fbinary+download)
 
-#### Iniciar o software do Docker Desktop
+### Iniciar o software do Docker Desktop
 
 #### Iniciar o Minikube com driver Docker
 
 ```sh
-minikube start --driver=docker
+  minikube start --driver=docker
 ```
 
 #### Habilitar o Metrics Server (necessário para o HPA funcionar)
 
 ```sh
-minikube addons enable metrics-server
+  minikube addons enable metrics-server
 ```
 
 #### Configurar o ambiente Docker para usar o daemon interno do Minikube
 
 ```sh
-& minikube -p minikube docker-env | Invoke-Expression
+  & minikube -p minikube docker-env | Invoke-Expression
 ```
 
 #### Construir a imagem Docker da aplicação backend
 
 ```sh
-docker build -t soat:latest ./backend/soat
+  docker build -t soat:latest ./backend/soat
 ```
 
 #### Aplicar os manifests do Kubernetes na ordem correta
-> Os comandos a seguir estão levando em conta a pasta raiz do projeto
+Os comandos a seguir estão levando em conta a pasta raiz do projeto
+
 #### Namespace
 
 ```sh
-kubectl apply -f ./infra/namespace.yml
+  kubectl apply -f ./infra/namespace.yml
 ```
 
 #### Volumes persistentes para o banco de dados PostgreSQL
 
 ```sh
-kubectl apply -f ./infra/volumes/soat-postgres.yml
+  kubectl apply -f ./infra/volumes/soat-postgres.yml
 ```
 
 #### Configurações e segredos do banco de dados PostgreSQL
 
 ```sh
-kubectl apply -f ./infra/secrets/soat-postgres.yml
-kubectl apply -f ./infra/configmaps/soat-postgres.yml
+  kubectl apply -f ./infra/secrets/soat-postgres.yml
+  kubectl apply -f ./infra/configmaps/soat-postgres.yml
 ```
 
 #### Serviço e Deployment do banco de dados PostgreSQL
 
 ```sh
-kubectl apply -f ./infra/services/soat-postgres.yml
-kubectl apply -f ./infra/deployments/soat-postgres.yml
+  kubectl apply -f ./infra/services/soat-postgres.yml
+  kubectl apply -f ./infra/deployments/soat-postgres.yml
 ```
 
 #### Espere o pod do postgres ficar com Status Running
 
 ```sh
-kubectl get pods -n soat -w
+  kubectl get pods -n soat -w
 ```
 
 #### Configurações e segredos do backend
 
 ```sh
-kubectl apply -f ./infra/secrets/soat-backend.yml
-kubectl apply -f ./infra/configmaps/soat-backend.yml
+  kubectl apply -f ./infra/secrets/soat-backend.yml
+  kubectl apply -f ./infra/configmaps/soat-backend.yml
 ```
 
 #### Deployment e Service do backend
 
 ```sh
-kubectl apply -f ./infra/deployments/soat-backend.yml
-kubectl apply -f ./infra/services/soat-backend.yml
+  kubectl apply -f ./infra/deployments/soat-backend.yml
+  kubectl apply -f ./infra/services/soat-backend.yml
 ```
 
 #### HPA para autoescalonamento do backend
 
 ```sh
-kubectl apply -f ./infra/hpas/soat-backend.yml
+  kubectl apply -f ./infra/hpas/soat-backend.yml
 ```
 
 #### Acessar o serviço exposto no Minikube
 
 ```sh
-minikube service soat-backend -n soat
+  minikube service soat-backend -n soat
 ```
 
-> No exemplo abaixo, o acesso a aplicação está liberada no endereço **http://127.0.0.1:54754**
+No exemplo abaixo, o acesso a aplicação está liberada no endereço **http://127.0.0.1:54754**
 
 <div style="text-align: center;">
     <img 
@@ -260,73 +237,82 @@ minikube service soat-backend -n soat
 </div>
 
 ### Aplicando o escalonamento dos PODs usando o HPA na prática
-> Para demonstrar o funcionamento do Horizontal Pod Autoscaler (HPA), vamos gerar uma carga de requisições na API do backend utilizando a ferramenta k6 e observar o Kubernetes escalonar os pods automaticamente
+Para demonstrar o funcionamento do Horizontal Pod Autoscaler (HPA), vamos gerar uma carga de requisições na API do backend utilizando a ferramenta k6 e observar o Kubernetes escalonar os pods automaticamente
 
 #### Obtenha a URL do serviço de backend
-> Certifique-se que o minikube tunnel esteja rodando em um terminal separado. Em seguida, use o comando minikube service para obter a URL completa do serviço de backend
+
+Certifique-se que o minikube tunnel esteja rodando em um terminal separado. Em seguida, use o comando minikube service para obter a URL completa do serviço de backend
 
 ```sh
-minikube service soat-backend --url -n soat
+  minikube service soat-backend --url -n soat
 ```
 
-> Anote a URL completa retornada, ela será utilizada para o teste de carga
+Anote a URL completa retornada, ela será utilizada para o teste de carga
 
 #### Monitore o HPA e os PODs
-> Abra dois novos terminais
+
+Abra dois novos terminais
 
 #### Terminal 1 (Monitoramento do HPA)
-> Neste terminal, será monitorado o status do HPA, que mostrará a utilização atual da CPU e o número de réplicas
+
+Neste terminal, será monitorado o status do HPA, que mostrará a utilização atual da CPU e o número de réplicas
 
 ```sh
-kubectl get hpa -n soat -w
+  kubectl get hpa -n soat -w
 ```
 
-> Você verá a coluna TARGETS (utilização de CPU) e REPLICAS (número atual de pods). O HPA está configurado para escalar quando a CPU atingir o limite estabelecido no manifesto .yaml
+Você verá a coluna TARGETS (utilização de CPU) e REPLICAS (número atual de pods). O HPA está configurado para escalar quando a CPU atingir o limite estabelecido no manifesto .yaml
 
 #### Terminal 2 (Monitoramento dos PODs)
-> Neste terminal, será mostrado os pods sendo criados e excluídos conforme o HPA escala
+Neste terminal, será mostrado os pods sendo criados e excluídos conforme o HPA escala
 
 ```sh
-kubectl get pods -n soat -w
+  kubectl get pods -n soat -w
 ```
 
 #### Gerar carga na API
-> Abra um terceiro terminal. Usaremos a ferramenta k6 para gerar requisições HTTP na API
+
+Abra um terceiro terminal. Usaremos a ferramenta k6 para gerar requisições HTTP na API
 
 #### Instale k6 (se ainda não tiver)
-> O k6 é uma ferramenta de teste de carga moderna e eficiente, escrita em JavaScript
+
+O **k6** é uma ferramenta de teste de carga moderna e eficiente, escrita em JavaScript
 
 #### No Windows (via Chocholatey)
 
 ```sh
-choco install k6
+  choco install k6
 ```
 
 #### No Linux/macOS (via Homebrew)
 
 ```sh
-brew install k6
+  brew install k6
 ```
 
 #### Execute o teste de carga com k6
-> Substitua <URL_DO_SERVICO> no script load-test.js, contido na pasta raiz, pela URL obtida do serviço de backend. Em seguida, execute o script no terminal
+
+Substitua <URL_DO_SERVICO> no script load-test.js, contido na pasta raiz, pela URL obtida do serviço de backend. Em seguida, execute o script no terminal
 
 ```sh
-k6 run load-test.js
+  k6 run load-test.js
 ```
 
 #### Observe o escalonamento
-> No Terminal 1 (HPA), você deverá ver a coluna TARGETS (CPU) aumentar. Quando ela ultrapassar o limite estabelecido de CPU, o HPA começará a criar novos pods
 
-> No Terminal 2 (Pods), você verá novos pods do backend sendo criados (ContainerCreating, depois Running). O número de pods em REPLICAS no Terminal 1 também aumentará (até o maxReplicas configurado, que é 5)
+No Terminal 1 (HPA), você deverá ver a coluna TARGETS (CPU) aumentar. Quando ela ultrapassar o limite estabelecido de CPU, o HPA começará a criar novos pods
+
+No Terminal 2 (Pods), você verá novos pods do backend sendo criados (ContainerCreating, depois Running). O número de pods em REPLICAS no Terminal 1 também aumentará (até o maxReplicas configurado, que é 5)
 
 #### Observe o desescalonamento
-> No Terminal 1 (HPA), a coluna TARGETS (CPU) voltará a valores baixos
 
-> Após um período de estabilização (configurado no HPA, 60 segundos), o HPA começará a reduzir o número de réplicas, e você verá pods sendo terminados no Terminal 2 (Pods)
+No Terminal 1 (HPA), a coluna TARGETS (CPU) voltará a valores baixos
+
+Após um período de estabilização (configurado no HPA, 60 segundos), o HPA começará a reduzir o número de réplicas, e você verá pods sendo terminados no Terminal 2 (Pods)
 
 #### Por fim, teremos algo próximo do seguinte
-> Para este teste de carga, o limite de CPU do HPA foi configurado em 25% para facilitar a observação do escalonamento
+
+Para este teste de carga, o limite de CPU do HPA foi configurado em 25% para facilitar a observação do escalonamento
 
 <div style="text-align: center;">
     <img 
@@ -335,3 +321,27 @@ k6 run load-test.js
         alt="HPA escalonando e desescalonando"
     >
 </div>
+
+## Guia de Execução dos Endpoints
+
+Para uma experiência de teste completa e coerente, recomendamos seguir uma ordem lógica que simula um fluxo de usuário real. A história é simples: um cliente chega, faz um pedido, paga, e a cozinha o prepara.
+
+Para detalhes técnicos, exemplos de requisição e resposta, consulte a [documentação do Swagger](http://localhost:8080/swagger-ui/index.html) ou a coleção do Postman.
+
+1.  **`POST /products` - Montando o Cardápio:**
+    Antes de tudo, precisamos ter itens para vender. Use este endpoint para cadastrar os produtos que farão parte do cardápio, como lanches, bebidas e acompanhamentos.
+
+2.  **`POST /customers` - Identificando o Cliente:**
+    Com o cardápio pronto, o próximo passo é identificar quem está comprando. Este endpoint registra um novo cliente no sistema. O CPF é o identificador principal.
+
+3.  **`POST /orders` - Anotando o Pedido:**
+    Cliente identificado e produtos no cardápio, é hora de fazer o pedido. Este endpoint cria um novo pedido, associando o cliente aos itens que ele deseja consumir.
+
+4.  **`POST /payments` - Processando o Pagamento:**
+    Com o pedido confirmado, o pagamento é iniciado. Este endpoint recebe os dados do pedido e aciona o fluxo de pagamento de forma assíncrona.
+
+5.  **`GET /payments/{paymentId}/status` - Verificando o Pagamento:**
+    Para saber se o pagamento foi aprovado, consulte este endpoint. Ele informa o status final da transação (aprovado, recusado, etc.).
+
+6.  **`GET /orders` - Acompanhando a Fila:**
+    Após a aprovação do pagamento, o pedido entra na fila da cozinha. Este endpoint permite visualizar todos os pedidos que estão em preparação ou prontos para serem entregues, garantindo que a ordem de preparo seja respeitada.
