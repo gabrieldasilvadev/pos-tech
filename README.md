@@ -109,7 +109,7 @@ http://localhost:8080/health
 #### Executar o docker compose
 
 ```sh
-docker compose up -d
+  docker compose up -d
 ```
 
 #### Para validar se todos os serviços estão up acesse:
@@ -134,8 +134,9 @@ http://0.0.0.0:8080/swagger-ui/index.html
     >
 </div>
 
-### Executando o app com o minikube localmente
-> Comandos realizados utilizando o Windows + Powershell (administrador) e driver sendo o Docker Desktop
+## Executando o app com o minikube localmente
+
+Comandos realizados utilizando o Windows + Powershell (administrador) e driver sendo o Docker Desktop
 
 Primeiro precisamos instalar o minikube conforme o sistema operacional, para isso siga as [instruções de instalação na documentação](https://minikube.sigs.k8s.io/docs/start/?arch=%2Fmacos%2Farm64%2Fstable%2Fbinary+download)
 
@@ -165,7 +166,7 @@ Primeiro precisamos instalar o minikube conforme o sistema operacional, para iss
   docker build -t soat:latest ./backend/soat
 ```
 
-#### Aplicar os manifests do Kubernetes na ordem correta
+### Aplicar os manifests do Kubernetes na ordem correta
 Os comandos a seguir estão levando em conta a pasta raiz do projeto
 
 #### Namespace
@@ -324,24 +325,51 @@ Para este teste de carga, o limite de CPU do HPA foi configurado em 25% para fac
 
 ## Guia de Execução dos Endpoints
 
-Para uma experiência de teste completa e coerente, recomendamos seguir uma ordem lógica que simula um fluxo de usuário real. A história é simples: um cliente chega, faz um pedido, paga, e a cozinha o prepara.
+Para uma experiência de teste completa e coerente, recomendamos seguir a ordem lógica abaixo, que simula um fluxo de ponta a ponta: da gestão do cardápio à entrega do pedido. A história cobre os diferentes papéis (Gerente, Cliente, Cozinha) e suas interações com o sistema.
 
 Para detalhes técnicos, exemplos de requisição e resposta, consulte a [documentação do Swagger](http://localhost:8080/swagger-ui/index.html) ou a coleção do Postman.
 
-1.  **`POST /products` - Montando o Cardápio:**
-    Antes de tudo, precisamos ter itens para vender. Use este endpoint para cadastrar os produtos que farão parte do cardápio, como lanches, bebidas e acompanhamentos.
+### 1. Gestão do Cardápio (Ator: Gerente da Loja)
 
-2.  **`POST /customers` - Identificando o Cliente:**
-    Com o cardápio pronto, o próximo passo é identificar quem está comprando. Este endpoint registra um novo cliente no sistema. O CPF é o identificador principal.
+Antes de qualquer venda, o gerente precisa preparar o cardápio, garantindo que os produtos estejam disponíveis, com preços corretos e atualizados.
 
-3.  **`POST /orders` - Anotando o Pedido:**
-    Cliente identificado e produtos no cardápio, é hora de fazer o pedido. Este endpoint cria um novo pedido, associando o cliente aos itens que ele deseja consumir.
+1.  **`POST /products` - Cadastrando um Novo Lanche**
+    O gerente adiciona um novo hambúrguer ao sistema.
 
-4.  **`POST /payments` - Processando o Pagamento:**
-    Com o pedido confirmado, o pagamento é iniciado. Este endpoint recebe os dados do pedido e aciona o fluxo de pagamento de forma assíncrona.
+2.  **`PUT /products/{productId}` - Ajustando o Preço**
+    Após o cadastro, o gerente percebe que o preço está incorreto e usa este endpoint para ajustá-lo.
 
-5.  **`GET /payments/{paymentId}/status` - Verificando o Pagamento:**
-    Para saber se o pagamento foi aprovado, consulte este endpoint. Ele informa o status final da transação (aprovado, recusado, etc.).
+3.  **`GET /products` - Verificando o Cardápio**
+    Para garantir que todos os produtos de uma categoria estão corretos, o gerente lista todos os itens da categoria "Lanche".
 
-6.  **`GET /orders` - Acompanhando a Fila:**
-    Após a aprovação do pagamento, o pedido entra na fila da cozinha. Este endpoint permite visualizar todos os pedidos que estão em preparação ou prontos para serem entregues, garantindo que a ordem de preparo seja respeitada.
+4.  **`DELETE /products/{productId}` - Removendo um Item**
+    Um item promocional saiu do cardápio e precisa ser inativado. O gerente o remove para que não apareça mais para os clientes.
+
+### 2. Jornada de Compra (Ator: Cliente)
+
+Com o cardápio pronto, um cliente chega à lanchonete para fazer um pedido.
+
+5.  **`POST /customers` - Cliente Novo na Área**
+    Um novo cliente se cadastra no sistema para agilizar futuros pedidos.
+
+6.  **`GET /customers?cpf={cpf}` - Verificando o Cadastro**
+    O cliente (ou o sistema) pode usar o CPF para consultar os dados e confirmar que o cadastro foi bem-sucedido.
+
+7.  **`POST /orders` - Fazendo o Pedido**
+    O cliente escolhe seus itens (o lanche cadastrado anteriormente e uma bebida) e cria um novo pedido.
+
+8.  **`POST /payments` - Iniciando o Pagamento**
+    Com o pedido criado, o próximo passo é o pagamento. Este endpoint inicia a transação de forma assíncrona.
+
+9.  **`GET /payments/{paymentId}/status` - O Pagamento foi Aprovado?**
+    O cliente aguarda a confirmação e usa este endpoint para verificar rapidamente se o pagamento foi aprovado.
+
+10. **`GET /payments/{paymentId}` - Detalhes da Transação (Opcional)**
+    Para obter mais detalhes sobre a transação (como valor, data e status), o cliente pode consultar este endpoint.
+
+### 3. Preparo e Entrega (Ator: Cozinha)
+
+Com o pagamento confirmado, o pedido é enviado para a cozinha.
+
+11. **`GET /orders` - Acompanhando a Fila da Cozinha**
+    A equipe da cozinha monitora este endpoint para ver a lista de pedidos pendentes. A lista é priorizada para garantir que os pedidos prontos sejam atendidos primeiro, seguidos pelos que estão em preparação e, por último, os recém-chegados.
