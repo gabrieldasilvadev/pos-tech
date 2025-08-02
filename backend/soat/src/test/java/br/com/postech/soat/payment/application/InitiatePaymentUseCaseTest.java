@@ -75,8 +75,8 @@ class InitiatePaymentUseCaseTest {
     }
 
     @Test
-    @DisplayName("Should save payment as PENDING before gateway approval")
-    void shouldSavePaymentAsPendingBeforeGatewayApproval() {
+    @DisplayName("Should save payment as APPROVED when gateway returns success")
+    void shouldSavePaymentAsApprovedWhenGatewayReturnsSuccess() {
         OrderId orderId = new OrderId(UUID.randomUUID());
         CustomerId customerId = new CustomerId(UUID.randomUUID());
         BigDecimal amount = new BigDecimal("100.00");
@@ -100,6 +100,6 @@ class InitiatePaymentUseCaseTest {
         assertEquals(customerId, capturedPayment.getCustomerId());
         assertEquals(PaymentMethod.PIX, capturedPayment.getMethod());
         assertEquals(amount, capturedPayment.getAmount());
-        assertEquals(PaymentStatus.PENDING, capturedPayment.getStatus());
+        assertEquals(PaymentStatus.APPROVED, capturedPayment.getStatus());
     }
 }
