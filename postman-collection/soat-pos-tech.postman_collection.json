@@ -2,13 +2,13 @@
 	"info": {
 		"_postman_id": "06e56eb0-512b-434b-b64b-5303a704bad5",
 		"name": "Sistema SOAT - Lanchonete",
-		"description": "API do Sistema de Autoatendimento da Lanchonete SOAT\n\nSistema completo para gestão de pedidos, clientes, produtos e pagamentos de uma lanchonete.\n\n🔄 **Fluxo Recomendado para Testes (conforme README.md):**\n\n**1. Gestão do Cardápio (Gerente):**\n- POST /products - Cadastrar novos produtos\n- PUT /products/{id} - Atualizar preços e informações\n- GET /products - Verificar o cardápio\n- DELETE /products/{id} - Inativar produtos\n\n**2. Jornada do Cliente:**\n- POST /customers - Cadastrar novo cliente\n- GET /customers?cpf={cpf} - Verificar cadastro\n- POST /orders - Fazer pedido\n\n**3. Fluxo de Pagamento:**\n- POST /payments - Iniciar pagamento\n- GET /payments/{id}/status - Verificar aprovação\n- GET /payments/{id} - Detalhes da transação\n\n**4. Operação da Cozinha:**\n- GET /orders - Acompanhar fila de pedidos\n\nCategorias de produtos:\n- SNACK (Lanches) | DRINK (Bebidas) | DESSERT (Sobremesas) | SIDE_DISH (Acompanhamentos)\n\nStatus de pedidos:\n- RECEIVED → IN_PREPARATION → DONE → DELIVERED\n\nStatus de pagamentos:\n- PENDING → APPROVED/DECLINED/FAILED",
+		"description": "API do Sistema de Autoatendimento da Lanchonete SOAT\n\nSistema completo para gestão de pedidos, clientes, produtos e pagamentos de uma lanchonete.\n\n**Fluxo Recomendado para Testes (conforme README.md):**\n\n**1. Gestão do Cardápio (Gerente):**\n- POST /products - Cadastrar novos produtos\n- PUT /products/{id} - Atualizar preços e informações\n- GET /products - Verificar o cardápio\n- DELETE /products/{id} - Inativar produtos\n\n**2. Jornada do Cliente:**\n- POST /customers - Cadastrar novo cliente\n- GET /customers?cpf={cpf} - Verificar cadastro\n- POST /orders - Fazer pedido\n\n**3. Fluxo de Pagamento:**\n- POST /payments - Iniciar pagamento\n- GET /payments/{id}/status - Verificar aprovação\n- GET /payments/{id} - Detalhes da transação\n\n**4. Operação da Cozinha:**\n- GET /orders - Acompanhar fila de pedidos\n\nCategorias de produtos:\n- SNACK (Lanches) | DRINK (Bebidas) | DESSERT (Sobremesas) | SIDE_DISH (Acompanhamentos)\n\nStatus de pedidos:\n- RECEIVED → IN_PREPARATION → DONE → DELIVERED\n\nStatus de pagamentos:\n- PENDING → APPROVED/DECLINED/FAILED",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "2833044"
 	},
 	"item": [
 		{
-			"name": "1️⃣ Gestão do Cardápio",
+			"name": "Gestão do Cardápio",
 			"item": [
 				{
 					"name": "Criar um novo produto",
@@ -107,7 +107,7 @@
 									},
 									{
 										"key": "Accept",
-										"value": "application/json"
+											"value": "application/json"
 									}
 								],
 								"body": {
@@ -428,7 +428,12 @@
 							"name": "Produto não encontrado",
 							"originalRequest": {
 								"method": "DELETE",
-								"header": [],
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
 								"url": {
 									"raw": "http://localhost:8080/products/99999999-9999-9999-9999-999999999999",
 									"protocol": "http",
@@ -460,7 +465,7 @@
 			"description": "**GESTÃO DO CARDÁPIO (Ator: Gerente da Lanchonete)**\n\nAntes de qualquer venda, o gerente precisa preparar o cardápio, garantindo que os produtos estejam disponíveis, com preços corretos e atualizados.\n\nPermite cadastrar, atualizar, listar e inativar produtos do catálogo por categoria."
 		},
 		{
-			"name": "2️⃣ Jornada do Cliente",
+			"name": "Jornada do Cliente",
 			"item": [
 				{
 					"name": "Criar um novo cliente",
@@ -805,7 +810,7 @@
 			"description": "**JORNADA DO CLIENTE**\n\nCom o cardápio pronto, um cliente chega à lanchonete para fazer um pedido.\n\nGerenciamento do relacionamento com clientes e criação de pedidos."
 		},
 		{
-			"name": "3️⃣ Fluxo de Pagamento",
+			"name": "Fluxo de Pagamento",
 			"item": [
 				{
 					"name": "Iniciar processo de pagamento",
@@ -1110,7 +1115,104 @@
 			"description": "**FLUXO DE PAGAMENTO**\n\nGerenciamento de pagamentos dos pedidos. Com o pedido criado, o próximo passo é o pagamento.\n\nPermite iniciar processamento de pagamento e consultar status das transações."
 		},
 		{
-			"name": "4️⃣ Operação da Cozinha",
+			"name": "Webhook - Notificações de Pagamento",
+			"item": [
+				{
+					"name": "Webhook Mercado Pago",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "id",
+									"value": "e390242e-91c7-de0d-d9f5-4d2297bc06df",
+									"description": "ID único da transação de pagamento",
+									"type": "text"
+								},
+								{
+									"key": "topic",
+									"value": "payment",
+									"description": "Tipo de notificação (deve ser 'payment')",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/webhooks/mercado-pago",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"webhooks",
+								"mercado-pago"
+							]
+						},
+						"description": "**WEBHOOK - Notificação de Confirmação de Pagamento**\n\nEste endpoint é utilizado pelo Mercado Pago para notificar automaticamente sobre mudanças no status de pagamentos. Não faz parte do fluxo normal de teste da aplicação, sendo destinado ao processamento assíncrono de confirmações de pagamento.\n\n**Propósito:**\n- Receber notificações automáticas do Mercado Pago sobre status de pagamentos\n- Processar mudanças de status (PENDING → APPROVED/DECLINED/FAILED)\n- Atualizar automaticamente o status dos pagamentos no sistema\n\n**Funcionamento:**\n1. O Mercado Pago envia uma notificação POST com Content-Type application/x-www-form-urlencoded\n2. O sistema verifica se o topic é 'payment'\n3. Busca os detalhes do pagamento usando o ID fornecido\n4. Atualiza o status do pagamento conforme a resposta do gateway\n5. Retorna HTTP 200 OK independente do resultado\n\n**Status de Pagamento Suportados:**\n- APPROVED: Pagamento aprovado → status FINISHED\n- DECLINED: Pagamento recusado → status DECLINED\n- FAILED: Falha técnica → status FAILED\n\n**Uso em Testes:**\nPode ser usado para simular notificações do Mercado Pago durante testes de integração.\n\n**Documentação completa:** backend/soat/docs/webhook-documentation.md"
+					},
+					"response": [
+						{
+							"name": "Notificação recebida com sucesso",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "id",
+											"value": "e390242e-91c7-de0d-d9f5-4d2297bc06df",
+											"description": "ID único da transação de pagamento",
+											"type": "text"
+										},
+										{
+											"key": "topic",
+											"value": "payment",
+											"description": "Tipo de notificação",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:8080/webhooks/mercado-pago",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"webhooks",
+										"mercado-pago"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			],
+			"description": "**WEBHOOK - NOTIFICAÇÕES DE PAGAMENTO**\n\nEndpoint destinado ao recebimento de notificações automáticas do Mercado Pago sobre mudanças no status de pagamentos.\n\nEste endpoint NÃO faz parte do fluxo normal de testes da aplicação, sendo utilizado exclusivamente para processamento assíncrono de confirmações de pagamento."
+		},
+		{
+			"name": "Operação da Cozinha",
 			"item": [
 				{
 					"name": "Listar pedidos ativos",

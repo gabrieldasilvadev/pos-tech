@@ -96,6 +96,8 @@ http://localhost:8080/swagger-ui/index.html
 http://localhost:8080/v3/api-docs
 ```
 
+**Observação importante:** O projeto já contém uma coleção postman com todas as requisições e com riqueza de exemplos através do arquivo `postman-collection/soat-pos-tech.postman_collection.json`. 
+
 ### Health Check
 
 ```
@@ -328,6 +330,24 @@ Para este teste de carga, o limite de CPU do HPA foi configurado em 25% para fac
         alt="HPA escalonando e desescalonando"
     >
 </div>
+
+## Integração com Webhook MercadoPago
+
+O sistema também oferece integração com webhooks do MercadoPago para processamento assíncrono de notificações de pagamento. O webhook permite que o sistema receba atualizações automáticas sobre o status dos pagamentos, garantindo que os pedidos sejam atualizados em tempo real.
+
+> **Observação Importante: Simulação de Integração**
+>
+> Atualmente, a integração com o Mercado Pago é uma **simulação funcional** para fins de desenvolvimento e demonstração local. O código está estruturado e preparado para uma integração real com a API do Mercado Pago, exigindo apenas pequenos ajustes (como a configuração de credenciais reais) para ser ativado em um ambiente de produção na nuvem.
+
+### Endpoint Webhook
+
+**`POST /webhooks/mercado-pago`** - Recebe notificações de pagamento do MercadoPago
+
+Este endpoint processa notificações assíncronas sobre mudanças de status de pagamento, atualizando automaticamente os pedidos conforme os pagamentos são aprovados, recusados ou falharam.
+
+### Documentação Completa do Webhook
+
+Para informações detalhadas sobre a implementação da simulação, configuração, teste e como simular diferentes cenários de pagamento, consulte a [documentação completa do webhook](backend/soat/docs/webhook-documentation.md).
 
 ## Guia de Execução dos Endpoints
 
