@@ -333,7 +333,7 @@ Para este teste de carga, o limite de CPU do HPA foi configurado em 25% para fac
 
 Para uma experiência de teste completa e coerente, recomendamos seguir a ordem lógica abaixo, que simula um fluxo de ponta a ponta: da gestão do cardápio à entrega do pedido. A história cobre os diferentes papéis (Gerente, Cliente, Cozinha) e suas interações com o sistema.
 
-Para detalhes técnicos, exemplos de requisição e resposta, consulte a [documentação do Swagger](http://localhost:8080/swagger-ui/index.html) ou a coleção do Postman.
+Para detalhes técnicos, exemplos de requisição e resposta, consulte a coleção do Postman (Arquivo: soat-pos-tech.postman_collection.json).
 
 ### 1. Gestão do Cardápio (Ator: Gerente da Lanchonete)
 

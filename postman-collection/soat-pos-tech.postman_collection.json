@@ -1,1 +1,1209 @@
-{"item":[{"name":"customers","description":"","item":[{"id":"f5a4cc75-de36-47c1-b276-bf78c65c6edb","name":"Buscar cliente por CPF","request":{"name":"Buscar cliente por CPF","description":{"content":"Localiza e retorna os dados de um cliente específico com base no CPF fornecido.\nO CPF deve ser informado como um parâmetro de consulta (query parameter) e conter apenas os 11 dígitos.","type":"text/plain"},"url":{"protocol":"http","port":"8080","path":["customers"],"host":["localhost"],"query":[{"disabled":false,"description":{"content":"CPF do cliente no formato apenas números","type":"text/plain"},"key":"cpf","value":"66641742504"}],"variable":[]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET","body":{},"auth":null},"response":[{"id":"7f2431ed-180d-47c2-b5d7-120610b0f4c8","originalRequest":{"url":{"protocol":"http","port":"8080","path":["customers"],"host":["localhost"],"query":[{"disabled":false,"description":{"content":"CPF do cliente no formato apenas números","type":"text/plain"},"key":"cpf","value":"66641742504"}],"variable":[]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET","body":{}},"status":"OK","code":200,"header":[{"key":"Content-Type","value":"application/json"}],"body":"{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"email\": \"<string>\",\n  \"cpf\": \"<string>\",\n  \"phone\": \"<string>\"\n}","cookie":[],"_postman_previewlanguage":"json"},{"id":"708f4437-b50e-46ee-9745-2fefc4959a0b","originalRequest":{"url":{"protocol":"http","port":"8080","path":["customers"],"host":["localhost"],"query":[{"disabled":false,"description":{"content":"CPF do cliente no formato apenas números","type":"text/plain"},"key":"cpf","value":"66641742504"}],"variable":[]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET","body":{}},"status":"Bad Request","code":400,"header":[{"key":"Content-Type","value":"application/json"}],"body":"{\n  \"status\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"error\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}","cookie":[],"_postman_previewlanguage":"json"},{"id":"fd9a56a1-72fa-479a-91ae-a14c4610440a","name":"Cliente não encontrado para o CPF informado.","originalRequest":{"url":{"protocol":"http","port":"8080","path":["customers"],"host":["localhost"],"query":[{"disabled":false,"description":{"content":"CPF do cliente no formato apenas números","type":"text/plain"},"key":"cpf","value":"66641742504"}],"variable":[]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET","body":{}},"status":"Not Found","code":404,"header":[{"key":"Content-Type","value":"application/json"}],"body":"{\n  \"status\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"error\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}","cookie":[],"_postman_previewlanguage":"json"},{"id":"2008c4f4-b74e-4354-a787-0298de3c08e4","originalRequest":{"url":{"protocol":"http","port":"8080","path":["customers"],"host":["localhost"],"query":[{"disabled":false,"description":{"content":"CPF do cliente no formato apenas números","type":"text/plain"},"key":"cpf","value":"66641742504"}],"variable":[]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET","body":{}},"status":"Internal Server Error","code":500,"header":[{"key":"Content-Type","value":"application/json"}],"body":"{\n  \"status\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"error\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}","cookie":[],"_postman_previewlanguage":"json"}],"event":[],"protocolProfileBehavior":{"disableBodyPruning":true}},{"id":"c70b48d1-559f-47c9-a66d-757f5251e9e7","name":"Criar um novo cliente","request":{"name":"Criar um novo cliente","description":{"content":"Registra um novo cliente no sistema.\nO CPF é usado como um identificador único. Se um cliente com o mesmo CPF já existir, a API retornará um erro de conflito.","type":"text/plain"},"url":{"protocol":"http","port":"8080","path":["customers"],"host":["localhost"],"query":[],"variable":[]},"header":[{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],"method":"POST","body":{"mode":"raw","raw":"{\n  \"cpf\": \"41180716180\",\n  \"name\": \"<string>\",\n  \"email\": \"1I@QQMbSxlVe61.yyWCZhepFKV\",\n  \"phone\": \"3204435327\"\n}","options":{"raw":{"headerFamily":"json","language":"json"}}},"auth":null},"response":[{"id":"f9595ffc-e880-416c-bec5-2028ff9db0f1","originalRequest":{"url":{"protocol":"http","port":"8080","path":["customers"],"host":["localhost"],"query":[],"variable":[]},"header":[{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],"method":"POST","body":{"mode":"raw","raw":"{\n  \"cpf\": \"41180716180\",\n  \"name\": \"<string>\",\n  \"email\": \"1I@QQMbSxlVe61.yyWCZhepFKV\",\n  \"phone\": \"3204435327\"\n}","options":{"raw":{"headerFamily":"json","language":"json"}}}},"status":"Created","code":201,"header":[{"key":"Content-Type","value":"application/json"}],"body":"{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"email\": \"<string>\",\n  \"cpf\": \"<string>\",\n  \"phone\": \"<string>\"\n}","cookie":[],"_postman_previewlanguage":"json"},{"id":"134ae5e3-7223-4916-ad8f-f5c80dd3492a","originalRequest":{"url":{"protocol":"http","port":"8080","path":["customers"],"host":["localhost"],"query":[],"variable":[]},"header":[{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],"method":"POST","body":{"mode":"raw","raw":"{\n  \"cpf\": \"41180716180\",\n  \"name\": \"<string>\",\n  \"email\": \"1I@QQMbSxlVe61.yyWCZhepFKV\",\n  \"phone\": \"3204435327\"\n}","options":{"raw":{"headerFamily":"json","language":"json"}}}},"status":"Bad Request","code":400,"header":[{"key":"Content-Type","value":"application/json"}],"body":"{\n  \"status\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"error\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}","cookie":[],"_postman_previewlanguage":"json"},{"id":"371ba07d-bbd3-48ca-a9f2-01c2e49a0c51","name":"Cliente já cadastrado com o CPF informado.","originalRequest":{"url":{"protocol":"http","port":"8080","path":["customers"],"host":["localhost"],"query":[],"variable":[]},"header":[{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],"method":"POST","body":{"mode":"raw","raw":"{\n  \"cpf\": \"41180716180\",\n  \"name\": \"<string>\",\n  \"email\": \"1I@QQMbSxlVe61.yyWCZhepFKV\",\n  \"phone\": \"3204435327\"\n}","options":{"raw":{"headerFamily":"json","language":"json"}}}},"status":"Conflict","code":409,"header":[{"key":"Content-Type","value":"application/json"}],"body":"{\n  \"status\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"error\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}","cookie":[],"_postman_previewlanguage":"json"},{"id":"1d882481-6924-4938-9f46-aa83b4f2ff0c","originalRequest":{"url":{"protocol":"http","port":"8080","path":["customers"],"host":["localhost"],"query":[],"variable":[]},"header":[{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],"method":"POST","body":{"mode":"raw","raw":"{\n  \"cpf\": \"41180716180\",\n  \"name\": \"<string>\",\n  \"email\": \"1I@QQMbSxlVe61.yyWCZhepFKV\",\n  \"phone\": \"3204435327\"\n}","options":{"raw":{"headerFamily":"json","language":"json"}}}},"status":"Internal Server Error","code":500,"header":[{"key":"Content-Type","value":"application/json"}],"body":"{\n  \"status\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"error\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}","cookie":[],"_postman_previewlanguage":"json"}],"event":[],"protocolProfileBehavior":{"disableBodyPruning":true}}]},{"name":"products","description":"","item":[{"id":"d6773c12-1359-4c76-ad36-7da48e57381b","name":"Buscar produtos","request":{"name":"Buscar produtos","description":{"content":"Retorna uma lista de produtos.\n- Se nenhum parâmetro for fornecido, retorna todos os produtos ativos.\n- É possível filtrar por `category` para obter produtos de uma categoria específica.","type":"text/plain"},"url":{"protocol":"http","port":"8080","path":["products"],"host":["localhost"],"query":[{"disabled":false,"description":{"content":"SKU do produto","type":"text/plain"},"key":"SKU","value":"<string>"},{"disabled":false,"description":{"content":"Enum da categoria","type":"text/plain"},"key":"category","value":"DRINK"}],"variable":[]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET","body":{},"auth":null},"response":[{"id":"54e47904-f469-44d6-97bb-c682ae7aa9b7","name":"Example response","originalRequest":{"url":{"protocol":"http","port":"8080","path":["products"],"host":["localhost"],"query":[{"disabled":false,"description":{"content":"SKU do produto","type":"text/plain"},"key":"SKU","value":"<string>"},{"disabled":false,"description":{"content":"Enum da categoria","type":"text/plain"},"key":"category","value":"DRINK"}],"variable":[]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET","body":{}},"status":"OK","code":200,"header":[{"key":"Content-Type","value":"application/json"}],"body":"[\n  {\n    \"id\": \"59b25958-aaa8-65ec-4035-f4cbc3faaf17\",\n    \"sku\": \"<string>\",\n    \"name\": \"<string>\",\n    \"description\": \"<string>\",\n    \"price\": \"<double>\",\n    \"active\": \"<boolean>\",\n    \"image\": \"<string>\",\n    \"category\": \"DESSERT\"\n  },\n  {\n    \"id\": \"e1f3b7df-b19c-62da-47a2-e29c02bc89b8\",\n    \"sku\": \"<string>\",\n    \"name\": \"<string>\",\n    \"description\": \"<string>\",\n    \"price\": \"<double>\",\n    \"active\": \"<boolean>\",\n    \"image\": \"<string>\",\n    \"category\": \"SIDE_DISH\"\n  }\n]","cookie":[],"_postman_previewlanguage":"json"},{"id":"2e0fc781-9b94-4b25-8357-c33f90417ded","name":"Nenhum produto encontrado","originalRequest":{"url":{"protocol":"http","port":"8080","path":["products"],"host":["localhost"],"query":[{"disabled":false,"description":{"content":"SKU do produto","type":"text/plain"},"key":"SKU","value":"<string>"},{"disabled":false,"description":{"content":"Enum da categoria","type":"text/plain"},"key":"category","value":"DRINK"}],"variable":[]},"method":"GET","body":{}},"status":"No Content","code":204,"header":[],"cookie":[],"_postman_previewlanguage":"text"},{"id":"6c3cfb79-7a9d-4beb-b0b4-be7b170e6e56","name":"Requisição inválida","originalRequest":{"url":{"protocol":"http","port":"8080","path":["products"],"host":["localhost"],"query":[{"disabled":false,"description":{"content":"SKU do produto","type":"text/plain"},"key":"SKU","value":"<string>"},{"disabled":false,"description":{"content":"Enum da categoria","type":"text/plain"},"key":"category","value":"DRINK"}],"variable":[]},"method":"GET","body":{}},"status":"Bad Request","code":400,"header":[],"cookie":[],"_postman_previewlanguage":"text"},{"id":"3d5dd981-b3e9-4ce2-8ff4-53c60952c043","name":"Erro interno ao buscar produtos","originalRequest":{"url":{"protocol":"http","port":"8080","path":["products"],"host":["localhost"],"query":[{"disabled":false,"description":{"content":"SKU do produto","type":"text/plain"},"key":"SKU","value":"<string>"},{"disabled":false,"description":{"content":"Enum da categoria","type":"text/plain"},"key":"category","value":"DRINK"}],"variable":[]},"method":"GET","body":{}},"status":"Internal Server Error","code":500,"header":[],"cookie":[],"_postman_previewlanguage":"text"}],"event":[],"protocolProfileBehavior":{"disableBodyPruning":true}},{"id":"20bf14a8-4425-49a2-9b7b-25d5bef9c106","name":"Criar um novo produto","request":{"name":"Criar um novo produto","description":{"content":"Cria um novo produto no catálogo, exigindo dados como nome, SKU, preço e categoria.","type":"text/plain"},"url":{"protocol":"http","port":"8080","path":["products"],"host":["localhost"],"query":[],"variable":[]},"header":[{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],"method":"POST","body":{"mode":"raw","raw":"{\n  \"sku\": \"<string>\",\n  \"name\": \"<string>\",\n  \"price\": \"<double>\",\n  \"description\": \"<string>\",\n  \"image\": \"<string>\",\n  \"category\": \"SIDE_DISH\"\n}","options":{"raw":{"headerFamily":"json","language":"json"}}},"auth":null},"response":[{"id":"ed97e57b-3233-4ac1-b72f-4892241a941d","name":"Produto criado com sucesso!","originalRequest":{"url":{"protocol":"http","port":"8080","path":["products"],"host":["localhost"],"query":[],"variable":[]},"header":[{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],"method":"POST","body":{"mode":"raw","raw":"{\n  \"sku\": \"<string>\",\n  \"name\": \"<string>\",\n  \"price\": \"<double>\",\n  \"description\": \"<string>\",\n  \"image\": \"<string>\",\n  \"category\": \"SIDE_DISH\"\n}","options":{"raw":{"headerFamily":"json","language":"json"}}}},"status":"Created","code":201,"header":[{"key":"Content-Type","value":"application/json"}],"body":"{\n  \"id\": \"<string>\"\n}","cookie":[],"_postman_previewlanguage":"json"},{"id":"016e9d3a-afd2-49a1-9394-49b64b0e47e4","name":"Dados inválidos. Por favor, valide as informações.","originalRequest":{"url":{"protocol":"http","port":"8080","path":["products"],"host":["localhost"],"query":[],"variable":[]},"header":[{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],"method":"POST","body":{"mode":"raw","raw":"{\n  \"sku\": \"<string>\",\n  \"name\": \"<string>\",\n  \"price\": \"<double>\",\n  \"description\": \"<string>\",\n  \"image\": \"<string>\",\n  \"category\": \"SIDE_DISH\"\n}","options":{"raw":{"headerFamily":"json","language":"json"}}}},"status":"Bad Request","code":400,"header":[{"key":"Content-Type","value":"application/json"}],"body":"{\n  \"status\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"error\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}","cookie":[],"_postman_previewlanguage":"json"},{"id":"bb0e1004-0769-4c2d-a93b-86cd8f954672","name":"Internal Server Error","originalRequest":{"url":{"protocol":"http","port":"8080","path":["products"],"host":["localhost"],"query":[],"variable":[]},"header":[{"key":"Content-Type","value":"application/json"}],"method":"POST","body":{"mode":"raw","raw":"{\n  \"sku\": \"<string>\",\n  \"name\": \"<string>\",\n  \"price\": \"<double>\",\n  \"description\": \"<string>\",\n  \"image\": \"<string>\",\n  \"category\": \"SIDE_DISH\"\n}","options":{"raw":{"headerFamily":"json","language":"json"}}}},"status":"Internal Server Error","code":500,"header":[],"cookie":[],"_postman_previewlanguage":"text"}],"event":[],"protocolProfileBehavior":{"disableBodyPruning":true}},{"name":"{productId}","description":"","item":[{"id":"b88df046-2b9f-4a76-9d16-4097d83a7558","name":"Inativar um produto","request":{"name":"Inativar um produto","description":{"content":"Realiza a inativação de um produto, tornando-o indisponível para novos pedidos.\nA operação é lógica e não remove o registro do banco de dados.","type":"text/plain"},"url":{"protocol":"http","port":"8080","path":["products",":productId"],"host":["localhost"],"query":[],"variable":[{"type":"any","value":"<uuid>","key":"productId","disabled":false,"description":{"content":"(Required) ","type":"text/plain"}}]},"method":"DELETE","body":{},"auth":null},"response":[{"id":"1d3aeda3-1294-4a26-b355-403edc7fc228","name":"No Content","originalRequest":{"url":{"protocol":"http","port":"8080","path":["products",":productId"],"host":["localhost"],"query":[],"variable":[]},"method":"DELETE","body":{}},"status":"No Content","code":204,"header":[],"cookie":[],"_postman_previewlanguage":"text"},{"id":"60502e62-66d5-4a70-9275-9373e3c8356e","name":"Bad Request","originalRequest":{"url":{"protocol":"http","port":"8080","path":["products",":productId"],"host":["localhost"],"query":[],"variable":[]},"method":"DELETE","body":{}},"status":"Bad Request","code":400,"header":[],"cookie":[],"_postman_previewlanguage":"text"},{"id":"9d31955a-c0bf-4d29-926f-533eb1ff8024","name":"Not Found","originalRequest":{"url":{"protocol":"http","port":"8080","path":["products",":productId"],"host":["localhost"],"query":[],"variable":[]},"method":"DELETE","body":{}},"status":"Not Found","code":404,"header":[],"cookie":[],"_postman_previewlanguage":"text"},{"id":"c2cf559c-cda1-4366-bc14-31ecc9fd3699","name":"Internal Server Error","originalRequest":{"url":{"protocol":"http","port":"8080","path":["products",":productId"],"host":["localhost"],"query":[],"variable":[]},"method":"DELETE","body":{}},"status":"Internal Server Error","code":500,"header":[],"cookie":[],"_postman_previewlanguage":"text"}],"event":[],"protocolProfileBehavior":{"disableBodyPruning":true}},{"id":"5a55fc95-954a-4e0c-9320-6c0eb3f39eca","name":"Atualizar um produto","request":{"name":"Atualizar um produto","description":{"content":"Atualiza os dados de um produto existente com base no seu `productId`.","type":"text/plain"},"url":{"protocol":"http","port":"8080","path":["products",":productId"],"host":["localhost"],"query":[],"variable":[{"type":"any","value":"<uuid>","key":"productId","disabled":false,"description":{"content":"(Required) ","type":"text/plain"}}]},"header":[{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],"method":"PUT","body":{"mode":"raw","raw":"{\n  \"name\": \"<string>\",\n  \"price\": \"<double>\",\n  \"description\": \"<string>\",\n  \"image\": \"<string>\",\n  \"category\": \"DRINK\"\n}","options":{"raw":{"headerFamily":"json","language":"json"}}},"auth":null},"response":[{"id":"72e36a58-7255-4faf-9673-330d0a698738","name":"Produto atualizado com sucesso!","originalRequest":{"url":{"protocol":"http","port":"8080","path":["products",":productId"],"host":["localhost"],"query":[],"variable":[]},"header":[{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],"method":"PUT","body":{"mode":"raw","raw":"{\n  \"name\": \"<string>\",\n  \"price\": \"<double>\",\n  \"description\": \"<string>\",\n  \"image\": \"<string>\",\n  \"category\": \"DRINK\"\n}","options":{"raw":{"headerFamily":"json","language":"json"}}}},"status":"OK","code":200,"header":[{"key":"Content-Type","value":"application/json"}],"body":"{\n  \"id\": \"<uuid>\",\n  \"sku\": \"<string>\",\n  \"active\": \"<boolean>\",\n  \"name\": \"<string>\",\n  \"price\": \"<double>\",\n  \"description\": \"<string>\",\n  \"image\": \"<string>\",\n  \"category\": \"DRINK\"\n}","cookie":[],"_postman_previewlanguage":"json"},{"id":"f16f0ff2-ca9e-4af2-910a-c8a9bf5ca02d","name":"Dados inválidos. Verifique os campos obrigatórios e o formato enviado.","originalRequest":{"url":{"protocol":"http","port":"8080","path":["products",":productId"],"host":["localhost"],"query":[],"variable":[]},"header":[{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],"method":"PUT","body":{"mode":"raw","raw":"{\n  \"name\": \"<string>\",\n  \"price\": \"<double>\",\n  \"description\": \"<string>\",\n  \"image\": \"<string>\",\n  \"category\": \"DRINK\"\n}","options":{"raw":{"headerFamily":"json","language":"json"}}}},"status":"Bad Request","code":400,"header":[{"key":"Content-Type","value":"application/json"}],"body":"{\n  \"status\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"error\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}","cookie":[],"_postman_previewlanguage":"json"},{"id":"8d6d3f93-48ca-49bb-8f6c-c85f837e3dc3","name":"Recurso não encontrado. Verifique o identificador ou o endpoint.","originalRequest":{"url":{"protocol":"http","port":"8080","path":["products",":productId"],"host":["localhost"],"query":[],"variable":[]},"header":[{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],"method":"PUT","body":{"mode":"raw","raw":"{\n  \"name\": \"<string>\",\n  \"price\": \"<double>\",\n  \"description\": \"<string>\",\n  \"image\": \"<string>\",\n  \"category\": \"DRINK\"\n}","options":{"raw":{"headerFamily":"json","language":"json"}}}},"status":"Not Found","code":404,"header":[{"key":"Content-Type","value":"application/json"}],"body":"{\n  \"status\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"error\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}","cookie":[],"_postman_previewlanguage":"json"},{"id":"8a9baec7-04e5-45b3-89da-21b3b96f87fe","name":"Erro interno no servidor. Tente novamente mais tarde ou contate o suporte.","originalRequest":{"url":{"protocol":"http","port":"8080","path":["products",":productId"],"host":["localhost"],"query":[],"variable":[]},"header":[{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],"method":"PUT","body":{"mode":"raw","raw":"{\n  \"name\": \"<string>\",\n  \"price\": \"<double>\",\n  \"description\": \"<string>\",\n  \"image\": \"<string>\",\n  \"category\": \"DRINK\"\n}","options":{"raw":{"headerFamily":"json","language":"json"}}}},"status":"Internal Server Error","code":500,"header":[{"key":"Content-Type","value":"application/json"}],"body":"{\n  \"status\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"error\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}","cookie":[],"_postman_previewlanguage":"json"}],"event":[],"protocolProfileBehavior":{"disableBodyPruning":true}}]}]},{"name":"orders","description":"","item":[{"id":"7f32552e-1686-44f4-9ddc-d0c77021ee9c","name":"Listar pedidos ativos","request":{"name":"Listar pedidos ativos","description":{"content":"Retorna uma lista paginada de pedidos que não estão com status `FINALIZED`.\nA lista é ordenada pela seguinte prioridade de status: `DONE` > `IN_PREPARATION` > `RECEIVED`.\nDentro de cada status, os pedidos são ordenados do mais antigo para o mais novo.","type":"text/plain"},"url":{"protocol":"http","port":"8080","path":["orders"],"host":["localhost"],"query":[{"disabled":false,"description":{"content":"Número da página (começando em 0)","type":"text/plain"},"key":"page","value":"0"},{"disabled":false,"description":{"content":"Tamanho da página (número de itens por página)","type":"text/plain"},"key":"size","value":"10"}],"variable":[]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET","body":{},"auth":null},"response":[{"id":"ff4c81ee-d664-490b-ac5c-03bda5acf758","name":"Lista de pedidos ativos ordenados por prioridade e data","originalRequest":{"url":{"protocol":"http","port":"8080","path":["orders"],"host":["localhost"],"query":[{"disabled":false,"description":{"content":"Número da página (começando em 0)","type":"text/plain"},"key":"page","value":"0"},{"disabled":false,"description":{"content":"Tamanho da página (número de itens por página)","type":"text/plain"},"key":"size","value":"10"}],"variable":[]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET","body":{}},"status":"OK","code":200,"header":[{"key":"Content-Type","value":"application/json"}],"body":"[\n  {\n    \"OrderId\": \"f5c245ab-4664-d67d-74d7-225526e5fa4f\",\n    \"customerId\": \"61bc79b4-2854-15d3-688a-f98841eaa43b\",\n    \"items\": [\n      {\n        \"productId\": \"2f8c67c7-c2a3-c0d9-958a-ecd12f683323\",\n        \"name\": \"<string>\",\n        \"quantity\": \"<integer>\",\n        \"price\": \"<double>\",\n        \"category\": \"SNACK\",\n        \"discount\": {\n          \"value\": \"<double>\"\n        }\n      },\n      {\n        \"productId\": \"89398ec0-8238-cbab-fb94-b34c88066534\",\n        \"name\": \"<string>\",\n        \"quantity\": \"<integer>\",\n        \"price\": \"<double>\",\n        \"category\": \"SNACK\",\n        \"discount\": {\n          \"value\": \"<double>\"\n        }\n      }\n    ],\n    \"discountAmountTotal\": \"<double>\",\n    \"total\": \"<double>\",\n    \"status\": \"DONE\"\n  },\n  {\n    \"OrderId\": \"1c664f52-9918-f715-fab4-41f11d5593af\",\n    \"customerId\": \"b594a376-806d-6730-d322-22752f54a92c\",\n    \"items\": [\n      {\n        \"productId\": \"f2078dbd-fedf-d2cc-fc43-b17ec1e6daec\",\n        \"name\": \"<string>\",\n        \"quantity\": \"<integer>\",\n        \"price\": \"<double>\",\n        \"category\": \"SNACK\",\n        \"discount\": {\n          \"value\": \"<double>\"\n        }\n      },\n      {\n        \"productId\": \"f5985f24-8e36-77b7-e90f-d55e5c1e6ccc\",\n        \"name\": \"<string>\",\n        \"quantity\": \"<integer>\",\n        \"price\": \"<double>\",\n        \"category\": \"SNACK\",\n        \"discount\": {\n          \"value\": \"<double>\"\n        }\n      }\n    ],\n    \"discountAmountTotal\": \"<double>\",\n    \"total\": \"<double>\",\n    \"status\": \"DELIVERED\"\n  }\n]","cookie":[],"_postman_previewlanguage":"json"},{"id":"bb8068a2-06b4-499e-aa5c-80277cb6c37a","name":"Nenhum pedido ativo encontrado","originalRequest":{"url":{"protocol":"http","port":"8080","path":["orders"],"host":["localhost"],"query":[{"disabled":false,"description":{"content":"Número da página (começando em 0)","type":"text/plain"},"key":"page","value":"0"},{"disabled":false,"description":{"content":"Tamanho da página (número de itens por página)","type":"text/plain"},"key":"size","value":"10"}],"variable":[]},"method":"GET","body":{}},"status":"No Content","code":204,"header":[],"cookie":[],"_postman_previewlanguage":"text"},{"id":"499399ec-1d3d-4eea-98b1-3eeb69a4160a","originalRequest":{"url":{"protocol":"http","port":"8080","path":["orders"],"host":["localhost"],"query":[{"disabled":false,"description":{"content":"Número da página (começando em 0)","type":"text/plain"},"key":"page","value":"0"},{"disabled":false,"description":{"content":"Tamanho da página (número de itens por página)","type":"text/plain"},"key":"size","value":"10"}],"variable":[]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET","body":{}},"status":"Bad Request","code":400,"header":[{"key":"Content-Type","value":"application/json"}],"body":"{\n  \"status\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"error\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}","cookie":[],"_postman_previewlanguage":"json"},{"id":"f9cfc8e9-7224-4c45-bc44-8657dc3a00d2","originalRequest":{"url":{"protocol":"http","port":"8080","path":["orders"],"host":["localhost"],"query":[{"disabled":false,"description":{"content":"Número da página (começando em 0)","type":"text/plain"},"key":"page","value":"0"},{"disabled":false,"description":{"content":"Tamanho da página (número de itens por página)","type":"text/plain"},"key":"size","value":"10"}],"variable":[]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET","body":{}},"status":"Internal Server Error","code":500,"header":[{"key":"Content-Type","value":"application/json"}],"body":"{\n  \"status\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"error\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}","cookie":[],"_postman_previewlanguage":"json"}],"event":[],"protocolProfileBehavior":{"disableBodyPruning":true}},{"id":"8f4aa895-35d6-481b-87da-567185163c90","name":"Criar um novo pedido","request":{"name":"Criar um novo pedido","description":{"content":"Registra um novo pedido no sistema.\n\n**Dados necessários:**\n- `customerId`: O ID do cliente que está realizando o pedido.\n- `items`: Uma lista de produtos que compõem o pedido. Para cada item, é preciso fornecer o `productId`, a `quantity` e os dados do produto (`name`, `price`, `category`).\n\n**Comportamento:**\n- O sistema calcula o subtotal e o total do pedido.\n- O status inicial do pedido é definido como `RECEIVED`.","type":"text/plain"},"url":{"protocol":"http","port":"8080","path":["orders"],"host":["localhost"],"query":[],"variable":[]},"header":[{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],"method":"POST","body":{"mode":"raw","raw":"{\n  \"CustomerId\": \"9318c136-21a2-2612-9833-19193a8e8c73\",\n  \"items\": [\n    {\n      \"productId\": \"ad01dce4-1076-e488-350a-e6b5366638c5\",\n      \"name\": \"<string>\",\n      \"quantity\": \"<integer>\",\n      \"price\": \"<double>\",\n      \"category\": \"DESSERT\",\n      \"discount\": {\n        \"value\": \"<double>\"\n      }\n    }\n  ],\n  \"discounts\": [\n    {\n      \"value\": \"<double>\"\n    },\n    {\n      \"value\": \"<double>\"\n    }\n  ],\n  \"notes\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}","options":{"raw":{"headerFamily":"json","language":"json"}}},"auth":null},"response":[{"id":"e894ee68-f1e5-439e-9717-960a87e90cb1","name":"Example response","originalRequest":{"url":{"protocol":"http","port":"8080","path":["orders"],"host":["localhost"],"query":[],"variable":[]},"header":[{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],"method":"POST","body":{"mode":"raw","raw":"{\n  \"CustomerId\": \"9318c136-21a2-2612-9833-19193a8e8c73\",\n  \"items\": [\n    {\n      \"productId\": \"ad01dce4-1076-e488-350a-e6b5366638c5\",\n      \"name\": \"<string>\",\n      \"quantity\": \"<integer>\",\n      \"price\": \"<double>\",\n      \"category\": \"DESSERT\",\n      \"discount\": {\n        \"value\": \"<double>\"\n      }\n    }\n  ],\n  \"discounts\": [\n    {\n      \"value\": \"<double>\"\n    },\n    {\n      \"value\": \"<double>\"\n    }\n  ],\n  \"notes\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}","options":{"raw":{"headerFamily":"json","language":"json"}}}},"status":"Created","code":201,"header":[{"key":"Content-Type","value":"application/json"}],"body":"{\n  \"OrderId\": \"e5811a75-088f-2ea9-999a-5c185e4853e8\",\n  \"items\": [\n    {\n      \"productId\": \"80bcf95c-f823-1c12-996b-70209890ef7d\",\n      \"name\": \"<string>\",\n      \"quantity\": \"<integer>\",\n      \"price\": \"<double>\",\n      \"category\": \"SIDE_DISH\",\n      \"discount\": {\n        \"value\": \"<double>\"\n      }\n    },\n    {\n      \"productId\": \"9acb1d6b-d620-020c-a3f7-f9b967a121ee\",\n      \"name\": \"<string>\",\n      \"quantity\": \"<integer>\",\n      \"price\": \"<double>\",\n      \"category\": \"DRINK\",\n      \"discount\": {\n        \"value\": \"<double>\"\n      }\n    }\n  ],\n  \"discountAmountTotal\": \"<double>\",\n  \"subtotal\": \"<double>\",\n  \"total\": \"<double>\",\n  \"status\": \"DONE\",\n  \"discounts\": [\n    {\n      \"type\": \"FIXED\",\n      \"amount\": \"<double>\",\n      \"reason\": \"<string>\"\n    },\n    {\n      \"type\": \"FIXED\",\n      \"amount\": \"<double>\",\n      \"reason\": \"<string>\"\n    }\n  ]\n}","cookie":[],"_postman_previewlanguage":"json"}],"event":[],"protocolProfileBehavior":{"disableBodyPruning":true}}]},{"name":"payments","description":"","item":[{"id":"c90a1ce7-d29a-4850-9484-18d7260059c6","name":"Iniciar processo de pagamento","request":{"name":"Iniciar processo de pagamento","description":{"content":"Inicia o processo de pagamento para um pedido específico.\nA API recebe a solicitação e retorna imediatamente um `paymentId`, que será usado para consultar o status da transação.\nO processamento do pagamento ocorre de forma assíncrona.","type":"text/plain"},"url":{"protocol":"http","port":"8080","path":["payments"],"host":["localhost"],"query":[],"variable":[]},"header":[{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],"method":"POST","body":{"mode":"raw","raw":"{\n  \"customerId\": \"15dcd225-2b06-f0c0-b01a-864629c632c6\",\n  \"orderId\": \"a3e9700f-4f70-389f-82eb-b090aaa323fc\",\n  \"amount\": \"<double>\",\n  \"paymentMethod\": \"string\"\n}","options":{"raw":{"headerFamily":"json","language":"json"}}},"auth":null},"response":[{"id":"8858a206-bf76-45e9-8334-8c417e97bb13","name":"Representa a resposta do sistema após o recebimento de uma solicitação de pagamento. Contém o identificador único da transação, que poderá ser utilizado para consultar o status do pagamento posteriormente.","originalRequest":{"url":{"protocol":"http","port":"8080","path":["payments"],"host":["localhost"],"query":[],"variable":[]},"header":[{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],"method":"POST","body":{"mode":"raw","raw":"{\n  \"customerId\": \"15dcd225-2b06-f0c0-b01a-864629c632c6\",\n  \"orderId\": \"a3e9700f-4f70-389f-82eb-b090aaa323fc\",\n  \"amount\": \"<double>\",\n  \"paymentMethod\": \"string\"\n}","options":{"raw":{"headerFamily":"json","language":"json"}}}},"status":"Accepted","code":202,"header":[{"key":"Content-Type","value":"application/json"}],"body":"{\n  \"paymentId\": \"e390242e-91c7-de0d-d9f5-4d2297bc06df\"\n}","cookie":[],"_postman_previewlanguage":"json"}],"event":[],"protocolProfileBehavior":{"disableBodyPruning":true}},{"name":"{paymentId}","description":"","item":[{"id":"bd6fa76d-0c5a-4786-b11c-a16feff5f553","name":"Consultar dados do pagamento","request":{"name":"Consultar dados do pagamento","description":{"content":"Retorna os detalhes completos de uma transação de pagamento, incluindo status, valor e data de processamento.\nÚtil para verificar o resultado final de um pagamento.","type":"text/plain"},"url":{"protocol":"http","port":"8080","path":["payments",":paymentId"],"host":["localhost"],"query":[],"variable":[{"type":"any","value":"<string>","key":"paymentId","disabled":false,"description":{"content":"(Required) Identificador único da transação de pagamento gerada durante o processo de checkout.","type":"text/plain"}}]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET","body":{},"auth":null},"response":[{"id":"c488e88b-281e-4aa3-85b2-90336facb979","name":"Representa os dados retornados após o processamento de um pagamento durante o checkout de um pedido.","originalRequest":{"url":{"protocol":"http","port":"8080","path":["payments",":paymentId"],"host":["localhost"],"query":[],"variable":[]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET","body":{}},"status":"OK","code":200,"header":[{"key":"Content-Type","value":"application/json"}],"body":"{\n  \"orderId\": \"e79ccd30-37a4-af15-04ff-83e6702f0999\",\n  \"paymentId\": \"c336b5bb-8f3a-df05-2393-235d15db762a\",\n  \"amount\": \"<double>\",\n  \"paymentStatus\": \"PENDING\",\n  \"processedAt\": \"6671-88-62T31:66:36-09:77\"\n}","cookie":[],"_postman_previewlanguage":"json"}],"event":[],"protocolProfileBehavior":{"disableBodyPruning":true}},{"name":"status","description":"","item":[{"id":"77d9d529-3efb-46cc-88bc-115238d3e3e9","name":"Consultar status do pagamento","request":{"name":"Consultar status do pagamento","description":{"content":"Endpoint otimizado para verificar rapidamente o status de uma transação de pagamento.\nRetorna apenas o `paymentId` e o `status` atual.","type":"text/plain"},"url":{"protocol":"http","port":"8080","path":["payments",":paymentId","status"],"host":["localhost"],"query":[],"variable":[{"type":"any","value":"<string>","key":"paymentId","disabled":false,"description":{"content":"(Required) Identificador único da transação de pagamento gerada durante o processo de checkout.","type":"text/plain"}}]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET","body":{},"auth":null},"response":[{"id":"e0201f25-540f-45aa-82c4-78bb0ab62f7a","name":"Representa o status atual de uma transação de pagamento de forma simplificada.","originalRequest":{"url":{"protocol":"http","port":"8080","path":["payments",":paymentId","status"],"host":["localhost"],"query":[],"variable":[]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET","body":{}},"status":"OK","code":200,"header":[{"key":"Content-Type","value":"application/json"}],"body":"{\n  \"paymentId\": \"6c81b239-9d9c-6366-7ed6-d7a20e57a4be\",\n  \"status\": \"FAILED\"\n}","cookie":[],"_postman_previewlanguage":"json"},{"id":"17248d7c-9bb5-40b2-babc-027bb6eb5197","originalRequest":{"url":{"protocol":"http","port":"8080","path":["payments",":paymentId","status"],"host":["localhost"],"query":[],"variable":[]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET","body":{}},"status":"Not Found","code":404,"header":[{"key":"Content-Type","value":"application/json"}],"body":"{\n  \"status\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"error\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}","cookie":[],"_postman_previewlanguage":"json"},{"id":"18c93911-926f-44f9-9e19-ad6a21fc083b","originalRequest":{"url":{"protocol":"http","port":"8080","path":["payments",":paymentId","status"],"host":["localhost"],"query":[],"variable":[]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET","body":{}},"status":"Internal Server Error","code":500,"header":[{"key":"Content-Type","value":"application/json"}],"body":"{\n  \"status\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"error\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}","cookie":[],"_postman_previewlanguage":"json"}],"event":[],"protocolProfileBehavior":{"disableBodyPruning":true}}]}]}]}],"event":[],"variable":[{"key":"baseUrl","value":"http://localhost:8080"}],"info":{"_postman_id":"e98cd729-9252-4075-8a9c-a222a57587b5","name":"PosTech - SOAT","schema":"https://schema.getpostman.com/json/collection/v2.1.0/collection.json","description":{"content":"API para gerenciamento de clientes e pedidos no contexto da disciplina de Soluções de Arquitetura de Software.","type":"text/plain"}}}
+{
+	"info": {
+		"_postman_id": "06e56eb0-512b-434b-b64b-5303a704bad5",
+		"name": "Sistema SOAT - Lanchonete",
+		"description": "API do Sistema de Autoatendimento da Lanchonete SOAT\n\nSistema completo para gestão de pedidos, clientes, produtos e pagamentos de uma lanchonete.\n\n🔄 **Fluxo Recomendado para Testes (conforme README.md):**\n\n**1. Gestão do Cardápio (Gerente):**\n- POST /products - Cadastrar novos produtos\n- PUT /products/{id} - Atualizar preços e informações\n- GET /products - Verificar o cardápio\n- DELETE /products/{id} - Inativar produtos\n\n**2. Jornada do Cliente:**\n- POST /customers - Cadastrar novo cliente\n- GET /customers?cpf={cpf} - Verificar cadastro\n- POST /orders - Fazer pedido\n\n**3. Fluxo de Pagamento:**\n- POST /payments - Iniciar pagamento\n- GET /payments/{id}/status - Verificar aprovação\n- GET /payments/{id} - Detalhes da transação\n\n**4. Operação da Cozinha:**\n- GET /orders - Acompanhar fila de pedidos\n\nCategorias de produtos:\n- SNACK (Lanches) | DRINK (Bebidas) | DESSERT (Sobremesas) | SIDE_DISH (Acompanhamentos)\n\nStatus de pedidos:\n- RECEIVED → IN_PREPARATION → DONE → DELIVERED\n\nStatus de pagamentos:\n- PENDING → APPROVED/DECLINED/FAILED",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2833044"
+	},
+	"item": [
+		{
+			"name": "1️⃣ Gestão do Cardápio",
+			"item": [
+				{
+					"name": "Criar um novo produto",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sku\": \"BURGUER-003\",\n  \"name\": \"X-Salada Fit\",\n  \"price\": 22.90,\n  \"description\": \"Hambúrguer de frango grelhado com salada fresca, tomate e molho light\",\n  \"image\": \"https://exemplo.com/images/x-salada-fit.jpg\",\n  \"category\": \"SNACK\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/products",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products"
+							]
+						},
+						"description": "**PASSO 1 - Cadastrando um Novo Lanche**\n\nO gerente adiciona um novo hambúrguer ao sistema para começar a preparar o cardápio.\n\n**Campos obrigatórios:**\n- sku: Código único do produto\n- name: Nome do produto\n- price: Preço em reais (formato decimal)\n- description: Descrição detalhada\n- image: URL da imagem do produto\n- category: SNACK, DRINK, DESSERT ou SIDE_DISH"
+					},
+					"response": [
+						{
+							"name": "Produto criado com sucesso",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"sku\": \"BURGUER-003\",\n  \"name\": \"X-Salada Fit\",\n  \"price\": 22.90,\n  \"description\": \"Hambúrguer de frango grelhado com salada fresca, tomate e molho light\",\n  \"image\": \"https://exemplo.com/images/x-salada-fit.jpg\",\n  \"category\": \"SNACK\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/products",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"456e7890-f12a-34b5-c678-901234567890\"\n}"
+						},
+						{
+							"name": "Dados inválidos - campos obrigatórios faltando",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Produto sem SKU\",\n  \"price\": -10.00\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/products",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 400,\n  \"message\": \"Bad request\",\n  \"error\": [\n    \"O valor do produto não pode ser nulo\"\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Atualizar um produto",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"X-Burger Clássico Premium\",\n  \"price\": 27.90,\n  \"description\": \"Hambúrguer artesanal com carne bovina angus, queijo suíço, alface americana, tomate orgânico e molho especial da casa\",\n  \"image\": \"https://exemplo.com/images/x-burger-classico-premium.jpg\",\n  \"category\": \"SNACK\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/products/:productId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								":productId"
+							],
+							"variable": [
+								{
+									"key": "productId",
+									"value": "59b25958-aaa8-65ec-4035-f4cbc3faaf17",
+									"description": "ID único do produto no formato UUID"
+								}
+							]
+						},
+						"description": "**PASSO 2 - Ajustando o Preço**\n\nApós o cadastro, o gerente percebe que o preço está incorreto e usa este endpoint para ajustá-lo.\n\n**Campos atualizáveis:**\n- name: Nome do produto\n- price: Preço em reais\n- description: Descrição\n- image: URL da imagem\n- category: Categoria do produto\n\n**Nota:** O SKU não pode ser alterado após a criação."
+					},
+					"response": [
+						{
+							"name": "Produto atualizado com sucesso",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"X-Burger Clássico Premium\",\n  \"price\": 27.90,\n  \"description\": \"Hambúrguer artesanal com carne bovina angus, queijo suíço, alface americana, tomate orgânico e molho especial da casa\",\n  \"image\": \"https://exemplo.com/images/x-burger-classico-premium.jpg\",\n  \"category\": \"SNACK\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/products/59b25958-aaa8-65ec-4035-f4cbc3faaf17",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"products",
+										"59b25958-aaa8-65ec-4035-f4cbc3faaf17"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"59b25958-aaa8-65ec-4035-f4cbc3faaf17\",\n  \"sku\": \"BURGUER-001\",\n  \"active\": true,\n  \"name\": \"X-Burger Clássico Premium\",\n  \"price\": 27.90,\n  \"description\": \"Hambúrguer artesanal com carne bovina angus, queijo suíço, alface americana, tomate orgânico e molho especial da casa\",\n  \"image\": \"https://exemplo.com/images/x-burger-classico-premium.jpg\",\n  \"category\": \"SNACK\"\n}"
+						},
+						{
+							"name": "Produto não encontrado",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"X-Burger Clássico Premium\",\n  \"price\": 27.90,\n  \"description\": \"Hambúrguer artesanal com carne bovina angus, queijo suíço, alface americana, tomate orgânico e molho especial da casa\",\n  \"image\": \"https://exemplo.com/images/x-burger-classico-premium.jpg\",\n  \"category\": \"SNACK\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/products/99999999-9999-9999-9999-999999999999",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"products",
+										"99999999-9999-9999-9999-999999999999"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 404,\n  \"message\": \"Entity not found\",\n  \"error\": [\n    \"Product not found with ID: 99999999-9999-9999-9999-999999999999\"\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Buscar produtos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/products?category=SNACK",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "SKU",
+									"value": "BURGUER-001",
+									"description": "SKU específico do produto para busca individual",
+									"disabled": true
+								},
+								{
+									"key": "category",
+									"value": "SNACK",
+									"description": "Categoria para filtrar produtos"
+								}
+							]
+						},
+						"description": "**PASSO 3 - Verificando o Cardápio**\n\nPara garantir que todos os produtos de uma categoria estão corretos, o gerente lista todos os itens da categoria \"Lanche\".\n\n- Se nenhum parâmetro for fornecido, retorna todos os produtos ativos\n- É possível filtrar por `category` para obter produtos de uma categoria específica\n- É possível buscar por `SKU` específico\n\n**Categorias disponíveis:**\n- SNACK (Lanches) | DRINK (Bebidas) | DESSERT (Sobremesas) | SIDE_DISH (Acompanhamentos)"
+					},
+					"response": [
+						{
+							"name": "Lista de produtos encontrados",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/products?category=SNACK",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"products"
+									],
+									"query": [
+										{
+											"key": "category",
+											"value": "SNACK",
+											"description": "Categoria para filtrar produtos"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n  {\n    \"id\": \"59b25958-aaa8-65ec-4035-f4cbc3faaf17\",\n    \"sku\": \"BURGUER-001\",\n    \"name\": \"X-Burger Clássico\",\n    \"description\": \"Hambúrguer artesanal com carne bovina, queijo, alface, tomate e molho especial\",\n    \"price\": 25.90,\n    \"active\": true,\n    \"image\": \"https://exemplo.com/images/x-burger-classico.jpg\",\n    \"category\": \"SNACK\"\n  },\n  {\n    \"id\": \"e1f3b7df-b19c-62da-47a2-e29c02bc89b8\",\n    \"sku\": \"BURGUER-002\",\n    \"name\": \"X-Bacon Especial\",\n    \"description\": \"Hambúrguer com carne bovina, bacon crocante, queijo cheddar e molho barbecue\",\n    \"price\": 29.90,\n    \"active\": true,\n    \"image\": \"https://exemplo.com/images/x-bacon-especial.jpg\",\n    \"category\": \"SNACK\"\n  }\n]"
+						}
+					]
+				},
+				{
+					"name": "Inativar um produto",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/products/:productId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								":productId"
+							],
+							"variable": [
+								{
+									"key": "productId",
+									"value": "59b25958-aaa8-65ec-4035-f4cbc3faaf17",
+									"description": "ID único do produto no formato UUID"
+								}
+							]
+						},
+						"description": "**PASSO 4 - Removendo um Item**\n\nUm item promocional saiu do cardápio e precisa ser inativado. O gerente o remove para que não apareça mais para os clientes.\n\nRealiza a inativação de um produto, tornando-o indisponível para novos pedidos. A operação é lógica e não remove o registro do banco de dados."
+					},
+					"response": [
+						{
+							"name": "Produto inativado com sucesso",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/products/59b25958-aaa8-65ec-4035-f4cbc3faaf17",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"products",
+										"59b25958-aaa8-65ec-4035-f4cbc3faaf17"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Produto não encontrado",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/products/99999999-9999-9999-9999-999999999999",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"products",
+										"99999999-9999-9999-9999-999999999999"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 404,\n  \"message\": \"Entity not found\",\n  \"error\": [\n    \"Product not found with ID: 99999999-9999-9999-9999-999999999999\"\n  ]\n}"
+						}
+					]
+				}
+			],
+			"description": "**GESTÃO DO CARDÁPIO (Ator: Gerente da Lanchonete)**\n\nAntes de qualquer venda, o gerente precisa preparar o cardápio, garantindo que os produtos estejam disponíveis, com preços corretos e atualizados.\n\nPermite cadastrar, atualizar, listar e inativar produtos do catálogo por categoria."
+		},
+		{
+			"name": "2️⃣ Jornada do Cliente",
+			"item": [
+				{
+					"name": "Criar um novo cliente",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"cpf\": \"53731833697\",\n  \"name\": \"Maria Silva Santos\",\n  \"email\": \"maria.silva@email.com\",\n  \"phone\": \"11987654321\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/customers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"customers"
+							]
+						},
+						"description": "**PASSO 5 - Cliente Novo na Área**\n\nUm novo cliente se cadastra no sistema para agilizar futuros pedidos.\n\nRegistra um novo cliente no sistema. O CPF é usado como um identificador único.\n\n**Campos obrigatórios:**\n- cpf: 11 dígitos apenas números\n- name: Entre 3 e 255 caracteres\n- email: Formato de email válido\n\n**Campos opcionais:**\n- phone: Telefone no formato brasileiro (10 ou 11 dígitos)"
+					},
+					"response": [
+						{
+							"name": "Cliente criado com sucesso",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"cpf\": \"53731833697\",\n  \"name\": \"Maria Silva Santos\",\n  \"email\": \"maria.silva@email.com\",\n  \"phone\": \"11987654321\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/customers",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"customers"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"name\": \"Maria Silva Santos\",\n  \"email\": \"maria.silva@email.com\",\n  \"cpf\": \"53731833697\",\n  \"phone\": \"11987654321\"\n}"
+						},
+						{
+							"name": "Cliente já cadastrado com o CPF informado",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"cpf\": \"53731833697\",\n  \"name\": \"Maria Silva Santos\",\n  \"email\": \"maria.silva@email.com\",\n  \"phone\": \"11987654321\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/customers",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"customers"
+									]
+								}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 409,\n  \"message\": \"Resource conflict\",\n  \"error\": [\n    \"Customer registration failed due to business rule violation\"\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Buscar cliente por CPF",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/customers?cpf=53731833697",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"customers"
+							],
+							"query": [
+								{
+									"key": "cpf",
+									"value": "53731833697",
+									"description": "CPF do cliente no formato apenas números (11 dígitos)"
+								}
+							]
+						},
+						"description": "**PASSO 6 - Verificando o Cadastro**\n\nO cliente (ou o sistema) pode usar o CPF para consultar os dados e confirmar que o cadastro foi bem-sucedido.\n\nLocaliza e retorna os dados de um cliente específico com base no CPF fornecido. O CPF deve ser informado como um parâmetro de consulta e conter apenas os 11 dígitos.\n\n**Exemplo de uso:**\n- CPF válido: 53731833697\n- CPF inválido: 12345 (menos de 11 dígitos)"
+					},
+					"response": [
+						{
+							"name": "Cliente encontrado com sucesso",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/customers?cpf=53731833697",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"customers"
+									],
+									"query": [
+										{
+											"key": "cpf",
+											"value": "53731833697",
+											"description": "CPF do cliente no formato apenas números"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"name\": \"Maria Silva Santos\",\n  \"email\": \"maria.silva@email.com\",\n  \"cpf\": \"53731833697\",\n  \"phone\": \"11987654321\"\n}"
+						},
+						{
+							"name": "Cliente não encontrado para o CPF informado",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/customers?cpf=99999999999",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"customers"
+									],
+									"query": [
+										{
+											"key": "cpf",
+											"value": "99999999999",
+											"description": "CPF do cliente no formato apenas números"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 404,\n  \"message\": \"Entity not found\",\n  \"error\": [\n    \"Customer not found for the document identifier: 99999999999\"\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Criar um novo pedido",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"CustomerId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"items\": [\n    {\n      \"productId\": \"59b25958-aaa8-65ec-4035-f4cbc3faaf17\",\n      \"name\": \"X-Burger Clássico\",\n      \"quantity\": 2,\n      \"price\": 25.90,\n      \"category\": \"SNACK\",\n      \"discount\": {\n        \"value\": 0.00\n      }\n    },\n    {\n      \"productId\": \"e1f3b7df-b19c-62da-47a2-e29c02bc89b8\",\n      \"name\": \"Coca-Cola 350ml\",\n      \"quantity\": 2,\n      \"price\": 5.50,\n      \"category\": \"DRINK\",\n      \"discount\": {\n        \"value\": 0.00\n      }\n    }\n  ],\n  \"discounts\": [\n    {\n      \"value\": 5.00\n    }\n  ],\n  \"notes\": [\n    \"Sem cebola no hambúrguer\",\n    \"Coca-Cola bem gelada\"\n  ]\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders"
+							]
+						},
+						"description": "**PASSO 7 - Fazendo o Pedido**\n\nO cliente escolhe seus itens (o lanche cadastrado anteriormente e uma bebida) e cria um novo pedido.\n\nRegistra um novo pedido no sistema.\n\n**Dados necessários:**\n- `CustomerId`: O ID do cliente que está realizando o pedido (formato UUID)\n- `items`: Uma lista de produtos que compõem o pedido. Para cada item:\n  - `productId`: ID do produto (formato UUID)\n  - `name`: Nome do produto\n  - `quantity`: Quantidade desejada (mínimo 1)\n  - `price`: Preço unitário\n  - `category`: Categoria do produto\n  - `discount`: Desconto aplicado ao item (opcional)\n\n**Comportamento:**\n- O sistema calcula o subtotal e o total do pedido\n- O status inicial do pedido é definido como `RECEIVED`\n- Descontos e observações são opcionais"
+					},
+					"response": [
+						{
+							"name": "Pedido criado com sucesso",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"CustomerId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"items\": [\n    {\n      \"productId\": \"59b25958-aaa8-65ec-4035-f4cbc3faaf17\",\n      \"name\": \"X-Burger Clássico\",\n      \"quantity\": 2,\n      \"price\": 25.90,\n      \"category\": \"SNACK\",\n      \"discount\": {\n        \"value\": 0.00\n      }\n    },\n    {\n      \"productId\": \"e1f3b7df-b19c-62da-47a2-e29c02bc89b8\",\n      \"name\": \"Coca-Cola 350ml\",\n      \"quantity\": 2,\n      \"price\": 5.50,\n      \"category\": \"DRINK\",\n      \"discount\": {\n        \"value\": 0.00\n      }\n    }\n  ],\n  \"discounts\": [\n    {\n      \"value\": 5.00\n    }\n  ],\n  \"notes\": [\n    \"Sem cebola no hambúrguer\",\n    \"Coca-Cola bem gelada\"\n  ]\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/orders",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"orders"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"OrderId\": \"f5c245ab-4664-d67d-74d7-225526e5fa4f\",\n  \"items\": [\n    {\n      \"productId\": \"59b25958-aaa8-65ec-4035-f4cbc3faaf17\",\n      \"name\": \"X-Burger Clássico\",\n      \"quantity\": 2,\n      \"price\": 25.90,\n      \"category\": \"SNACK\",\n      \"discount\": {\n        \"value\": 0.00\n      }\n    },\n    {\n      \"productId\": \"e1f3b7df-b19c-62da-47a2-e29c02bc89b8\",\n      \"name\": \"Coca-Cola 350ml\",\n      \"quantity\": 2,\n      \"price\": 5.50,\n      \"category\": \"DRINK\",\n      \"discount\": {\n        \"value\": 0.00\n      }\n    }\n  ],\n  \"discountAmountTotal\": 5.00,\n  \"subtotal\": 62.80,\n  \"total\": 57.80,\n  \"status\": \"RECEIVED\",\n  \"discounts\": [\n    {\n      \"type\": \"FIXED\",\n      \"amount\": 5.00,\n      \"reason\": \"Desconto promocional\"\n    }\n  ]\n}"
+						}
+					]
+				}
+			],
+			"description": "**JORNADA DO CLIENTE**\n\nCom o cardápio pronto, um cliente chega à lanchonete para fazer um pedido.\n\nGerenciamento do relacionamento com clientes e criação de pedidos."
+		},
+		{
+			"name": "3️⃣ Fluxo de Pagamento",
+			"item": [
+				{
+					"name": "Iniciar processo de pagamento",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customerId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"orderId\": \"f5c245ab-4664-d67d-74d7-225526e5fa4f\",\n  \"amount\": 57.80,\n  \"paymentMethod\": \"PIX\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/payments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"payments"
+							]
+						},
+						"description": "**PASSO 8 - Iniciando o Pagamento**\n\nCom o pedido criado, o próximo passo é o pagamento. Este endpoint inicia a transação de forma assíncrona.\n\nInicia o processo de pagamento para um pedido específico. A API recebe a solicitação e retorna imediatamente um `paymentId`, que será usado para consultar o status da transação. O processamento do pagamento ocorre de forma assíncrona.\n\n**Dados necessários:**\n- `customerId`: ID do cliente (formato UUID)\n- `orderId`: ID do pedido (formato UUID)\n- `amount`: Valor total a ser pago\n- `paymentMethod`: Método de pagamento (ex: PIX, CREDIT_CARD, etc.)"
+					},
+					"response": [
+						{
+							"name": "Pagamento iniciado com sucesso",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"customerId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"orderId\": \"f5c245ab-4664-d67d-74d7-225526e5fa4f\",\n  \"amount\": 57.80,\n  \"paymentMethod\": \"PIX\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/payments",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"payments"
+									]
+								}
+							},
+							"status": "Accepted",
+							"code": 202,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"paymentId\": \"e390242e-91c7-de0d-d9f5-4d2297bc06df\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Consultar status do pagamento",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/payments/:paymentId/status",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"payments",
+								":paymentId",
+								"status"
+							],
+							"variable": [
+								{
+									"key": "paymentId",
+									"value": "e390242e-91c7-de0d-d9f5-4d2297bc06df",
+									"description": "Identificador único da transação de pagamento gerada durante o processo de checkout"
+								}
+							]
+						},
+						"description": "**PASSO 9 - O Pagamento foi Aprovado?**\n\nO cliente aguarda a confirmação e usa este endpoint para verificar rapidamente se o pagamento foi aprovado.\n\nEndpoint otimizado para verificar rapidamente o status de uma transação de pagamento. Retorna apenas o `paymentId` e o `status` atual.\n\n**Status possíveis:**\n- PENDING: Pagamento pendente\n- APPROVED: Pagamento aprovado\n- DECLINED: Pagamento rejeitado\n- FAILED: Falha no processamento"
+					},
+					"response": [
+						{
+							"name": "Status do pagamento - Aprovado",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/payments/e390242e-91c7-de0d-d9f5-4d2297bc06df/status",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"payments",
+										"e390242e-91c7-de0d-d9f5-4d2297bc06df",
+										"status"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"paymentId\": \"e390242e-91c7-de0d-d9f5-4d2297bc06df\",\n  \"status\": \"APPROVED\"\n}"
+						},
+						{
+							"name": "Status do pagamento - Pendente",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/payments/e390242e-91c7-de0d-d9f5-4d2297bc06df/status",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"payments",
+										"e390242e-91c7-de0d-d9f5-4d2297bc06df",
+										"status"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"paymentId\": \"e390242e-91c7-de0d-d9f5-4d2297bc06df\",\n  \"status\": \"PENDING\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Consultar dados do pagamento",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/payments/:paymentId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"payments",
+								":paymentId"
+							],
+							"variable": [
+								{
+									"key": "paymentId",
+									"value": "e390242e-91c7-de0d-d9f5-4d2297bc06df",
+									"description": "Identificador único da transação de pagamento gerada durante o processo de checkout"
+								}
+							]
+						},
+						"description": "**PASSO 10 - Detalhes da Transação (Opcional)**\n\nPara obter mais detalhes sobre a transação (como valor, data e status), o cliente pode consultar este endpoint.\n\nRetorna os detalhes completos de uma transação de pagamento, incluindo status, valor e data de processamento. Útil para verificar o resultado final de um pagamento."
+					},
+					"response": [
+						{
+							"name": "Dados completos do pagamento",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/payments/e390242e-91c7-de0d-d9f5-4d2297bc06df",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"payments",
+										"e390242e-91c7-de0d-d9f5-4d2297bc06df"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"orderId\": \"f5c245ab-4664-d67d-74d7-225526e5fa4f\",\n  \"paymentId\": \"e390242e-91c7-de0d-d9f5-4d2297bc06df\",\n  \"amount\": 57.80,\n  \"paymentStatus\": \"APPROVED\",\n  \"processedAt\": \"2024-01-15T14:30:25-03:00\"\n}"
+						},
+						{
+							"name": "Pagamento não encontrado",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/payments/99999999-9999-9999-9999-999999999999",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"payments",
+										"99999999-9999-9999-9999-999999999999"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 404,\n  \"message\": \"Entity not found\",\n  \"error\": [\n    \"Payment not found\"\n  ]\n}"
+						}
+					]
+				}
+			],
+			"description": "**FLUXO DE PAGAMENTO**\n\nGerenciamento de pagamentos dos pedidos. Com o pedido criado, o próximo passo é o pagamento.\n\nPermite iniciar processamento de pagamento e consultar status das transações."
+		},
+		{
+			"name": "4️⃣ Operação da Cozinha",
+			"item": [
+				{
+					"name": "Listar pedidos ativos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/orders?page=0&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0",
+									"description": "Número da página (começando em 0)"
+								},
+								{
+									"key": "size",
+									"value": "10",
+									"description": "Tamanho da página (número de itens por página)"
+								}
+							]
+						},
+						"description": "**PASSO 11 - Acompanhando a Fila da Cozinha**\n\nCom o pagamento confirmado, o pedido é enviado para a cozinha. A equipe da cozinha monitora este endpoint para ver a lista de pedidos pendentes.\n\nRetorna uma lista paginada de pedidos que não estão com status `DELIVERED`. A lista é priorizada para garantir que os pedidos prontos sejam atendidos primeiro, seguidos pelos que estão em preparação e, por último, os recém-chegados.\n\n**Ordenação por prioridade:**\n- DONE > IN_PREPARATION > RECEIVED\n- Dentro de cada status: pedidos mais antigos primeiro\n- Pedidos com status DELIVERED não aparecem na lista\n\n**Parâmetros de paginação:**\n- page: Número da página (começando em 0)\n- size: Quantidade de itens por página (padrão: 10)"
+					},
+					"response": [
+						{
+							"name": "Lista de pedidos ativos ordenados por prioridade",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/orders?page=0&size=10",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"orders"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0",
+											"description": "Número da página (começando em 0)"
+										},
+										{
+											"key": "size",
+											"value": "10",
+											"description": "Tamanho da página (número de itens por página)"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n  {\n    \"OrderId\": \"f5c245ab-4664-d67d-74d7-225526e5fa4f\",\n    \"customerId\": \"61bc79b4-2854-15d3-688a-f98841eaa43b\",\n    \"items\": [\n      {\n        \"productId\": \"2f8c67c7-c2a3-c0d9-958a-ecd12f683323\",\n        \"name\": \"X-Burger Clássico\",\n        \"quantity\": 2,\n        \"price\": 25.90,\n        \"category\": \"SNACK\",\n        \"discount\": {\n          \"value\": 0.00\n        }\n      },\n      {\n        \"productId\": \"89398ec0-8238-cbab-fb94-b34c88066534\",\n        \"name\": \"Coca-Cola 350ml\",\n        \"quantity\": 2,\n        \"price\": 5.50,\n        \"category\": \"DRINK\",\n        \"discount\": {\n          \"value\": 0.00\n        }\n      }\n    ],\n    \"discountAmountTotal\": 0.00,\n    \"total\": 62.80,\n    \"status\": \"DONE\"\n  },\n  {\n    \"OrderId\": \"1c664f52-9918-f715-fab4-41f11d5593af\",\n    \"customerId\": \"b594a376-806d-6730-d322-22752f54a92c\",\n    \"items\": [\n      {\n        \"productId\": \"f2078dbd-fedf-d2cc-fc43-b17ec1e6daec\",\n        \"name\": \"X-Bacon Especial\",\n        \"quantity\": 1,\n        \"price\": 29.90,\n        \"category\": \"SNACK\",\n        \"discount\": {\n          \"value\": 2.00\n        }\n      }\n    ],\n    \"discountAmountTotal\": 2.00,\n    \"total\": 27.90,\n    \"status\": \"IN_PREPARATION\"\n  }\n]"
+						}
+					]
+				}
+			],
+			"description": "**OPERAÇÃO DA COZINHA**\n\nCom o pagamento confirmado, o pedido é enviado para a cozinha.\n\nGerenciamento da fila de produção e acompanhamento dos pedidos em preparação."
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080"
+		}
+	]
+}
