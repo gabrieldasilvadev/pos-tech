@@ -94,9 +94,7 @@ class PaymentTest {
         payment.finish(); // Move to FINISHED status
         
         // Act & Assert
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () ->
-            payment.decline()
-        );
+        IllegalStateException exception = assertThrows(IllegalStateException.class, payment::decline);
         assertEquals("Payment cannot be declined from status FINISHED", exception.getMessage());
     }
 

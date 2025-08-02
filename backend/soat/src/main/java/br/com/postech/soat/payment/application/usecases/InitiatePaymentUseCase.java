@@ -32,11 +32,11 @@ public class InitiatePaymentUseCase {
         if (result.equals(GatewayOperationResult.FAILURE)) {
             logger.error("Payment processing failed for payment ID: {}", payment.getId());
             payment.fail();
-            paymentRepository.save(payment);
-            return payment.getId();
+        } else {
+            logger.info("Payment processed successfully for payment ID: {}", payment.getId());
+            payment.approve();
         }
 
-        logger.info("Payment processed successfully for payment ID: {}", payment.getId());
         paymentRepository.save(payment);
 
         return payment.getId();

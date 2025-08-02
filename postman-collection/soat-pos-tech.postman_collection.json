@@ -1,0 +1,1311 @@
+{
+	"info": {
+		"_postman_id": "06e56eb0-512b-434b-b64b-5303a704bad5",
+		"name": "Sistema SOAT - Lanchonete",
+		"description": "API do Sistema de Autoatendimento da Lanchonete SOAT\n\nSistema completo para gestão de pedidos, clientes, produtos e pagamentos de uma lanchonete.\n\n**Fluxo Recomendado para Testes (conforme README.md):**\n\n**1. Gestão do Cardápio (Gerente):**\n- POST /products - Cadastrar novos produtos\n- PUT /products/{id} - Atualizar preços e informações\n- GET /products - Verificar o cardápio\n- DELETE /products/{id} - Inativar produtos\n\n**2. Jornada do Cliente:**\n- POST /customers - Cadastrar novo cliente\n- GET /customers?cpf={cpf} - Verificar cadastro\n- POST /orders - Fazer pedido\n\n**3. Fluxo de Pagamento:**\n- POST /payments - Iniciar pagamento\n- GET /payments/{id}/status - Verificar aprovação\n- GET /payments/{id} - Detalhes da transação\n\n**4. Operação da Cozinha:**\n- GET /orders - Acompanhar fila de pedidos\n\nCategorias de produtos:\n- SNACK (Lanches) | DRINK (Bebidas) | DESSERT (Sobremesas) | SIDE_DISH (Acompanhamentos)\n\nStatus de pedidos:\n- RECEIVED → IN_PREPARATION → DONE → DELIVERED\n\nStatus de pagamentos:\n- PENDING → APPROVED/DECLINED/FAILED",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2833044"
+	},
+	"item": [
+		{
+			"name": "Gestão do Cardápio",
+			"item": [
+				{
+					"name": "Criar um novo produto",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sku\": \"BURGUER-003\",\n  \"name\": \"X-Salada Fit\",\n  \"price\": 22.90,\n  \"description\": \"Hambúrguer de frango grelhado com salada fresca, tomate e molho light\",\n  \"image\": \"https://exemplo.com/images/x-salada-fit.jpg\",\n  \"category\": \"SNACK\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/products",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products"
+							]
+						},
+						"description": "**PASSO 1 - Cadastrando um Novo Lanche**\n\nO gerente adiciona um novo hambúrguer ao sistema para começar a preparar o cardápio.\n\n**Campos obrigatórios:**\n- sku: Código único do produto\n- name: Nome do produto\n- price: Preço em reais (formato decimal)\n- description: Descrição detalhada\n- image: URL da imagem do produto\n- category: SNACK, DRINK, DESSERT ou SIDE_DISH"
+					},
+					"response": [
+						{
+							"name": "Produto criado com sucesso",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"sku\": \"BURGUER-003\",\n  \"name\": \"X-Salada Fit\",\n  \"price\": 22.90,\n  \"description\": \"Hambúrguer de frango grelhado com salada fresca, tomate e molho light\",\n  \"image\": \"https://exemplo.com/images/x-salada-fit.jpg\",\n  \"category\": \"SNACK\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/products",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"456e7890-f12a-34b5-c678-901234567890\"\n}"
+						},
+						{
+							"name": "Dados inválidos - campos obrigatórios faltando",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+											"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Produto sem SKU\",\n  \"price\": -10.00\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/products",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 400,\n  \"message\": \"Bad request\",\n  \"error\": [\n    \"O valor do produto não pode ser nulo\"\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Atualizar um produto",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"X-Burger Clássico Premium\",\n  \"price\": 27.90,\n  \"description\": \"Hambúrguer artesanal com carne bovina angus, queijo suíço, alface americana, tomate orgânico e molho especial da casa\",\n  \"image\": \"https://exemplo.com/images/x-burger-classico-premium.jpg\",\n  \"category\": \"SNACK\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/products/:productId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								":productId"
+							],
+							"variable": [
+								{
+									"key": "productId",
+									"value": "59b25958-aaa8-65ec-4035-f4cbc3faaf17",
+									"description": "ID único do produto no formato UUID"
+								}
+							]
+						},
+						"description": "**PASSO 2 - Ajustando o Preço**\n\nApós o cadastro, o gerente percebe que o preço está incorreto e usa este endpoint para ajustá-lo.\n\n**Campos atualizáveis:**\n- name: Nome do produto\n- price: Preço em reais\n- description: Descrição\n- image: URL da imagem\n- category: Categoria do produto\n\n**Nota:** O SKU não pode ser alterado após a criação."
+					},
+					"response": [
+						{
+							"name": "Produto atualizado com sucesso",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"X-Burger Clássico Premium\",\n  \"price\": 27.90,\n  \"description\": \"Hambúrguer artesanal com carne bovina angus, queijo suíço, alface americana, tomate orgânico e molho especial da casa\",\n  \"image\": \"https://exemplo.com/images/x-burger-classico-premium.jpg\",\n  \"category\": \"SNACK\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/products/59b25958-aaa8-65ec-4035-f4cbc3faaf17",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"products",
+										"59b25958-aaa8-65ec-4035-f4cbc3faaf17"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"59b25958-aaa8-65ec-4035-f4cbc3faaf17\",\n  \"sku\": \"BURGUER-001\",\n  \"active\": true,\n  \"name\": \"X-Burger Clássico Premium\",\n  \"price\": 27.90,\n  \"description\": \"Hambúrguer artesanal com carne bovina angus, queijo suíço, alface americana, tomate orgânico e molho especial da casa\",\n  \"image\": \"https://exemplo.com/images/x-burger-classico-premium.jpg\",\n  \"category\": \"SNACK\"\n}"
+						},
+						{
+							"name": "Produto não encontrado",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"X-Burger Clássico Premium\",\n  \"price\": 27.90,\n  \"description\": \"Hambúrguer artesanal com carne bovina angus, queijo suíço, alface americana, tomate orgânico e molho especial da casa\",\n  \"image\": \"https://exemplo.com/images/x-burger-classico-premium.jpg\",\n  \"category\": \"SNACK\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/products/99999999-9999-9999-9999-999999999999",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"products",
+										"99999999-9999-9999-9999-999999999999"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 404,\n  \"message\": \"Entity not found\",\n  \"error\": [\n    \"Product not found with ID: 99999999-9999-9999-9999-999999999999\"\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Buscar produtos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/products?category=SNACK",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "SKU",
+									"value": "BURGUER-001",
+									"description": "SKU específico do produto para busca individual",
+									"disabled": true
+								},
+								{
+									"key": "category",
+									"value": "SNACK",
+									"description": "Categoria para filtrar produtos"
+								}
+							]
+						},
+						"description": "**PASSO 3 - Verificando o Cardápio**\n\nPara garantir que todos os produtos de uma categoria estão corretos, o gerente lista todos os itens da categoria \"Lanche\".\n\n- Se nenhum parâmetro for fornecido, retorna todos os produtos ativos\n- É possível filtrar por `category` para obter produtos de uma categoria específica\n- É possível buscar por `SKU` específico\n\n**Categorias disponíveis:**\n- SNACK (Lanches) | DRINK (Bebidas) | DESSERT (Sobremesas) | SIDE_DISH (Acompanhamentos)"
+					},
+					"response": [
+						{
+							"name": "Lista de produtos encontrados",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/products?category=SNACK",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"products"
+									],
+									"query": [
+										{
+											"key": "category",
+											"value": "SNACK",
+											"description": "Categoria para filtrar produtos"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n  {\n    \"id\": \"59b25958-aaa8-65ec-4035-f4cbc3faaf17\",\n    \"sku\": \"BURGUER-001\",\n    \"name\": \"X-Burger Clássico\",\n    \"description\": \"Hambúrguer artesanal com carne bovina, queijo, alface, tomate e molho especial\",\n    \"price\": 25.90,\n    \"active\": true,\n    \"image\": \"https://exemplo.com/images/x-burger-classico.jpg\",\n    \"category\": \"SNACK\"\n  },\n  {\n    \"id\": \"e1f3b7df-b19c-62da-47a2-e29c02bc89b8\",\n    \"sku\": \"BURGUER-002\",\n    \"name\": \"X-Bacon Especial\",\n    \"description\": \"Hambúrguer com carne bovina, bacon crocante, queijo cheddar e molho barbecue\",\n    \"price\": 29.90,\n    \"active\": true,\n    \"image\": \"https://exemplo.com/images/x-bacon-especial.jpg\",\n    \"category\": \"SNACK\"\n  }\n]"
+						}
+					]
+				},
+				{
+					"name": "Inativar um produto",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/products/:productId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								":productId"
+							],
+							"variable": [
+								{
+									"key": "productId",
+									"value": "59b25958-aaa8-65ec-4035-f4cbc3faaf17",
+									"description": "ID único do produto no formato UUID"
+								}
+							]
+						},
+						"description": "**PASSO 4 - Removendo um Item**\n\nUm item promocional saiu do cardápio e precisa ser inativado. O gerente o remove para que não apareça mais para os clientes.\n\nRealiza a inativação de um produto, tornando-o indisponível para novos pedidos. A operação é lógica e não remove o registro do banco de dados."
+					},
+					"response": [
+						{
+							"name": "Produto inativado com sucesso",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/products/59b25958-aaa8-65ec-4035-f4cbc3faaf17",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"products",
+										"59b25958-aaa8-65ec-4035-f4cbc3faaf17"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Produto não encontrado",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/products/99999999-9999-9999-9999-999999999999",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"products",
+										"99999999-9999-9999-9999-999999999999"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 404,\n  \"message\": \"Entity not found\",\n  \"error\": [\n    \"Product not found with ID: 99999999-9999-9999-9999-999999999999\"\n  ]\n}"
+						}
+					]
+				}
+			],
+			"description": "**GESTÃO DO CARDÁPIO (Ator: Gerente da Lanchonete)**\n\nAntes de qualquer venda, o gerente precisa preparar o cardápio, garantindo que os produtos estejam disponíveis, com preços corretos e atualizados.\n\nPermite cadastrar, atualizar, listar e inativar produtos do catálogo por categoria."
+		},
+		{
+			"name": "Jornada do Cliente",
+			"item": [
+				{
+					"name": "Criar um novo cliente",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"cpf\": \"53731833697\",\n  \"name\": \"Maria Silva Santos\",\n  \"email\": \"maria.silva@email.com\",\n  \"phone\": \"11987654321\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/customers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"customers"
+							]
+						},
+						"description": "**PASSO 5 - Cliente Novo na Área**\n\nUm novo cliente se cadastra no sistema para agilizar futuros pedidos.\n\nRegistra um novo cliente no sistema. O CPF é usado como um identificador único.\n\n**Campos obrigatórios:**\n- cpf: 11 dígitos apenas números\n- name: Entre 3 e 255 caracteres\n- email: Formato de email válido\n\n**Campos opcionais:**\n- phone: Telefone no formato brasileiro (10 ou 11 dígitos)"
+					},
+					"response": [
+						{
+							"name": "Cliente criado com sucesso",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"cpf\": \"53731833697\",\n  \"name\": \"Maria Silva Santos\",\n  \"email\": \"maria.silva@email.com\",\n  \"phone\": \"11987654321\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/customers",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"customers"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"name\": \"Maria Silva Santos\",\n  \"email\": \"maria.silva@email.com\",\n  \"cpf\": \"53731833697\",\n  \"phone\": \"11987654321\"\n}"
+						},
+						{
+							"name": "Cliente já cadastrado com o CPF informado",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"cpf\": \"53731833697\",\n  \"name\": \"Maria Silva Santos\",\n  \"email\": \"maria.silva@email.com\",\n  \"phone\": \"11987654321\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/customers",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"customers"
+									]
+								}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 409,\n  \"message\": \"Resource conflict\",\n  \"error\": [\n    \"Customer registration failed due to business rule violation\"\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Buscar cliente por CPF",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/customers?cpf=53731833697",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"customers"
+							],
+							"query": [
+								{
+									"key": "cpf",
+									"value": "53731833697",
+									"description": "CPF do cliente no formato apenas números (11 dígitos)"
+								}
+							]
+						},
+						"description": "**PASSO 6 - Verificando o Cadastro**\n\nO cliente (ou o sistema) pode usar o CPF para consultar os dados e confirmar que o cadastro foi bem-sucedido.\n\nLocaliza e retorna os dados de um cliente específico com base no CPF fornecido. O CPF deve ser informado como um parâmetro de consulta e conter apenas os 11 dígitos.\n\n**Exemplo de uso:**\n- CPF válido: 53731833697\n- CPF inválido: 12345 (menos de 11 dígitos)"
+					},
+					"response": [
+						{
+							"name": "Cliente encontrado com sucesso",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/customers?cpf=53731833697",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"customers"
+									],
+									"query": [
+										{
+											"key": "cpf",
+											"value": "53731833697",
+											"description": "CPF do cliente no formato apenas números"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"name\": \"Maria Silva Santos\",\n  \"email\": \"maria.silva@email.com\",\n  \"cpf\": \"53731833697\",\n  \"phone\": \"11987654321\"\n}"
+						},
+						{
+							"name": "Cliente não encontrado para o CPF informado",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/customers?cpf=99999999999",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"customers"
+									],
+									"query": [
+										{
+											"key": "cpf",
+											"value": "99999999999",
+											"description": "CPF do cliente no formato apenas números"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 404,\n  \"message\": \"Entity not found\",\n  \"error\": [\n    \"Customer not found for the document identifier: 99999999999\"\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Criar um novo pedido",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"CustomerId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"items\": [\n    {\n      \"productId\": \"59b25958-aaa8-65ec-4035-f4cbc3faaf17\",\n      \"name\": \"X-Burger Clássico\",\n      \"quantity\": 2,\n      \"price\": 25.90,\n      \"category\": \"SNACK\",\n      \"discount\": {\n        \"value\": 0.00\n      }\n    },\n    {\n      \"productId\": \"e1f3b7df-b19c-62da-47a2-e29c02bc89b8\",\n      \"name\": \"Coca-Cola 350ml\",\n      \"quantity\": 2,\n      \"price\": 5.50,\n      \"category\": \"DRINK\",\n      \"discount\": {\n        \"value\": 0.00\n      }\n    }\n  ],\n  \"discounts\": [\n    {\n      \"value\": 5.00\n    }\n  ],\n  \"notes\": [\n    \"Sem cebola no hambúrguer\",\n    \"Coca-Cola bem gelada\"\n  ]\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders"
+							]
+						},
+						"description": "**PASSO 7 - Fazendo o Pedido**\n\nO cliente escolhe seus itens (o lanche cadastrado anteriormente e uma bebida) e cria um novo pedido.\n\nRegistra um novo pedido no sistema.\n\n**Dados necessários:**\n- `CustomerId`: O ID do cliente que está realizando o pedido (formato UUID)\n- `items`: Uma lista de produtos que compõem o pedido. Para cada item:\n  - `productId`: ID do produto (formato UUID)\n  - `name`: Nome do produto\n  - `quantity`: Quantidade desejada (mínimo 1)\n  - `price`: Preço unitário\n  - `category`: Categoria do produto\n  - `discount`: Desconto aplicado ao item (opcional)\n\n**Comportamento:**\n- O sistema calcula o subtotal e o total do pedido\n- O status inicial do pedido é definido como `RECEIVED`\n- Descontos e observações são opcionais"
+					},
+					"response": [
+						{
+							"name": "Pedido criado com sucesso",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"CustomerId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"items\": [\n    {\n      \"productId\": \"59b25958-aaa8-65ec-4035-f4cbc3faaf17\",\n      \"name\": \"X-Burger Clássico\",\n      \"quantity\": 2,\n      \"price\": 25.90,\n      \"category\": \"SNACK\",\n      \"discount\": {\n        \"value\": 0.00\n      }\n    },\n    {\n      \"productId\": \"e1f3b7df-b19c-62da-47a2-e29c02bc89b8\",\n      \"name\": \"Coca-Cola 350ml\",\n      \"quantity\": 2,\n      \"price\": 5.50,\n      \"category\": \"DRINK\",\n      \"discount\": {\n        \"value\": 0.00\n      }\n    }\n  ],\n  \"discounts\": [\n    {\n      \"value\": 5.00\n    }\n  ],\n  \"notes\": [\n    \"Sem cebola no hambúrguer\",\n    \"Coca-Cola bem gelada\"\n  ]\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/orders",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"orders"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"OrderId\": \"f5c245ab-4664-d67d-74d7-225526e5fa4f\",\n  \"items\": [\n    {\n      \"productId\": \"59b25958-aaa8-65ec-4035-f4cbc3faaf17\",\n      \"name\": \"X-Burger Clássico\",\n      \"quantity\": 2,\n      \"price\": 25.90,\n      \"category\": \"SNACK\",\n      \"discount\": {\n        \"value\": 0.00\n      }\n    },\n    {\n      \"productId\": \"e1f3b7df-b19c-62da-47a2-e29c02bc89b8\",\n      \"name\": \"Coca-Cola 350ml\",\n      \"quantity\": 2,\n      \"price\": 5.50,\n      \"category\": \"DRINK\",\n      \"discount\": {\n        \"value\": 0.00\n      }\n    }\n  ],\n  \"discountAmountTotal\": 5.00,\n  \"subtotal\": 62.80,\n  \"total\": 57.80,\n  \"status\": \"RECEIVED\",\n  \"discounts\": [\n    {\n      \"type\": \"FIXED\",\n      \"amount\": 5.00,\n      \"reason\": \"Desconto promocional\"\n    }\n  ]\n}"
+						}
+					]
+				}
+			],
+			"description": "**JORNADA DO CLIENTE**\n\nCom o cardápio pronto, um cliente chega à lanchonete para fazer um pedido.\n\nGerenciamento do relacionamento com clientes e criação de pedidos."
+		},
+		{
+			"name": "Fluxo de Pagamento",
+			"item": [
+				{
+					"name": "Iniciar processo de pagamento",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customerId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"orderId\": \"f5c245ab-4664-d67d-74d7-225526e5fa4f\",\n  \"amount\": 57.80,\n  \"paymentMethod\": \"PIX\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/payments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"payments"
+							]
+						},
+						"description": "**PASSO 8 - Iniciando o Pagamento**\n\nCom o pedido criado, o próximo passo é o pagamento. Este endpoint inicia a transação de forma assíncrona.\n\nInicia o processo de pagamento para um pedido específico. A API recebe a solicitação e retorna imediatamente um `paymentId`, que será usado para consultar o status da transação. O processamento do pagamento ocorre de forma assíncrona.\n\n**Dados necessários:**\n- `customerId`: ID do cliente (formato UUID)\n- `orderId`: ID do pedido (formato UUID)\n- `amount`: Valor total a ser pago\n- `paymentMethod`: Método de pagamento (ex: PIX, CREDIT_CARD, etc.)"
+					},
+					"response": [
+						{
+							"name": "Pagamento iniciado com sucesso",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"customerId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"orderId\": \"f5c245ab-4664-d67d-74d7-225526e5fa4f\",\n  \"amount\": 57.80,\n  \"paymentMethod\": \"PIX\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/payments",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"payments"
+									]
+								}
+							},
+							"status": "Accepted",
+							"code": 202,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"paymentId\": \"e390242e-91c7-de0d-d9f5-4d2297bc06df\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Consultar status do pagamento",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/payments/:paymentId/status",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"payments",
+								":paymentId",
+								"status"
+							],
+							"variable": [
+								{
+									"key": "paymentId",
+									"value": "e390242e-91c7-de0d-d9f5-4d2297bc06df",
+									"description": "Identificador único da transação de pagamento gerada durante o processo de checkout"
+								}
+							]
+						},
+						"description": "**PASSO 9 - O Pagamento foi Aprovado?**\n\nO cliente aguarda a confirmação e usa este endpoint para verificar rapidamente se o pagamento foi aprovado.\n\nEndpoint otimizado para verificar rapidamente o status de uma transação de pagamento. Retorna apenas o `paymentId` e o `status` atual.\n\n**Status possíveis:**\n- PENDING: Pagamento pendente\n- APPROVED: Pagamento aprovado\n- DECLINED: Pagamento rejeitado\n- FAILED: Falha no processamento"
+					},
+					"response": [
+						{
+							"name": "Status do pagamento - Aprovado",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/payments/e390242e-91c7-de0d-d9f5-4d2297bc06df/status",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"payments",
+										"e390242e-91c7-de0d-d9f5-4d2297bc06df",
+										"status"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"paymentId\": \"e390242e-91c7-de0d-d9f5-4d2297bc06df\",\n  \"status\": \"APPROVED\"\n}"
+						},
+						{
+							"name": "Status do pagamento - Pendente",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/payments/e390242e-91c7-de0d-d9f5-4d2297bc06df/status",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"payments",
+										"e390242e-91c7-de0d-d9f5-4d2297bc06df",
+										"status"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"paymentId\": \"e390242e-91c7-de0d-d9f5-4d2297bc06df\",\n  \"status\": \"PENDING\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Consultar dados do pagamento",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/payments/:paymentId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"payments",
+								":paymentId"
+							],
+							"variable": [
+								{
+									"key": "paymentId",
+									"value": "e390242e-91c7-de0d-d9f5-4d2297bc06df",
+									"description": "Identificador único da transação de pagamento gerada durante o processo de checkout"
+								}
+							]
+						},
+						"description": "**PASSO 10 - Detalhes da Transação (Opcional)**\n\nPara obter mais detalhes sobre a transação (como valor, data e status), o cliente pode consultar este endpoint.\n\nRetorna os detalhes completos de uma transação de pagamento, incluindo status, valor e data de processamento. Útil para verificar o resultado final de um pagamento."
+					},
+					"response": [
+						{
+							"name": "Dados completos do pagamento",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/payments/e390242e-91c7-de0d-d9f5-4d2297bc06df",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"payments",
+										"e390242e-91c7-de0d-d9f5-4d2297bc06df"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"orderId\": \"f5c245ab-4664-d67d-74d7-225526e5fa4f\",\n  \"paymentId\": \"e390242e-91c7-de0d-d9f5-4d2297bc06df\",\n  \"amount\": 57.80,\n  \"paymentStatus\": \"APPROVED\",\n  \"processedAt\": \"2024-01-15T14:30:25-03:00\"\n}"
+						},
+						{
+							"name": "Pagamento não encontrado",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/payments/99999999-9999-9999-9999-999999999999",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"payments",
+										"99999999-9999-9999-9999-999999999999"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 404,\n  \"message\": \"Entity not found\",\n  \"error\": [\n    \"Payment not found\"\n  ]\n}"
+						}
+					]
+				}
+			],
+			"description": "**FLUXO DE PAGAMENTO**\n\nGerenciamento de pagamentos dos pedidos. Com o pedido criado, o próximo passo é o pagamento.\n\nPermite iniciar processamento de pagamento e consultar status das transações."
+		},
+		{
+			"name": "Webhook - Notificações de Pagamento",
+			"item": [
+				{
+					"name": "Webhook Mercado Pago",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "id",
+									"value": "e390242e-91c7-de0d-d9f5-4d2297bc06df",
+									"description": "ID único da transação de pagamento",
+									"type": "text"
+								},
+								{
+									"key": "topic",
+									"value": "payment",
+									"description": "Tipo de notificação (deve ser 'payment')",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/webhooks/mercado-pago",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"webhooks",
+								"mercado-pago"
+							]
+						},
+						"description": "**WEBHOOK - Notificação de Confirmação de Pagamento**\n\nEste endpoint é utilizado pelo Mercado Pago para notificar automaticamente sobre mudanças no status de pagamentos. Não faz parte do fluxo normal de teste da aplicação, sendo destinado ao processamento assíncrono de confirmações de pagamento.\n\n**Propósito:**\n- Receber notificações automáticas do Mercado Pago sobre status de pagamentos\n- Processar mudanças de status (PENDING → APPROVED/DECLINED/FAILED)\n- Atualizar automaticamente o status dos pagamentos no sistema\n\n**Funcionamento:**\n1. O Mercado Pago envia uma notificação POST com Content-Type application/x-www-form-urlencoded\n2. O sistema verifica se o topic é 'payment'\n3. Busca os detalhes do pagamento usando o ID fornecido\n4. Atualiza o status do pagamento conforme a resposta do gateway\n5. Retorna HTTP 200 OK independente do resultado\n\n**Status de Pagamento Suportados:**\n- APPROVED: Pagamento aprovado → status FINISHED\n- DECLINED: Pagamento recusado → status DECLINED\n- FAILED: Falha técnica → status FAILED\n\n**Uso em Testes:**\nPode ser usado para simular notificações do Mercado Pago durante testes de integração.\n\n**Documentação completa:** backend/soat/docs/webhook-documentation.md"
+					},
+					"response": [
+						{
+							"name": "Notificação recebida com sucesso",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "id",
+											"value": "e390242e-91c7-de0d-d9f5-4d2297bc06df",
+											"description": "ID único da transação de pagamento",
+											"type": "text"
+										},
+										{
+											"key": "topic",
+											"value": "payment",
+											"description": "Tipo de notificação",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:8080/webhooks/mercado-pago",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"webhooks",
+										"mercado-pago"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			],
+			"description": "**WEBHOOK - NOTIFICAÇÕES DE PAGAMENTO**\n\nEndpoint destinado ao recebimento de notificações automáticas do Mercado Pago sobre mudanças no status de pagamentos.\n\nEste endpoint NÃO faz parte do fluxo normal de testes da aplicação, sendo utilizado exclusivamente para processamento assíncrono de confirmações de pagamento."
+		},
+		{
+			"name": "Operação da Cozinha",
+			"item": [
+				{
+					"name": "Listar pedidos ativos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/orders?page=0&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0",
+									"description": "Número da página (começando em 0)"
+								},
+								{
+									"key": "size",
+									"value": "10",
+									"description": "Tamanho da página (número de itens por página)"
+								}
+							]
+						},
+						"description": "**PASSO 11 - Acompanhando a Fila da Cozinha**\n\nCom o pagamento confirmado, o pedido é enviado para a cozinha. A equipe da cozinha monitora este endpoint para ver a lista de pedidos pendentes.\n\nRetorna uma lista paginada de pedidos que não estão com status `DELIVERED`. A lista é priorizada para garantir que os pedidos prontos sejam atendidos primeiro, seguidos pelos que estão em preparação e, por último, os recém-chegados.\n\n**Ordenação por prioridade:**\n- DONE > IN_PREPARATION > RECEIVED\n- Dentro de cada status: pedidos mais antigos primeiro\n- Pedidos com status DELIVERED não aparecem na lista\n\n**Parâmetros de paginação:**\n- page: Número da página (começando em 0)\n- size: Quantidade de itens por página (padrão: 10)"
+					},
+					"response": [
+						{
+							"name": "Lista de pedidos ativos ordenados por prioridade",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/orders?page=0&size=10",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"orders"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0",
+											"description": "Número da página (começando em 0)"
+										},
+										{
+											"key": "size",
+											"value": "10",
+											"description": "Tamanho da página (número de itens por página)"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n  {\n    \"OrderId\": \"f5c245ab-4664-d67d-74d7-225526e5fa4f\",\n    \"customerId\": \"61bc79b4-2854-15d3-688a-f98841eaa43b\",\n    \"items\": [\n      {\n        \"productId\": \"2f8c67c7-c2a3-c0d9-958a-ecd12f683323\",\n        \"name\": \"X-Burger Clássico\",\n        \"quantity\": 2,\n        \"price\": 25.90,\n        \"category\": \"SNACK\",\n        \"discount\": {\n          \"value\": 0.00\n        }\n      },\n      {\n        \"productId\": \"89398ec0-8238-cbab-fb94-b34c88066534\",\n        \"name\": \"Coca-Cola 350ml\",\n        \"quantity\": 2,\n        \"price\": 5.50,\n        \"category\": \"DRINK\",\n        \"discount\": {\n          \"value\": 0.00\n        }\n      }\n    ],\n    \"discountAmountTotal\": 0.00,\n    \"total\": 62.80,\n    \"status\": \"DONE\"\n  },\n  {\n    \"OrderId\": \"1c664f52-9918-f715-fab4-41f11d5593af\",\n    \"customerId\": \"b594a376-806d-6730-d322-22752f54a92c\",\n    \"items\": [\n      {\n        \"productId\": \"f2078dbd-fedf-d2cc-fc43-b17ec1e6daec\",\n        \"name\": \"X-Bacon Especial\",\n        \"quantity\": 1,\n        \"price\": 29.90,\n        \"category\": \"SNACK\",\n        \"discount\": {\n          \"value\": 2.00\n        }\n      }\n    ],\n    \"discountAmountTotal\": 2.00,\n    \"total\": 27.90,\n    \"status\": \"IN_PREPARATION\"\n  }\n]"
+						}
+					]
+				}
+			],
+			"description": "**OPERAÇÃO DA COZINHA**\n\nCom o pagamento confirmado, o pedido é enviado para a cozinha.\n\nGerenciamento da fila de produção e acompanhamento dos pedidos em preparação."
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080"
+		}
+	]
+}
