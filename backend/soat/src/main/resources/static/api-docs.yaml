@@ -1,8 +1,10 @@
 openapi: 3.0.3
 info:
   version: '1.0'
-  title: PosTech - SOAT
-  description: API para gerenciamento de clientes e pedidos no contexto da disciplina de Soluções de Arquitetura de Software.
+  title: 'Fast Food Tech Challenge - Sistema de Gestão'
+  description: |
+    API para o sistema de autoatendimento de uma rede de fast food.
+    Este projeto gerencia clientes, produtos, pedidos e pagamentos, seguindo as melhores práticas de arquitetura de software.
   termsOfService: ''
   license:
     url: 'https://opensource.org/licenses/MIT'
@@ -16,7 +18,9 @@ paths:
       tags:
         - Customer
       summary: Buscar cliente por CPF
-      description: Busca cliente por CPF
+      description: |-
+        Localiza e retorna os dados de um cliente específico com base no CPF fornecido.
+        O CPF deve ser informado como um parâmetro de consulta (query parameter) e conter apenas os 11 dígitos.
       operationId: findCustomer
       parameters:
         - $ref: '#/components/parameters/CpfParam'
@@ -26,7 +30,16 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '404':
-          $ref: '#/components/responses/ErrorResponse'
+          description: Cliente não encontrado para o CPF informado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 404
+                message: 'Not Found'
+                error:
+                  - 'Customer with document 11122233344 not found'
         '500':
           $ref: '#/components/responses/ErrorResponse'
       servers:
@@ -35,8 +48,10 @@ paths:
     post:
       tags:
         - Customer
-      summary: Criar cliente
-      description: Cria um cliente
+      summary: Criar um novo cliente
+      description: |-
+        Registra um novo cliente no sistema.
+        O CPF é usado como um identificador único. Se um cliente com o mesmo CPF já existir, a API retornará um erro de conflito.
       operationId: createCustomer
       requestBody:
         $ref: '#/components/requestBodies/CustomerRequest'
@@ -46,7 +61,16 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '409':
-          $ref: '#/components/responses/ErrorResponse'
+          description: Cliente já cadastrado com o CPF informado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 409
+                message: 'Conflict'
+                error:
+                  - 'Customer with document 53731833697 already exists'
         '500':
           $ref: '#/components/responses/ErrorResponse'
       servers:
@@ -56,8 +80,11 @@ paths:
     get:
       tags:
         - Product
-      summary: 'Buscar produtos (todos, por ID ou por categoria)'
-      description: Retorna todos os produtos cadastrados ou realiza filtros por ID ou categoria
+      summary: Buscar produtos
+      description: |-
+        Retorna uma lista de produtos.
+        - Se nenhum parâmetro for fornecido, retorna todos os produtos ativos.
+        - É possível filtrar por `category` para obter produtos de uma categoria específica.
       operationId: getProduct
       parameters:
         - $ref: '#/components/parameters/SKU'
@@ -77,8 +104,9 @@ paths:
     post:
       tags:
         - Product
-      summary: Criar produto
-      description: 'Cria um novo produto no catálogo, exigindo dados como nome, SKU, preço e categoria.'
+      summary: Criar um novo produto
+      description: |-
+        Cria um novo produto no catálogo, exigindo dados como nome, SKU, preço e categoria.
       operationId: postProducts
       requestBody:
         $ref: '#/components/requestBodies/ProductCreateRequest'
@@ -100,7 +128,10 @@ paths:
     delete:
       tags:
         - Product
-      summary: Inativar produto
+      summary: Inativar um produto
+      description: |-
+        Realiza a inativação de um produto, tornando-o indisponível para novos pedidos.
+        A operação é lógica e não remove o registro do banco de dados.
       operationId: deleteProducts
       parameters:
         - name: productId
@@ -124,8 +155,9 @@ paths:
     put:
       tags:
         - Product
-      summary: Atualizar produto
-      description: Atualiza um produto existente com base no identificador e nos novos dados enviados.
+      summary: Atualizar um produto
+      description: |-
+        Atualiza os dados de um produto existente com base no seu `productId`.
       operationId: putProducts
       parameters:
         - name: productId
@@ -161,15 +193,44 @@ paths:
         - url: 'http://localhost:8080'
           description: Localhost
   /orders:
+    get:
+      tags:
+        - Order
+      summary: Listar pedidos ativos
+      description: |-
+        Retorna uma lista paginada de pedidos que não estão com status `FINALIZED`.
+        A lista é ordenada pela seguinte prioridade de status: `DONE` > `IN_PREPARATION` > `RECEIVED`.
+        Dentro de cada status, os pedidos são ordenados do mais antigo para o mais novo.
+      operationId: get-orders
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/SizeParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/OrderListResponse'
+        '204':
+          description: Nenhum pedido ativo encontrado
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ErrorResponse'
+      servers:
+        - url: 'http://localhost:8080'
+          description: Localhost
     post:
       tags:
         - Order
-      summary: Criar pedido
+      summary: Criar um novo pedido
       description: |-
-        Endpoint responsável por registrar um novo pedido realizado no totem.
-        Recebe uma lista de itens escolhidos pelo cliente, aplica validações de disponibilidade, calcula o subtotal, aplica descontos válidos.
-        Retorna o resumo completo do pedido contendo os itens, valores parciais, descontos aplicados e o valor total a ser pago.
-        O pedido permanece em estado pendente de pagamento até a confirmação via meio de pagamento associado.
+        Registra um novo pedido no sistema.
+
+        **Dados necessários:**
+        - `customerId`: O ID do cliente que está realizando o pedido.
+        - `items`: Uma lista de produtos que compõem o pedido. Para cada item, é preciso fornecer o `productId`, a `quantity` e os dados do produto (`name`, `price`, `category`).
+
+        **Comportamento:**
+        - O sistema calcula o subtotal e o total do pedido.
+        - O status inicial do pedido é definido como `RECEIVED`.
       operationId: post-orders
       requestBody:
         $ref: '#/components/requestBodies/CreateOrderRequest'
@@ -184,37 +245,49 @@ paths:
       tags:
         - Payment
       summary: Iniciar processo de pagamento
-      description: Solicita o processamento de um pagamento associado a um pedido previamente criado. O endpoint aceita a requisição e retorna imediatamente com o identificador da transação de pagamento.
+      description: |-
+        Inicia o processo de pagamento para um pedido específico.
+        A API recebe a solicitação e retorna imediatamente um `paymentId` e uma `paymentUrl` (quando disponível) para redirecionamento ao gateway de pagamento.
+        O processamento do pagamento ocorre de forma assíncrona através do gateway (ex: Mercado Pago).
+        
+        **Comportamento:**
+        - Em caso de sucesso: retorna `paymentId` e `paymentUrl` para redirecionamento
+        - Em caso de falha: retorna `paymentId` e `paymentUrl` como `null`
       operationId: post-payments
       requestBody:
         $ref: '#/components/requestBodies/PaymentRequest'
       responses:
         '202':
-          description: 'Representa a resposta do sistema após o recebimento de uma solicitação de pagamento. Contém o identificador único da transação, que poderá ser utilizado para consultar o status do pagamento posteriormente.'
+          description: 'Pagamento iniciado com sucesso. Contém o identificador único da transação e a URL de pagamento para redirecionamento (quando disponível).'
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  paymentId:
-                    $ref: '#/components/schemas/UUID'
-                required:
-                  - paymentId
+                $ref: '#/components/schemas/PaymentInitiationResult'
               examples:
-                Example 1:
+                PaymentSuccess:
+                  summary: 'Pagamento iniciado com sucesso'
+                  description: 'Exemplo de resposta quando o pagamento é iniciado com sucesso e a URL do gateway é retornada'
                   value:
                     paymentId: 241fae7b-0210-4d29-a928-90653c9a9a89
-      servers:
-        - url: 'http://localhost:8080'
-          description: Localhost
+                    paymentUrl: 'https://www.mercadopago.com/mlb/payments/ticket?foo=bar'
+                PaymentFailure:
+                  summary: 'Pagamento com falha'
+                  description: 'Exemplo de resposta quando há falha na comunicação com o gateway, mas o pagamento foi registrado'
+                  value:
+                    paymentId: 241fae7b-0210-4d29-a928-90653c9a9a89
+                    paymentUrl: null
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ErrorResponse'
   '/payments/{paymentId}':
     get:
       tags:
         - Payment
-      summary: Consultar pagamento
+      summary: Consultar dados do pagamento
       description: |-
-        Este endpoint permite consultar as informações de uma transação de pagamento previamente processada.
-        É útil para verificar o status final de um pagamento iniciado de forma assíncrona ou para exibir detalhes ao cliente ou sistemas internos.
+        Retorna os detalhes completos de uma transação de pagamento, incluindo status, valor e data de processamento.
+        Útil para verificar o resultado final de um pagamento.
       operationId: get-payments-paymentId
       parameters:
         - name: paymentId
@@ -229,13 +302,41 @@ paths:
       servers:
         - url: 'http://localhost:8080'
           description: Localhost
+  '/payments/{paymentId}/status':
+    get:
+      tags:
+        - Payment
+      summary: Consultar status do pagamento
+      description: |-
+        Endpoint otimizado para verificar rapidamente o status de uma transação de pagamento.
+        Retorna apenas o `paymentId` e o `status` atual.
+      operationId: get-payments-paymentId-status
+      parameters:
+        - name: paymentId
+          in: path
+          description: Identificador único da transação de pagamento gerada durante o processo de checkout.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/PaymentStatusResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ErrorResponse'
+      servers:
+        - url: 'http://localhost:8080'
+          description: Localhost
 tags:
   - name: Customer
     description: Operações relacionadas a clientes
   - name: Product
     description: Operações relacionadas a produtos
   - name: Order
-    description: Operações relacionadas aos pedidos
+    description: Operações relacionadas a pedidos
+  - name: Payment
+    description: Operações relacionadas a pagamentos
 components:
   parameters:
     CpfParam:
@@ -264,6 +365,25 @@ components:
       required: false
       schema:
         type: string
+    PageParam:
+      name: page
+      in: query
+      description: Número da página (começando em 0)
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+    SizeParam:
+      name: size
+      in: query
+      description: Tamanho da página (número de itens por página)
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
   requestBodies:
     CustomerRequest:
       description: ''
@@ -358,7 +478,7 @@ components:
                 image: string
                 category: SNACK
     CreateOrderRequest:
-      description: 'Requisição para criação de um novo pedido contendo cliente, lista de itens e observações opcionais.'
+      description: 'Requisição para criação de um novo pedido contendo cliente, lista completa de itens com todos os dados necessários e observações opcionais.'
       content:
         application/json:
           schema:
@@ -370,38 +490,65 @@ components:
                 type: array
                 minItems: 1
                 maxItems: 100
+                description: 'Lista completa de itens do pedido com todos os dados necessários'
                 items:
                   $ref: '#/components/schemas/OrderItem'
               discounts:
                 type: array
-                readOnly: true
+                description: 'Lista de descontos aplicáveis ao pedido'
                 items:
                   $ref: '#/components/schemas/Discount'
               notes:
                 type: array
+                description: 'Observações opcionais para o pedido (ex: retirar salada, sem cebola)'
                 items:
                   type: string
-                  readOnly: true
                   example: Remover a salada
             required:
               - CustomerId
               - items
           examples:
-            Example 1:
+            PedidoCompleto:
+              summary: 'Pedido completo com múltiplos itens'
+              description: 'Exemplo de criação de pedido com todos os dados necessários: cliente, itens completos com nome, preço, categoria e quantidade'
               value:
                 CustomerId: 241fae7b-0210-4d29-a928-90653c9a9a89
                 items:
-                  - productId: 241fae7b-0210-4d29-a928-90653c9a9a89
-                    name: string
+                  - productId: 441fae7b-0210-4d29-a928-90653c9a9a89
+                    name: Big Mac
                     quantity: 2
-                    price: 1946.32
+                    price: 25.90
                     category: SNACK
                     discount:
-                      value: 12.4
+                      value: 0.0
+                  - productId: 551fae7b-0210-4d29-a928-90653c9a9a89
+                    name: Coca-Cola 500ml
+                    quantity: 1
+                    price: 6.50
+                    category: DRINK
+                    discount:
+                      value: 0.0
                 discounts:
-                  - value: 12.4
+                  - value: 0.0
                 notes:
-                  - Remover a salada
+                  - Sem cebola
+            PedidoComDesconto:
+              summary: 'Pedido com desconto aplicado'
+              description: 'Exemplo de pedido com desconto aplicado nos itens e no total'
+              value:
+                CustomerId: 241fae7b-0210-4d29-a928-90653c9a9a89
+                items:
+                  - productId: 441fae7b-0210-4d29-a928-90653c9a9a89
+                    name: Big Mac
+                    quantity: 1
+                    price: 25.90
+                    category: SNACK
+                    discount:
+                      value: 2.50
+                discounts:
+                  - value: 2.50
+                notes:
+                  - Promoção aplicada
     PaymentRequest:
       description: Representa os dados necessários para iniciar o processo de pagamento de um pedido. Esse objeto é enviado no corpo da requisição.
       content:
@@ -479,13 +626,10 @@ components:
             properties:
               id:
                 type: string
-              message:
-                type: string
           examples:
             Example 1:
               value:
                 id: string
-                message: string
     UpdateProduct200Response:
       description: Produto atualizado com sucesso!
       content:
@@ -503,6 +647,51 @@ components:
                 description: string
                 image: string
                 category: SNACK
+    OrderListResponse:
+      description: Lista de pedidos ativos ordenados por prioridade e data
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                OrderId:
+                  $ref: '#/components/schemas/UUID'
+                customerId:
+                  $ref: '#/components/schemas/UUID'
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/OrderItem'
+                discountAmountTotal:
+                  $ref: '#/components/schemas/Money'
+                total:
+                  $ref: '#/components/schemas/Money'
+                status:
+                  $ref: '#/components/schemas/OrderStatus'
+              required:
+                - OrderId
+                - customerId
+                - items
+                - discountAmountTotal
+                - total
+                - status
+          examples:
+            Example 1:
+              value:
+                - OrderId: 241fae7b-0210-4d29-a928-90653c9a9a89
+                  customerId: 321fae7b-0210-4d29-a928-90653c9a9a89
+                  items:
+                    - productId: 441fae7b-0210-4d29-a928-90653c9a9a89
+                      name: Big Mac
+                      quantity: 2
+                      price: 25.90
+                      category: SNACK
+                  discountAmountTotal: 0.0
+                  subtotal: 51.80
+                  total: 51.80
+                  status: DONE
     OrderCreatedResponse:
       description: Example response
       content:
@@ -596,6 +785,26 @@ components:
                 amount: 1946.32
                 paymentStatus: APPROVED
                 processedAt: '2025-05-20T00:00:00Z'
+    PaymentStatusResponse:
+      description: Representa o status atual de uma transação de pagamento de forma simplificada.
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              paymentId:
+                $ref: '#/components/schemas/UUID'
+              status:
+                $ref: '#/components/schemas/PaymentStatus'
+            required:
+              - paymentId
+              - status
+          examples:
+            Example 1:
+              value:
+                paymentId: 241fae7b-0210-4d29-a928-90653c9a9a89
+                status: APPROVED
     Product200ListResponse:
       description: Example response
       content:
@@ -677,18 +886,20 @@ components:
     OrderItem:
       type: object
       title: OrderItem
-      description: 'Item individual de um pedido, contendo informações do produto e quantidade solicitada.'
+      description: 'Item individual de um pedido, contendo todas as informações do produto e quantidade solicitada.'
       properties:
         productId:
           $ref: '#/components/schemas/UUID'
         name:
           type: string
+          description: 'Nome do produto'
+          example: 'Big Mac'
         quantity:
           type: integer
           format: int32
           minimum: 1
           maximum: 100
-          readOnly: true
+          description: 'Quantidade solicitada do produto'
           example: 2
         price:
           $ref: '#/components/schemas/Money'
@@ -780,12 +991,28 @@ components:
         - PENDING
         - FINISHED
       title: PaymentStatus
-      description: Representa o resultado do processamento de uma tentativa de pagamento durante o fluxo de checkout
       readOnly: true
+    PaymentInitiationResult:
+      type: object
+      title: PaymentInitiationResult
+      description: 'Resultado da iniciação de pagamento contendo ID do pagamento e URL para redirecionamento'
+      properties:
+        paymentId:
+          $ref: '#/components/schemas/UUID'
+        paymentUrl:
+          type: string
+          format: uri
+          nullable: true
+          description: 'URL de pagamento gerada pelo gateway (ex: Mercado Pago). Será null em caso de falha no processamento.'
+          example: 'https://www.mercadopago.com/mlb/payments/ticket?foo=bar'
+      required:
+        - paymentId
+      example:
+        paymentId: '241fae7b-0210-4d29-a928-90653c9a9a89'
+        paymentUrl: 'https://www.mercadopago.com/mlb/payments/ticket?foo=bar'
     DateTime:
       type: string
       title: DateTime
+      description: 'Data e hora no formato ISO 8601'
       format: date-time
-      pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,9})?(Z|[+-]\d{2}:\d{2})$'
-      readOnly: true
       example: '2025-05-20T00:00:00Z'

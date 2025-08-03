@@ -19,6 +19,10 @@ spring:
     enabled: true
     baseline-on-migrate: true
     placeholder-replacement: false
+  profiles:
+    active:
+      - mercadoPagoClient
+
 
 springdoc:
   swagger-ui:
@@ -27,3 +31,8 @@ management:
   endpoints:
     web:
       base-path: /
+
+app:
+  payment-gateway:
+    mercadopago:
+      access-token: ${MERCADO_PAGO_ACCESS_TOKEN:accesstoken}
