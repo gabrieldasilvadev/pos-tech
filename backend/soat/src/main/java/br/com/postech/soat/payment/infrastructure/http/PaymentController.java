@@ -3,8 +3,9 @@ package br.com.postech.soat.payment.infrastructure.http;
 import br.com.postech.soat.openapi.api.PaymentApi;
 import br.com.postech.soat.openapi.model.GetPaymentsPaymentId200ResponseDto;
 import br.com.postech.soat.openapi.model.GetPaymentsPaymentIdStatus200ResponseDto;
-import br.com.postech.soat.openapi.model.PostPayments202ResponseDto;
+import br.com.postech.soat.openapi.model.PaymentInitiationResultDto;
 import br.com.postech.soat.openapi.model.PostPaymentsRequestDto;
+import br.com.postech.soat.payment.application.dto.PaymentInitiationResult;
 import br.com.postech.soat.payment.application.usecases.FindPaymentByIdUseCase;
 import br.com.postech.soat.payment.application.usecases.GetPaymentStatusUseCase;
 import br.com.postech.soat.payment.application.usecases.InitiatePaymentUseCase;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,12 +28,17 @@ public class PaymentController implements PaymentApi {
     private final GetPaymentStatusUseCase getPaymentStatusUseCase;
 
     @Override
-    public ResponseEntity<PostPayments202ResponseDto> postPayments(PostPaymentsRequestDto postPaymentsRequestDto) {
-        final PaymentId paymentId = initiatePaymentUseCase.execute(PaymentCommandMapper.INSTANCE
+    public ResponseEntity<PaymentInitiationResultDto> postPayments(PostPaymentsRequestDto postPaymentsRequestDto) {
+        final PaymentInitiationResult paymentInitiationResult = initiatePaymentUseCase.execute(PaymentCommandMapper.INSTANCE
             .toCommand(postPaymentsRequestDto));
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(PostPayments202ResponseDto.builder()
-            .paymentId(paymentId.getValue())
-            .build());
+
+        PaymentInitiationResultDto responseDto = PaymentInitiationResultDto.builder()
+            .paymentId(paymentInitiationResult.paymentId().getValue())
+            .paymentUrl(paymentInitiationResult.paymentUrl() != null ?
+                URI.create(paymentInitiationResult.paymentUrl()) : null)
+            .build();
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseDto);
     }
 
     @Override

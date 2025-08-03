@@ -27,39 +27,22 @@ public class ProcessPaymentNotificationUseCase {
 
         final Payment payment = paymentRepository.findById(paymentId);
 
-        // Parse payment status from fake gateway response
         PaymentStatus gatewayStatus = parsePaymentStatusFromResponse(paymentProcessed);
 
-        // Update payment based on gateway status
         switch (gatewayStatus) {
-            case APPROVED -> {
-                payment.finish();
-            }
-            case DECLINED -> {
-                payment.decline();
-            }
-            case FAILED -> {
-                payment.fail();
-            }
-            default -> {
-                throw new IllegalStateException("Unexpected payment status: " + gatewayStatus);
-            }
+            case APPROVED -> payment.finish();
+            case DECLINED -> payment.decline();
+            case FAILED -> payment.fail();
+            default -> throw new IllegalStateException("Unexpected payment status: " + gatewayStatus);
         }
 
         paymentRepository.save(payment);
     }
 
     private PaymentStatus parsePaymentStatusFromResponse(String paymentProcessed) {
-        // Parse the status from the fake gateway response
-        // Example: "Payment details for ID: uuid, Status: APPROVED, Amount: 100.0"
-        if (paymentProcessed.contains("Status: DECLINED")) {
-            return PaymentStatus.DECLINED;
-        } else if (paymentProcessed.contains("Status: FAILED")) {
-            return PaymentStatus.FAILED;
-        } else if (paymentProcessed.contains("Status: APPROVED")) {
-            return PaymentStatus.APPROVED;
-        } else {
-            return PaymentStatus.APPROVED; // Default to approved for backward compatibility
-        }
+        if (paymentProcessed.contains("Status: DECLINED")) return PaymentStatus.DECLINED;
+        if (paymentProcessed.contains("Status: FAILED")) return PaymentStatus.FAILED;
+        if (paymentProcessed.contains("Status: APPROVED")) return PaymentStatus.APPROVED;
+        return PaymentStatus.APPROVED;
     }
 }
