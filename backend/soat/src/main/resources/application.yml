@@ -23,9 +23,6 @@ spring:
     active:
       - mercadoPagoClient
 
-server:
-  error:
-    include-stacktrace: never
 
 springdoc:
   swagger-ui:
