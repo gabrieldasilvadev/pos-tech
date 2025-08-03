@@ -247,30 +247,39 @@ paths:
       summary: Iniciar processo de pagamento
       description: |-
         Inicia o processo de pagamento para um pedido específico.
-        A API recebe a solicitação e retorna imediatamente um `paymentId`, que será usado para consultar o status da transação.
-        O processamento do pagamento ocorre de forma assíncrona.
+        A API recebe a solicitação e retorna imediatamente um `paymentId` e uma `paymentUrl` (quando disponível) para redirecionamento ao gateway de pagamento.
+        O processamento do pagamento ocorre de forma assíncrona através do gateway (ex: Mercado Pago).
+        
+        **Comportamento:**
+        - Em caso de sucesso: retorna `paymentId` e `paymentUrl` para redirecionamento
+        - Em caso de falha: retorna `paymentId` e `paymentUrl` como `null`
       operationId: post-payments
       requestBody:
         $ref: '#/components/requestBodies/PaymentRequest'
       responses:
         '202':
-          description: 'Representa a resposta do sistema após o recebimento de uma solicitação de pagamento. Contém o identificador único da transação, que poderá ser utilizado para consultar o status do pagamento posteriormente.'
+          description: 'Pagamento iniciado com sucesso. Contém o identificador único da transação e a URL de pagamento para redirecionamento (quando disponível).'
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  paymentId:
-                    $ref: '#/components/schemas/UUID'
-                required:
-                  - paymentId
+                $ref: '#/components/schemas/PaymentInitiationResult'
               examples:
-                Example 1:
+                PaymentSuccess:
+                  summary: 'Pagamento iniciado com sucesso'
+                  description: 'Exemplo de resposta quando o pagamento é iniciado com sucesso e a URL do gateway é retornada'
                   value:
                     paymentId: 241fae7b-0210-4d29-a928-90653c9a9a89
-      servers:
-        - url: 'http://localhost:8080'
-          description: Localhost
+                    paymentUrl: 'https://www.mercadopago.com/mlb/payments/ticket?foo=bar'
+                PaymentFailure:
+                  summary: 'Pagamento com falha'
+                  description: 'Exemplo de resposta quando há falha na comunicação com o gateway, mas o pagamento foi registrado'
+                  value:
+                    paymentId: 241fae7b-0210-4d29-a928-90653c9a9a89
+                    paymentUrl: null
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ErrorResponse'
   '/payments/{paymentId}':
     get:
       tags:
@@ -982,12 +991,28 @@ components:
         - PENDING
         - FINISHED
       title: PaymentStatus
-      description: Representa o resultado do processamento de uma tentativa de pagamento durante o fluxo de checkout
       readOnly: true
+    PaymentInitiationResult:
+      type: object
+      title: PaymentInitiationResult
+      description: 'Resultado da iniciação de pagamento contendo ID do pagamento e URL para redirecionamento'
+      properties:
+        paymentId:
+          $ref: '#/components/schemas/UUID'
+        paymentUrl:
+          type: string
+          format: uri
+          nullable: true
+          description: 'URL de pagamento gerada pelo gateway (ex: Mercado Pago). Será null em caso de falha no processamento.'
+          example: 'https://www.mercadopago.com/mlb/payments/ticket?foo=bar'
+      required:
+        - paymentId
+      example:
+        paymentId: '241fae7b-0210-4d29-a928-90653c9a9a89'
+        paymentUrl: 'https://www.mercadopago.com/mlb/payments/ticket?foo=bar'
     DateTime:
       type: string
       title: DateTime
+      description: 'Data e hora no formato ISO 8601'
       format: date-time
-      pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,9})?(Z|[+-]\d{2}:\d{2})$'
-      readOnly: true
       example: '2025-05-20T00:00:00Z'
