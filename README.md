@@ -34,7 +34,7 @@ O projeto adota tecnologias, práticas e ferramentas alinhadas com o Pós Tech e
 
 ## Referência: [Pós Tech em Software Architecture - FIAP+Alura](https://postech.fiap.com.br/curso/software-architecture/)
 
-## Participantes Grupo 75
+## Participantes
 
 [![brunocesaromax](https://github.com/brunocesaromax.png?size=100)](https://github.com/brunocesaromax)
 [![philipphahmann](https://github.com/philipphahmann.png?size=100)](https://github.com/philipphahmann)
