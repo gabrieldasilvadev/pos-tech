@@ -60,7 +60,7 @@ jobs:
       - name: Show JaCoCo Coverage
         run: |
           sudo apt install -y libxml2-utils -qq
-          JACOCO_XML=${{ github.workspace }}"/coverage/jacoco.xml"
+          JACOCO_XML="${{ github.workspace }}"/coverage/jacoco.xml"
           if [ -f "$JACOCO_XML" ]; then
             MISSED=$(xmllint --xpath "string(//report/counter[@type='LINE']/@missed)" "$JACOCO_XML")
             COVERED=$(xmllint --xpath "string(//report/counter[@type='LINE']/@covered)" "$JACOCO_XML")
