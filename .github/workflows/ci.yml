@@ -8,6 +8,7 @@ env:
   GITHUB_SHA: ${{ github.sha }}
   SHORT_SHA: $(echo $GITHUB_SHA | cut -c1-7)
   IMAGE_TAG: ${{ github.event.repository.name }}:$(echo $GITHUB_SHA | cut -c1-7)
+  IMAGE_TAG_GITHUB: ghcr.io/${{ github.repository }}:${{ github.sha }}
   THRESHOLD: 90.0
 
 jobs:
@@ -37,7 +38,7 @@ jobs:
           push: true
           no-cache: true
           target: builder
-          tags: ${{ env.IMAGE_TAG }}
+          tags: ${{ env.IMAGE_TAG_GITHUB }}
 
   UnitTest:
     runs-on: ubuntu-latest
@@ -51,10 +52,10 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Pull Image Docker
-        run: docker pull ${{ env.IMAGE_TAG }}
+        run: docker pull ${{ env.IMAGE_TAG_GITHUB }}
 
       - name: test
-        run: docker run --privileged -v ${{ github.workspace }}/coverage:/app/target/site/jacoco/ --rm ${{ env.IMAGE_TAG }} sh -c "dockerd & sleep 5 && mvn compile test"
+        run: docker run --privileged -v ${{ github.workspace }}/coverage:/app/target/site/jacoco/ --rm ${{ env.IMAGE_TAG_GITHUB }} sh -c "dockerd & sleep 5 && mvn compile test"
 
       - name: Show JaCoCo Coverage
         run: |
@@ -92,10 +93,10 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Pull Image Docker
-        run: docker pull ${{ env.IMAGE_TAG }}
+        run: docker pull ${{ env.IMAGE_TAG_GITHUB }}
 
       - name: PMDCheck
-        run: docker run --rm -v ${{ github.workspace }}/coverage:/app/target/site/jacoco/ ${{ env.IMAGE_TAG }} mvn pmd:check -X || exit 0
+        run: docker run --rm -v ${{ github.workspace }}/coverage:/app/target/site/jacoco/ ${{ env.IMAGE_TAG_GITHUB }} mvn pmd:check -X || exit 0
 
   Package:
     runs-on: ubuntu-latest
@@ -109,10 +110,10 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Pull Image Docker
-        run: docker pull ${{ env.IMAGE_TAG }}
+        run: docker pull ${{ env.IMAGE_TAG_GITHUB }}
 
       - name: Package
-        run: docker run --rm ${{ env.IMAGE_TAG }} mvn clean package -DskipTests --batch-mode
+        run: docker run --rm ${{ env.IMAGE_TAG_GITHUB }} mvn clean package -DskipTests --batch-mode
 
   deploy:
     runs-on: ubuntu-latest
