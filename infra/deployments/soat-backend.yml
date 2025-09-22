@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: soat-backend
-          image: soat:latest
+          image: ${K8S_IMAGE_TAG}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
