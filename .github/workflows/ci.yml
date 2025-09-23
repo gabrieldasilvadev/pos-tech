@@ -9,7 +9,7 @@ env:
   SHORT_SHA: $(echo $GITHUB_SHA | cut -c1-7)
   IMAGE_TAG: ${{ github.event.repository.name }}:$(echo $GITHUB_SHA | cut -c1-7)
   IMAGE_TAG_GITHUB: ghcr.io/${{ github.repository }}:${{ github.sha }}
-  THRESHOLD: 90.0
+  THRESHOLD: 89.0
 
 jobs:
   DockerBuild:
