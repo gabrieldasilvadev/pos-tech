@@ -1,9 +1,9 @@
 package br.com.postech.soat.commons.infrastructure.security;
 
 import java.time.Clock;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -13,14 +13,11 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 @EnableConfigurationProperties(SecurityProperties.class)
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -33,6 +30,7 @@ public class SecurityConfig {
                     "/actuator/**",
                     "/webhooks/mercado-pago/**"
                 ).permitAll()
+                .requestMatchers(HttpMethod.POST, "/customers").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
