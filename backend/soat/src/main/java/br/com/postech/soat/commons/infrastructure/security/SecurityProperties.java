@@ -15,15 +15,7 @@ public class SecurityProperties {
     @Getter
     @Setter
     public static class Jwt {
-        /**
-         * Secret key used to sign and validate JWT tokens. It must have at least 32 characters
-         * to be compatible with the HS256 algorithm requirements.
-         */
         private String secret = "change-me-change-me-change-me-change-me";
-
-        /**
-         * Token expiration window. The default value is two hours.
-         */
         private Duration expiration = Duration.ofHours(2);
     }
 }
