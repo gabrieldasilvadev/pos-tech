@@ -1,6 +1,8 @@
 package br.com.postech.soat.commons.infrastructure.security;
 
 import br.com.postech.soat.commons.infrastructure.security.http.AuthenticationRequest;
+import br.com.postech.soat.payment.domain.entity.Payment;
+import br.com.postech.soat.payment.domain.valueobject.PaymentId;
 import br.com.postech.soat.payment.infrastructure.http.PostgresTestContainerConfig;
 import br.com.postech.soat.customer.application.repositories.CustomerRepository;
 import br.com.postech.soat.customer.domain.entity.Customer;
@@ -8,6 +10,7 @@ import br.com.postech.soat.customer.domain.valueobject.CPF;
 import br.com.postech.soat.customer.domain.valueobject.Email;
 import br.com.postech.soat.customer.domain.valueobject.Name;
 import br.com.postech.soat.customer.domain.valueobject.Phone;
+import br.com.postech.soat.payment.infrastructure.paymentgateway.CheckoutClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +19,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,17 +36,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("JWT Security Integration Tests")
 class JwtSecurityIntegrationTest extends PostgresTestContainerConfig {
 
-    @org.springframework.boot.test.context.TestConfiguration
+    @TestConfiguration
     static class TestBeans {
-        @org.springframework.context.annotation.Bean
-        public br.com.postech.soat.payment.infrastructure.paymentgateway.CheckoutClient checkoutClient() {
-            return new br.com.postech.soat.payment.infrastructure.paymentgateway.CheckoutClient() {
+        @Bean
+        public CheckoutClient checkoutClient() {
+            return new CheckoutClient() {
                 @Override
-                public String createPayment(br.com.postech.soat.payment.domain.entity.Payment payment) {
+                public String createPayment(Payment payment) {
                     return "http://test/payment/" + payment.getId().getValue();
                 }
                 @Override
-                public String getPaymentDetails(br.com.postech.soat.payment.domain.valueobject.PaymentId paymentId) {
+                public String getPaymentDetails(PaymentId paymentId) {
                     return "processed";
                 }
             };
@@ -61,7 +66,6 @@ class JwtSecurityIntegrationTest extends PostgresTestContainerConfig {
 
     @BeforeEach
     void setUp() {
-        // Ensure customer exists for login tests
         customerRepository.findByCpf(existingCpf).orElseGet(() ->
             customerRepository.save(
                 Customer.create(
@@ -123,7 +127,6 @@ class JwtSecurityIntegrationTest extends PostgresTestContainerConfig {
     @Test
     @DisplayName("Refresh token deve emitir novo token válido")
     void refreshTokenFlow() throws Exception {
-        // First login
         AuthenticationRequest request = new AuthenticationRequest(existingCpf);
         String token = extractToken(mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -131,7 +134,6 @@ class JwtSecurityIntegrationTest extends PostgresTestContainerConfig {
             .andExpect(status().isOk())
             .andReturn());
 
-        // Refresh using Authorization header
         MvcResult refreshResult = mockMvc.perform(post("/auth/refresh")
                 .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
@@ -139,9 +141,7 @@ class JwtSecurityIntegrationTest extends PostgresTestContainerConfig {
 
         String refreshed = extractToken(refreshResult);
         assertThat(refreshed).isNotBlank();
-        // It's acceptable that refreshed token might be different; assert it's usable
 
-        // Use refreshed token to access protected endpoint
         mockMvc.perform(get("/customers")
                 .param("cpf", existingCpf)
                 .header("Authorization", "Bearer " + refreshed))
@@ -155,7 +155,7 @@ class JwtSecurityIntegrationTest extends PostgresTestContainerConfig {
         if (node.has("token")) {
             return node.get("token").asText();
         }
-        // fallback to body-only string if structure changes
+        
         return json.replace("\"", "").replace("{token:", "").replace("}", "").trim();
     }
 }
