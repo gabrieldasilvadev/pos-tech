@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest(classes = JwtSecurityIntegrationTest.TestBeans.class)
+@SpringBootTest(classes = {br.com.postech.soat.SoatApplication.class, JwtSecurityIntegrationTest.TestBeans.class})
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @DisplayName("JWT Security Integration Tests")
