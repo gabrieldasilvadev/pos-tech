@@ -30,7 +30,6 @@ spring:
     active:
       - mercadoPagoClient
 
-
 springdoc:
   swagger-ui:
     path: /docs
