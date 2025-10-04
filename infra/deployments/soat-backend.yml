@@ -10,7 +10,7 @@ metadata:
     maintainer: "SOAT - Grupo 75"
     description: "Deployment do backend da aplicação Java"
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: soat-backend
@@ -21,17 +21,17 @@ spec:
     spec:
       containers:
         - name: soat-backend
-          image: soat:latest
+          image: ${K8S_IMAGE_TAG}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
           resources:
             requests:
               cpu: "100m"
-              memory: "128Mi"
+              memory: "512Mi"
             limits:
               cpu: "500m"
-              memory: "512Mi"
+              memory: "1Gi"
           envFrom:
             - configMapRef:
                 name: soat-backend-config
