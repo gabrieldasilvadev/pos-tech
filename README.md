@@ -42,6 +42,16 @@ O projeto adota tecnologias, práticas e ferramentas alinhadas com o Pós Tech e
 [![vinicius-ma](https://github.com/vinicius-ma.png?size=100)](https://github.com/vinicius-ma)
 [![gabrieldasilvadev](https://github.com/gabrieldasilvadev.png?size=100)](https://github.com/gabrieldasilvadev)
 
+- Nome: Bruno César Vicente da Silva Paula | RM360941 | Email: brunocesar.oc96@gmail.com
+
+- Nome: Philipp Teles Fernandes Erwin Hahmann | RM360012 | Email: hahmann96@gmail.com
+
+- Nome: Shanderson da Silva Vieira | RM362970 | Email: shanderson09@gmail.com
+
+- Nome: Vinicius Moraes Andreghetti | RM364516 | Email: vinicius.andreghetti@gmail.com
+
+- Nome: Gabriel da Silva | RM362894 | Email: gabrieldasilvaprivado1@gmail.com
+
 ---
 
 ## Instalação
@@ -245,6 +255,70 @@ No exemplo abaixo, o acesso a aplicação está liberada no endereço **http://1
     >
 </div>
 
+---
+
+## Integração com AWS LocalStack (JWT Authorizer + API Gateway)
+
+Este projeto também integra com **LocalStack** para simular serviços da AWS localmente.
+
+### Estrutura
+
+```
+infra/
+  .localstack/          # Configurações do LocalStack
+lambda/
+  ├── authorizer.js     # Lambda Authorizer para validar JWT
+  ├── authorizer.zip
+  ├── orders.js         # Lambda backend de exemplo
+  └── orders.zip
+setup/
+  ├── setup.sh          # Cria Lambda Authorizer
+  └── setup-apigw.sh    # Cria API Gateway + rota /orders + integração com Authorizer
+docker-compose.yml
+```
+
+### Requisitos
+
+- Docker + Docker Compose
+- LocalStack (via docker-compose)
+- `awslocal` (AWS CLI Local)
+- `zip`
+
+### Subir ambiente
+
+```sh
+docker compose up -d
+./setup/setup.sh          # cria Lambda Authorizer
+./setup/setup-apigw.sh    # cria API Gateway + rota /orders
+```
+
+### Testando
+
+1. Gerar token JWT (Node.js):
+
+```js
+const jwt = require("jsonwebtoken");
+const secret = "meuSegredoLocal"; 
+const token = jwt.sign({ sub: "123", role: "ADMIN" }, secret, { expiresIn: "1h" });
+console.log(token);
+```
+
+```sh
+npm install jsonwebtoken
+node generate-token.js
+```
+
+2. Chamada com cURL:
+
+```sh
+curl -i   -H "Authorization: Bearer <TOKEN>"   http://localhost:4566/restapis/<API_ID>/dev/_user_request_/orders
+```
+
+- ✅ Token válido → `200 OK` `{ "message": "Orders OK" }`
+- ❌ Token inválido/ausente → `403 Forbidden`
+
+---
+
 ### Aplicando o escalonamento dos PODs usando o HPA na prática
 Para demonstrar o funcionamento do Horizontal Pod Autoscaler (HPA), vamos gerar uma carga de requisições na API do backend utilizando a ferramenta k6 e observar o Kubernetes escalonar os pods automaticamente
 
@@ -399,3 +473,15 @@ Com o pagamento confirmado, o pedido é enviado para a cozinha.
 
 11. **`GET /orders` - Acompanhando a Fila da Cozinha**
     A equipe da cozinha monitora este endpoint para ver a lista de pedidos pendentes. A lista é priorizada para garantir que os pedidos prontos sejam atendidos primeiro, seguidos pelos que estão em preparação e, por último, os recém-chegados.
+
+## Artefatos
+
+**Fase 1**
+
+- Documentação do Event Storming via Miro: https://miro.com/app/board/uXjVIFxbQ2o=/?utm_source=notification&utm_medium=email&utm_campaign=daily-updates&utm_content=view-board-cta&lid=9lbsesqjsr5i
+- Apresentação do projeto: https://www.loom.com/share/b413f24f17f6452e9b513523c6bc12fa?sid=b1bbdf3f-f82a-4fa1-9a7a-cbbccc9ed54b
+
+**Fase 2**
+
+- Clean Architecture: https://www.loom.com/share/5091e99dfde44c76be3ebbc5b03c26d5?sid=592f9466-efb1-417d-b2e6-3b59e923b0f1
+- Kubernetes: https://www.loom.com/share/8a4ba16cab1d4cbaa7de549a625283be?sid=3afb585c-1ad6-42eb-9ccb-96af18ac1cf5
