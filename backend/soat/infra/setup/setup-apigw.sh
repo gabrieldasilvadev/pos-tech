@@ -6,6 +6,20 @@ export AWS_SECRET_ACCESS_KEY=test
 export AWS_DEFAULT_REGION=us-east-1
 
 LAMBDA_DIR="$(cd "$(dirname "$0")/../lambda" && pwd)"
+ZIP_DIR="$LAMBDA_DIR/zip"
+
+# ==========================
+# GERA OS ZIPS ANTES DE SUBIR
+# ==========================
+echo "📦 Gerando arquivos ZIP das Lambdas..."
+mkdir -p "$ZIP_DIR"
+for file in "$LAMBDA_DIR"/*.js; do
+  name=$(basename "$file" .js)
+  zip -j "$ZIP_DIR/$name.zip" "$file" >/dev/null
+  echo "   -> $name.zip"
+done
+echo "✅ Zips prontos em $ZIP_DIR"
+echo ""
 
 # ==========================
 # API GATEWAY
@@ -15,7 +29,6 @@ API_ID=$(awslocal apigateway create-rest-api \
   --name "fast-food-api" \
   --query 'id' --output text 2>/dev/null || true)
 
-# Se já existir, pega o ID
 if [ -z "$API_ID" ]; then
   API_ID=$(awslocal apigateway get-rest-apis \
     --query 'items[?name==`fast-food-api`].id' --output text)
@@ -47,32 +60,8 @@ fi
 echo "AUTHORIZER_ID=$AUTHORIZER_ID"
 
 # ==========================
-# FUNÇÕES AUXILIARES
+# FUNÇÃO AUXILIAR
 # ==========================
-create_lambda_if_not_exists() {
-  local function_name=$1
-  local file_name=$2
-  local message=$3
-
-  cat > "$LAMBDA_DIR/$file_name.js" <<EOF
-exports.handler = async () => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ message: "$message" })
-  };
-};
-EOF
-
-  zip -j "$LAMBDA_DIR/$file_name.zip" "$LAMBDA_DIR/$file_name.js" >/dev/null
-
-  awslocal lambda create-function \
-    --function-name $function_name \
-    --runtime nodejs18.x \
-    --handler $file_name.handler \
-    --role arn:aws:iam::000000000000:role/lambda-role \
-    --zip-file fileb://$LAMBDA_DIR/$file_name.zip >/dev/null 2>&1 || true
-}
-
 create_endpoint() {
   local path=$1
   local method=$2
@@ -110,7 +99,18 @@ create_endpoint() {
       --authorization-type NONE || true
   fi
 
-  create_lambda_if_not_exists $function_name $file_name "$function_name OK"
+  echo "📦 Verificando Lambda $function_name..."
+  if [ ! -f "$ZIP_DIR/$file_name.zip" ]; then
+    echo "❌ Arquivo $ZIP_DIR/$file_name.zip não encontrado!"
+    exit 1
+  fi
+
+  awslocal lambda create-function \
+    --function-name $function_name \
+    --runtime nodejs18.x \
+    --handler $file_name.handler \
+    --role arn:aws:iam::000000000000:role/lambda-role \
+    --zip-file fileb://$ZIP_DIR/$file_name.zip >/dev/null 2>&1 || true
 
   echo "⚡ Integrando rota $method $path com Lambda $function_name..."
   awslocal apigateway put-integration \
@@ -130,10 +130,10 @@ create_endpoint "/customers" POST "customers-service" "customers" "NONE" ""
 create_endpoint "/auth" POST "auth-service" "auth" "NONE" ""
 
 # Protegidas
-create_endpoint "/products" GET "products-get-service" "products-get" "CUSTOM" $AUTHORIZER_ID
+create_endpoint "/products" GET  "products-get-service"  "products-get"  "CUSTOM" $AUTHORIZER_ID
 create_endpoint "/products" POST "products-post-service" "products-post" "CUSTOM" $AUTHORIZER_ID
-create_endpoint "/orders" GET "orders-get-service" "orders-get" "CUSTOM" $AUTHORIZER_ID
-create_endpoint "/orders" POST "orders-post-service" "orders-post" "CUSTOM" $AUTHORIZER_ID
+create_endpoint "/orders"   GET  "orders-get-service"   "orders-get"   "CUSTOM" $AUTHORIZER_ID
+create_endpoint "/orders"   POST "orders-post-service"  "orders-post"  "CUSTOM" $AUTHORIZER_ID
 create_endpoint "/payments" POST "payments-post-service" "payments-post" "CUSTOM" $AUTHORIZER_ID
 
 # ==========================
