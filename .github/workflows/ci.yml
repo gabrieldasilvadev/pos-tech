@@ -1,8 +1,16 @@
 name: Java CI
 
 on:
+  push:
+    branches:
+      - develop
+
   pull_request:
-    branches: ["**"]
+    branches:
+      - main
+    types: [opened, synchronize, reopened, closed]
+
+  workflow_dispatch:
 
 env:
   GITHUB_SHA: ${{ github.sha }}
