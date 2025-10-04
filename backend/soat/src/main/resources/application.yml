@@ -3,6 +3,13 @@ server:
     include-stacktrace: never
 
 spring:
+  cloud:
+    aws:
+      credentials:
+        access-key: ${AWS_ACCESS_KEY:accesskey}
+        secret-key: ${AWS_SECRET_KEY:secretkey}
+      region:
+        static: ${AWS_REGION:us-east-1}
   application:
     name: soat
   datasource:
@@ -27,6 +34,10 @@ spring:
 springdoc:
   swagger-ui:
     path: /docs
+security:
+  jwt:
+    secret: ${JWT_SECRET:change-me-change-me-change-me-change-me}
+    expiration: ${JWT_EXPIRATION:PT2H}
 management:
   endpoints:
     web:
