@@ -9,7 +9,7 @@ env:
   SHORT_SHA: $(echo $GITHUB_SHA | cut -c1-7)
   IMAGE_TAG: ${{ github.event.repository.name }}:$(echo $GITHUB_SHA | cut -c1-7)
   IMAGE_TAG_GITHUB: ghcr.io/${{ github.repository }}:${{ github.sha }}
-  THRESHOLD: 89.0
+  THRESHOLD: 90.0
 
 jobs:
   DockerBuild:
@@ -156,4 +156,4 @@ jobs:
           envsubst < infra/services/soat-backend.yml | sponge infra/services/soat-backend.yml
 
           kubectl apply -k infra/
-          kubectl rollout status infra/deployments/soat-backend.yml -n soat
+          kubectl rollout status deployment/soat-backend -n soat
