@@ -30,14 +30,17 @@ spring:
     active:
       - mercadoPagoClient
 
-
 springdoc:
   swagger-ui:
     path: /docs
+
 security:
   jwt:
+    algorithm: ${JWT_ALGORITHM:HS256}
     secret: ${JWT_SECRET:change-me-change-me-change-me-change-me}
     expiration: ${JWT_EXPIRATION:PT2H}
+    audience: ${JWT_AUDIENCE:fast-food-api}
+
 management:
   endpoints:
     web:

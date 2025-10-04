@@ -255,6 +255,70 @@ No exemplo abaixo, o acesso a aplicação está liberada no endereço **http://1
     >
 </div>
 
+---
+
+## Integração com AWS LocalStack (JWT Authorizer + API Gateway)
+
+Este projeto também integra com **LocalStack** para simular serviços da AWS localmente.
+
+### Estrutura
+
+```
+infra/
+  .localstack/          # Configurações do LocalStack
+lambda/
+  ├── authorizer.js     # Lambda Authorizer para validar JWT
+  ├── authorizer.zip
+  ├── orders.js         # Lambda backend de exemplo
+  └── orders.zip
+setup/
+  ├── setup.sh          # Cria Lambda Authorizer
+  └── setup-apigw.sh    # Cria API Gateway + rota /orders + integração com Authorizer
+docker-compose.yml
+```
+
+### Requisitos
+
+- Docker + Docker Compose
+- LocalStack (via docker-compose)
+- `awslocal` (AWS CLI Local)
+- `zip`
+
+### Subir ambiente
+
+```sh
+docker compose up -d
+./setup/setup.sh          # cria Lambda Authorizer
+./setup/setup-apigw.sh    # cria API Gateway + rota /orders
+```
+
+### Testando
+
+1. Gerar token JWT (Node.js):
+
+```js
+const jwt = require("jsonwebtoken");
+const secret = "meuSegredoLocal"; 
+const token = jwt.sign({ sub: "123", role: "ADMIN" }, secret, { expiresIn: "1h" });
+console.log(token);
+```
+
+```sh
+npm install jsonwebtoken
+node generate-token.js
+```
+
+2. Chamada com cURL:
+
+```sh
+curl -i   -H "Authorization: Bearer <TOKEN>"   http://localhost:4566/restapis/<API_ID>/dev/_user_request_/orders
+```
+
+- ✅ Token válido → `200 OK` `{ "message": "Orders OK" }`
+- ❌ Token inválido/ausente → `403 Forbidden`
+
+---
+
 ### Aplicando o escalonamento dos PODs usando o HPA na prática
 Para demonstrar o funcionamento do Horizontal Pod Autoscaler (HPA), vamos gerar uma carga de requisições na API do backend utilizando a ferramenta k6 e observar o Kubernetes escalonar os pods automaticamente
 

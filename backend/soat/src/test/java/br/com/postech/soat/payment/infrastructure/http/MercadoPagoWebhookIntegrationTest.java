@@ -1,5 +1,6 @@
 package br.com.postech.soat.payment.infrastructure.http;
 
+import br.com.postech.soat.SoatApplication;
 import br.com.postech.soat.customer.domain.valueobject.CustomerId;
 import br.com.postech.soat.order.domain.valueobject.OrderId;
 import br.com.postech.soat.payment.application.repositories.PaymentRepository;
@@ -34,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(classes = {
+    SoatApplication.class,
     MercadoPagoWebhookIntegrationTest.ExcludeMockControllersConfig.class
 })
 @AutoConfigureMockMvc

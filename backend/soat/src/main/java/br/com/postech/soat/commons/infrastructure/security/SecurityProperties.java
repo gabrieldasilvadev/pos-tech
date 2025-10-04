@@ -17,5 +17,7 @@ public class SecurityProperties {
     public static class Jwt {
         private String secret = "change-me-change-me-change-me-change-me";
         private Duration expiration = Duration.ofHours(2);
+        private String audience = "fast-food-api";
+        private String algorithm = "HS256";
     }
 }
