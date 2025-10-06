@@ -1,6 +1,7 @@
 package br.com.postech.soat.commons.infrastructure.security;
 
 import java.time.Clock;
+import com.nimbusds.jose.JOSEException;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -49,14 +50,23 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtDecoder jwtDecoder(SecurityProperties properties) {
+    public JwtDecoder jwtDecoder(SecurityProperties properties, RsaKeyProvider keyProvider) {
         var jwt = properties.getJwt();
 
         if (jwt.getJwksUri() != null && !jwt.getJwksUri().isBlank()) {
             return NimbusJwtDecoder.withJwkSetUri(jwt.getJwksUri()).build();
         }
 
-        throw new IllegalStateException("No JWKS URI configured for RS256 validation");
+        var rsaKey = keyProvider.getRsaJwk();
+        if (rsaKey != null) {
+            try {
+                return NimbusJwtDecoder.withPublicKey(rsaKey.toRSAPublicKey()).build();
+            } catch (JOSEException e) {
+                throw new RuntimeException("Failed to extract RSA public key from local JWK", e);
+            }
+        }
+
+        throw new IllegalStateException("No JWKS URI configured and no local RSA key available for RS256 validation");
     }
 
     @Bean

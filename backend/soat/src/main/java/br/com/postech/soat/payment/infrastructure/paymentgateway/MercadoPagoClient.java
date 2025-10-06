@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("mercadoPagoClient")
+@Profile("mercadoPagoClient & !test")
 public class MercadoPagoClient implements CheckoutClient {
     private final Logger logger = LoggerFactory.getLogger(MercadoPagoClient.class);
     private final PaymentClient paymentClient;
