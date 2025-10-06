@@ -31,15 +31,20 @@ spring:
       - mercadoPagoClient
 
 springdoc:
+  api-docs:
+    enabled: true
   swagger-ui:
-    path: /docs
+    enabled: true
+    url: /openapi.yaml
+    try-it-out-enabled: true
+    filter: true
+    persist-authorization: true
 
 security:
   jwt:
-    algorithm: ${JWT_ALGORITHM:HS256}
-    secret: ${JWT_SECRET:change-me-change-me-change-me-change-me}
-    expiration: ${JWT_EXPIRATION:PT2H}
-    audience: ${JWT_AUDIENCE:fast-food-api}
+    jwks-uri: ${SECURITY_JWT_JWKS_URI:http://localhost:8080/.well-known/jwks.json}
+    audience: ${SECURITY_JWT_AUDIENCE:fast-food-api}
+    algorithm: ${SECURITY_JWT_ALGORITHM:RS256}
 
 management:
   endpoints:
