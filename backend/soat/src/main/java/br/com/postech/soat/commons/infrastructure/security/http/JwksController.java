@@ -5,6 +5,7 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -12,11 +13,12 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/.well-known")
 public class JwksController {
 
     private final RsaKeyProvider keyProvider;
 
-    @GetMapping("/.well-known/jwks.json")
+    @GetMapping("/jwks.json")
     public Map<String, Object> keys() {
         RSAKey rsaKey = keyProvider.getRsaJwk();
         if (rsaKey == null) {

@@ -15,9 +15,9 @@ public class SecurityProperties {
     @Getter
     @Setter
     public static class Jwt {
-        private String secret = "change-me-change-me-change-me-change-me";
+        private String jwksUri = "http://localhost:8080/.well-known/jwks.json";
         private Duration expiration = Duration.ofHours(2);
         private String audience = "fast-food-api";
-        private String algorithm = "HS256";
+        private String algorithm = "RS256";
     }
 }

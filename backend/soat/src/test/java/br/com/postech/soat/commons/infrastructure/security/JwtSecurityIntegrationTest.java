@@ -98,7 +98,7 @@ class JwtSecurityIntegrationTest extends PostgresTestContainerConfig {
     @DisplayName("GET /customers deve exigir JWT - sem token retorna 401")
     void findCustomerShouldRequireJwt() throws Exception {
         mockMvc.perform(get("/customers").param("cpf", existingCpf))
-            .andExpect(status().isForbidden());
+            .andExpect(status().isUnauthorized());
     }
 
     @Test
