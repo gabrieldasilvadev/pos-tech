@@ -10,4 +10,4 @@ metadata:
     maintainer: "SOAT - Grupo 75"
     description: "ConfigMap com variáveis de ambiente para o backend"
 data:
-  DB_URL: jdbc:postgresql://soat-postgres:5432/soat
+  DB_URL: ${SOAT_DB_URL}

@@ -1,0 +1,13 @@
+resources:
+  - ./namespace.yml
+  # Apenas para executar a base local
+  # - ./volumes/soat-postgres.yml
+  # - ./secrets/soat-postgres.yml
+  # - ./configmaps/soat-postgres.yml
+  # - ./services/soat-postgres.yml
+  # - ./deployments/soat-postgres.yml
+  - ./secrets/soat-backend.yml
+  - ./configmaps/soat-backend.yml
+  - ./deployments/soat-backend.yml
+  - ./services/soat-backend.yml
+  - ./hpas/soat-backend.yml
