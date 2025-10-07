@@ -38,7 +38,9 @@ public class SecurityConfig {
                     "/actuator/**",
                     "/webhooks/mercado-pago/**",
                     "/.well-known/jwks.json",
-                    "/openapi.yaml"
+                    "/openapi.yaml",
+                    "/health",
+                    "/health/**"
                 ).permitAll()
                 .requestMatchers(HttpMethod.POST, "/customers").permitAll()
                 .anyRequest().authenticated()
