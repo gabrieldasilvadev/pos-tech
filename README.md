@@ -36,7 +36,7 @@ O projeto adota tecnologias, práticas e ferramentas alinhadas com o Pós Tech e
 
 ## Participantes
 
-[![JuanpNeres](https://github.com/JuanpNeres.png?size=100)](https://github.com/JuanpNeres)
+[![JuanpNeres](https://avatars.githubusercontent.com/u/9919?s=100&v=4)](https://github.com/JuanpNeres)
 [![philipphahmann](https://github.com/philipphahmann.png?size=100)](https://github.com/philipphahmann)
 [![shandersonvieira](https://github.com/shandersonvieira.png?size=100)](https://github.com/shandersonvieira)
 [![vinicius-ma](https://github.com/vinicius-ma.png?size=100)](https://github.com/vinicius-ma)
