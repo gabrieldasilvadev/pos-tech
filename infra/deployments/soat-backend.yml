@@ -10,7 +10,7 @@ metadata:
     maintainer: "SOAT - Grupo 75"
     description: "Deployment do backend da aplicação Java"
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: soat-backend
