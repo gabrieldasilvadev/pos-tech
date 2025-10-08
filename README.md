@@ -36,13 +36,13 @@ O projeto adota tecnologias, práticas e ferramentas alinhadas com o Pós Tech e
 
 ## Participantes
 
-[![brunocesaromax](https://github.com/brunocesaromax.png?size=100)](https://github.com/brunocesaromax)
+[![JuanpNeres](https://github.com/JuanpNeres.png?size=100)](https://github.com/JuanpNeres)
 [![philipphahmann](https://github.com/philipphahmann.png?size=100)](https://github.com/philipphahmann)
 [![shandersonvieira](https://github.com/shandersonvieira.png?size=100)](https://github.com/shandersonvieira)
 [![vinicius-ma](https://github.com/vinicius-ma.png?size=100)](https://github.com/vinicius-ma)
 [![gabrieldasilvadev](https://github.com/gabrieldasilvadev.png?size=100)](https://github.com/gabrieldasilvadev)
 
-- Nome: Bruno César Vicente da Silva Paula | RM360941 | Email: brunocesar.oc96@gmail.com
+- Nome: Juan Pablo Neres de Lima | RM361411 | Email: 
 
 - Nome: Philipp Teles Fernandes Erwin Hahmann | RM360012 | Email: hahmann96@gmail.com
 
