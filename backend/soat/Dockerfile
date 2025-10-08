@@ -24,8 +24,6 @@ WORKDIR /app
 
 COPY --from=builder /app/target/*.jar app.jar
 
-COPY rsa /app/rsa
-
 EXPOSE 8080
 
 ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=80.0", "-Dspring.profiles.active=prod,mercadoPagoClient", "-jar", "/app/app.jar"]
