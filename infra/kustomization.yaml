@@ -10,4 +10,5 @@ resources:
   - ./configmaps/soat-backend.yml
   - ./deployments/soat-backend.yml
   - ./services/soat-backend.yml
-  - ./hpas/soat-backend.yml
+  # HPA desabilitado - réplicas fixadas em 1 no Deployment
+  # - ./hpas/soat-backend.yml
